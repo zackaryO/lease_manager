@@ -1,1 +1,84 @@
-<p>main works!</p>
+<div class="rental-detail">
+  <h2>Details for Lot #{{ rentalDetail.lotNumber }}</h2>
+
+  <p><strong>Lease Holder Name:</strong> {{ rentalDetail.leaseHolderName }}</p>
+  <p><strong>Address:</strong> {{ rentalDetail.address }}</p>
+  <p><strong>Email:</strong> {{ rentalDetail.email }}</p>
+  <p><strong>Phone:</strong> {{ rentalDetail.phone }}</p>
+  <p>
+    <strong>Monthly Rental Amount:</strong>
+    {{ rentalDetail.monthlyRentalAmount | currency }}
+  </p>
+  <p><strong>Due Date:</strong> {{ rentalDetail.dueDate | date }}</p>
+  <p><strong>Grace Period:</strong> {{ rentalDetail.gracePeriod }} days</p>
+
+  <div class="lease-agreement">
+    <strong>Lease Agreement:</strong>
+    <!-- Assuming the path is a direct link to an image or a PDF -->
+    <!-- <a [href]="rentalDetail.leaseAgreementPath" target="_blank">
+        <img *ngIf="isImage(rentalDetail.leaseAgreementPath)" [src]="rentalDetail.leaseAgreementPath" alt="Lease Agreement" />
+        <span *ngIf="!isImage(rentalDetail.leaseAgreementPath)">Download Lease Agreement</span> -->
+    <!-- </a> -->
+  </div>
+</div>
+<br />
+<>
+<h1>Placeholder for lot image</h1>
+<>
+<br />
+<>
+<h1>Placeholder for payment entry component</h1>
+<>
+<br />
+<h2>Edit Details:</h2>
+<form>
+  <label>
+    Lot Number:
+    <input [(ngModel)]="rentalDetail.lotNumber" readonly />
+    <!-- Assuming lotNumber is readonly -->
+  </label>
+
+  <label>
+    Lease Holder's Name:
+    <input [(ngModel)]="rentalDetail.leaseHolderName" />
+  </label>
+
+  <label>
+    Address:
+    <input [(ngModel)]="rentalDetail.address" />
+  </label>
+
+  <label>
+    Email:
+    <input [(ngModel)]="rentalDetail.email" />
+  </label>
+
+  <label>
+    Phone:
+    <input [(ngModel)]="rentalDetail.phone" />
+  </label>
+
+  <label>
+    Monthly Rental Amount:
+    <input [(ngModel)]="rentalDetail.monthlyRentalAmount" />
+  </label>
+
+  <label>
+    Due Date:
+    <input [(ngModel)]="rentalDetail.dueDate" />
+  </label>
+
+  <label>
+    Grace Period:
+    <input [(ngModel)]="rentalDetail.gracePeriod" />
+  </label>
+
+  <label>
+    Lease Agreement Path:
+    <input [(ngModel)]="rentalDetail.leaseAgreementPath" readonly />
+    <!-- Assuming this is readonly -->
+  </label>
+
+  <button (click)="onVacate()">Vacate Property</button>
+  <button (click)="onSendReminder()">Send Email Reminder</button>
+</form>

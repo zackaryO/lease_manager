@@ -1,0 +1,65 @@
+/* dashboard.component.css */
+
+.card {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rental-image {
+    max-width: 100%;
+    /* Ensures the image does not exceed the card's width */
+    height: auto;
+    /* Maintains the image's aspect ratio */
+    border-radius: 4px;
+    /* Optional: gives the image rounded corners */
+    margin-bottom: 10px;
+    /* Space between the image and the rental info */
+}
+
+.rental-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+
+.status-box {
+    width: 80%;
+    /* or whatever width you want for the clickable box */
+    height: 30px;
+    /* or adjust to the height you prefer */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    margin-top: 10px;
+    /* Space between the rental info and the status box */
+}
+
+.green {
+    background-color: #4CAF50;
+}
+
+.yellow {
+    background-color: #FFEB3B;
+}
+
+.red {
+    background-color: #FF5722;
+}
+
+
+/* For larger screens, you can introduce more styles with media queries */
+@media (min-width: 768px) {
+    /* Tablet styles here */
+}
+
+@media (min-width: 992px) {
+    /* Desktop styles here */
+}
