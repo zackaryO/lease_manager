@@ -13,17 +13,44 @@ import { RentalService } from '../services/rental-detail.service';
 })
 export class DetailsComponent implements OnInit {
   rentalDetail!: RentalDetail;
+  originalRentalDetail!: RentalDetail; // Store the original data for undoing changes
 
   constructor(
-    private RentalService: RentalService,
+    private rentalService: RentalService,
     private route: ActivatedRoute  // Inject ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     // Fetching the ID from the route
     const id = +this.route.snapshot.paramMap.get('id')!; // The + is used to convert the string to a number
-    this.rentalDetail = this.RentalService.getRentalDetailById(id);
+    this.rentalDetail = this.rentalService.getRentalDetailById(id);
+    this.originalRentalDetail = { ...this.rentalDetail };
   }
+
+  clearInput(event: FocusEvent): void {
+    (event.target as HTMLInputElement).value = '';
+  }
+
+  saveChanges(): void {
+    if (window.confirm('Are you sure you want to make this change?')) {
+      this.rentalService.updateRentalDetail(this.rentalDetail).subscribe(response => {
+        console.log('Update successful', response);
+        this.originalRentalDetail = { ...this.rentalDetail }; // Update the original data
+      }, error => {
+        console.error('Update failed:', error);
+      });
+    }
+  }
+
+  undoChanges(): void {
+    this.rentalService.undoRentalDetailUpdate(this.originalRentalDetail).subscribe(response => {
+      console.log('Undo successful', response);
+      this.rentalDetail = { ...this.originalRentalDetail }; // Reset to the original data
+    }, error => {
+      console.error('Undo failed:', error);
+    });
+  }
+
 
   onVacate() {
     // Logic to vacate the property

@@ -39,6 +39,7 @@
 <mat-card class="lot-image-card">
   <mat-card-content>
     <h1>Placeholder for lot image</h1>
+    <img [src]="rentalDetail.imageUrl" alt="Rental Image" class="rental-image" />
   </mat-card-content>
 </mat-card>
 
@@ -86,12 +87,14 @@
 
     <label>
       Due Date:
-      <input [(ngModel)]="rentalDetail.dueDate" />
+      <input [(ngModel)]="rentalDetail.dueDate" (focus)="clearInput($event)" type="number" min="1" max="30"
+        placeholder="Select Date (1-30)" />
     </label>
 
     <label>
       Grace Period:
-      <input [(ngModel)]="rentalDetail.gracePeriod" />
+      <input [(ngModel)]="rentalDetail.gracePeriod" (focus)="clearInput($event)" type="number" min="1" max="30"
+        placeholder="Select Day (1-30)" />
     </label>
 
     <label>
@@ -101,6 +104,8 @@
     </label>
 
     <div class="buttons">
+      <button type="button" (click)="saveChanges()">Save</button>
+      <button type="button" (click)="undoChanges()">Undo</button>
       <button (click)="onVacate()">Vacate Property</button>
       <button (click)="onSendReminder()">Send Email Reminder</button>
     </div>

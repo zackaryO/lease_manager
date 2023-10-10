@@ -8,9 +8,26 @@ import { Observable, of } from 'rxjs';  // Import the 'of' operator
 })
 export class RentalService {
 
-  // private baseUrl: string = 'http://api.example.com/rental-details';  // Commented this for now
+  // Commented the API URL for now
+  // private baseUrl: string = 'http://api.example.com/rental-details';
 
   constructor(private http: HttpClient) { }
+
+  updateRentalDetail(detail: RentalDetail): Observable<RentalDetail> {
+    // Commenting out actual API call and returning dummy response for now
+    // const apiUrl = `${this.baseUrl}/${detail.id}`;
+    // return this.http.put<RentalDetail>(apiUrl, detail);
+
+    return of(detail); // Just returning the provided detail
+  }
+
+  undoRentalDetailUpdate(detail: RentalDetail): Observable<RentalDetail> {
+    // Commenting out actual API call and returning dummy response for now
+    // const apiUrl = `${this.baseUrl}/${detail.id}`;
+    // return this.http.put<RentalDetail>(apiUrl, detail);
+
+    return of(detail); // Just returning the provided detail
+  }
 
   // Using dummy data instead of an API call for now
   fetchRentals(): Observable<RentalDetail[]> {

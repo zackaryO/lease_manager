@@ -60,3 +60,13 @@ button:hover {
 .lease-agreement {
     margin-top: 20px;
 }
+
+input:not([readonly]) {
+    color: #0077cc;
+    /* Different color for editable fields */
+}
+
+input:focus {
+    color: black;
+    /* Color when the field is focused */
+}

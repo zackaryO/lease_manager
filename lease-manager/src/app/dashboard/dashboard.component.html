@@ -1,10 +1,10 @@
 <!-- Wrap the card content with an anchor tag (or div) to make it clickable -->
 <a *ngFor="let rental of rentals" (click)="viewDetails(rental)" class="card">
-  <img [src]="rental.imageUrl" alt="Rental Image" class="rental-image" />
   <div class="rental-info">
     <p><strong>Lot Number:</strong> {{ rental.lotNumber }}</p>
     <p><strong>Lease Holder:</strong> {{ rental.leaseHolderName }}</p>
   </div>
+  <img [src]="rental.imageUrl" alt="Rental Image" class="rental-image" />
   <div [ngClass]="{
       green: rental.paymentStatus === 'up-to-date',
       yellow: rental.paymentStatus === 'less-than-7',
@@ -14,13 +14,11 @@
     <ng-container *ngIf="rental.paymentStatus === 'up-to-date'; else notUpToDate">
       Up to Date
     </ng-container>
-
     <ng-template #notUpToDate>
       <ng-container *ngIf="rental.paymentStatus === 'less-than-7'; else delinquent">
         1-7 Days Late
       </ng-container>
     </ng-template>
-
     <ng-template #delinquent> Delinquent </ng-template>
   </div>
 </a>
