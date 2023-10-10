@@ -1,0 +1,36 @@
+body,
+html {
+    height: 100%;
+    /* This makes sure your page occupies the full viewport height */
+    margin: 0;
+    /* Remove default margin */
+    font-family: 'Roboto', sans-serif;
+    /* Optional: To use Roboto font for the page which is commonly used with Angular Material */
+}
+
+body {
+    display: flex;
+    /* Make body a flex container */
+    align-items: center;
+    /* Center the content vertically */
+    justify-content: center;
+    /* Center the content horizontally */
+    background-color: #f4f4f4;
+    /* Optional: set a background color for better visualization */
+}
+
+mat-card {
+    max-width: 400px;
+    /* Set a max-width for the card for better appearance on larger screens */
+    width: 100%;
+    /* Make sure card takes full width on smaller screens */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Optional: Add a shadow for better depth */
+    overflow: hidden;
+    /* Ensures that nothing overflows the card boundary */
+}
+
+button {
+    margin-top: 20px;
+    /* Add some spacing above the button for aesthetics */
+}
