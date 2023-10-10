@@ -1,8 +1,10 @@
 // details.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';  // Import ActivatedRoute
-import { RentalDetail } from '../../models/rental-detail.model';
-import { RentalDetailService } from '../../services/rental-detail.service';
+import { RentalDetail } from '../models/rental-detail.model';
+import { RentalService } from '../services/rental-detail.service';
+
+
 
 @Component({
   selector: 'app-details',
@@ -13,14 +15,14 @@ export class DetailsComponent implements OnInit {
   rentalDetail!: RentalDetail;
 
   constructor(
-    private rentalDetailService: RentalDetailService,
+    private RentalService: RentalService,
     private route: ActivatedRoute  // Inject ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     // Fetching the ID from the route
     const id = +this.route.snapshot.paramMap.get('id')!; // The + is used to convert the string to a number
-    this.rentalDetail = this.rentalDetailService.getRentalDetailById(id);
+    this.rentalDetail = this.RentalService.getRentalDetailById(id);
   }
 
   onVacate() {

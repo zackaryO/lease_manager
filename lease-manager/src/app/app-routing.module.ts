@@ -6,9 +6,9 @@ import { LoginComponent } from './authentication/login/login.component';
 import { AuthGuard } from './authentication/auth.guard';
 
 // Import the other components
-import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
-import { DetailsComponent } from './details/main/details.component';
-import { ReportsComponent } from './reports/main/reports.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { DetailsComponent } from './details/details.component';
+import { ReportsComponent } from './reports/reports.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },

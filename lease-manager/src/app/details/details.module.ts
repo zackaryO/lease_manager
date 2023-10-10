@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetailsComponent } from './main/details.component';
+import { DetailsComponent } from './details.component';
 import { SharedModule } from '../shared/shared.module';  // Import SharedModule
 import { FormsModule } from '@angular/forms';
+import { MatListModule } from '@angular/material/list';
+
 
 @NgModule({
   declarations: [
@@ -11,6 +13,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     SharedModule,
+    MatListModule,
     FormsModule  // Add SharedModule to the imports array
   ]
 })

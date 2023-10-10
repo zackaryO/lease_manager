@@ -5,25 +5,18 @@
     <p><strong>Lot Number:</strong> {{ rental.lotNumber }}</p>
     <p><strong>Lease Holder:</strong> {{ rental.leaseHolderName }}</p>
   </div>
-  <div
-    [ngClass]="{
+  <div [ngClass]="{
       green: rental.paymentStatus === 'up-to-date',
       yellow: rental.paymentStatus === 'less-than-7',
       red: rental.paymentStatus === 'over-7'
-    }"
-    class="status-box"
-  >
+    }" class="status-box">
     <!-- Display based on paymentStatus -->
-    <ng-container
-      *ngIf="rental.paymentStatus === 'up-to-date'; else notUpToDate"
-    >
+    <ng-container *ngIf="rental.paymentStatus === 'up-to-date'; else notUpToDate">
       Up to Date
     </ng-container>
 
     <ng-template #notUpToDate>
-      <ng-container
-        *ngIf="rental.paymentStatus === 'less-than-7'; else delinquent"
-      >
+      <ng-container *ngIf="rental.paymentStatus === 'less-than-7'; else delinquent">
         1-7 Days Late
       </ng-container>
     </ng-template>
