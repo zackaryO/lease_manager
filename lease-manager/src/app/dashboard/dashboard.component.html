@@ -1,3 +1,4 @@
+<!-- dashboard.component.html -->
 <!-- Wrap the card content with an anchor tag (or div) to make it clickable -->
 <a *ngFor="let rental of rentals" (click)="viewDetails(rental)" class="card">
   <div class="rental-info">
@@ -5,20 +6,42 @@
     <p><strong>Lease Holder:</strong> {{ rental.leaseHolderName }}</p>
   </div>
   <img [src]="rental.imageUrl" alt="Rental Image" class="rental-image" />
-  <div [ngClass]="{
+  <div
+    [ngClass]="{
       green: rental.paymentStatus === 'up-to-date',
       yellow: rental.paymentStatus === 'less-than-7',
       red: rental.paymentStatus === 'over-7'
-    }" class="status-box">
+    }"
+    class="status-box"
+  >
     <!-- Display based on paymentStatus -->
-    <ng-container *ngIf="rental.paymentStatus === 'up-to-date'; else notUpToDate">
+    <ng-container
+      *ngIf="rental.paymentStatus === 'up-to-date'; else notUpToDate"
+    >
       Up to Date
     </ng-container>
     <ng-template #notUpToDate>
-      <ng-container *ngIf="rental.paymentStatus === 'less-than-7'; else delinquent">
+      <ng-container
+        *ngIf="rental.paymentStatus === 'less-than-7'; else delinquent"
+      >
         1-7 Days Late
       </ng-container>
     </ng-template>
     <ng-template #delinquent> Delinquent </ng-template>
   </div>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="makePayment($event, rental)"
+  >
+    Pay Now
+  </button>
+  <button
+    mat-raised-button
+    color="warn"
+    *ngIf="rental.lastPaymentDate && isPaymentRecent(rental.lastPaymentDate)"
+    (click)="undoPayment(rental)"
+  >
+    Undo Payment
+  </button>
 </a>

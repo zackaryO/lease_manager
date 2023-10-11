@@ -7,7 +7,7 @@
     border-radius: 4px;
     display: flex;
     flex-direction: row;
-    align-items: start;
+    align-items: flex-start;
     justify-content: center;
     /* Centers children horizontally */
     flex-wrap: wrap;

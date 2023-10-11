@@ -1,7 +1,11 @@
+// dashboard.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
 import { Router } from '@angular/router';
+import { PaymentService } from '../services/payment.service';
+import { Payment } from '../models/payment.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,21 +15,86 @@ import { Router } from '@angular/router';
 export class DashboardComponent implements OnInit {
   rentals: RentalDetail[] = [];
 
-  constructor(private rentalService: RentalService, private router: Router) { }
+  constructor(
+    private rentalService: RentalService,
+    private paymentService: PaymentService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    console.log('OnInit called for DashboardComponent');
     this.rentalService.fetchRentals().subscribe(rentals => {
-      console.log(rentals); // Logging the returned data
+      console.log('Rentals fetched:', rentals);
       if (rentals && Array.isArray(rentals)) {
         this.rentals = rentals;
       }
     }, error => {
-      const errorMessage = error.message || error;
-      console.error('Error fetching rentals:', errorMessage);
+      console.error('Error fetching rentals:', error);
     });
   }
 
   viewDetails(rental: RentalDetail): void {
+    console.log('Navigating to details for lot number:', rental.lotNumber);
     this.router.navigate(['/details', rental.lotNumber]);
+  }
+
+  makePayment(event: Event, rental: RentalDetail): void {
+    event.stopPropagation();
+    console.log('Making payment for:', rental);
+
+    const newPayment = new Payment(
+      rental.leaseHolderName,
+      rental.lotNumber,
+      rental.monthlyRentalAmount,
+      new Date(),
+      rental.dueDate,
+      false
+    );
+
+    console.log('New payment:', newPayment);
+    this.paymentService.recordPayment(newPayment).subscribe(
+      (response) => {
+        console.log('Payment recorded:', response);
+        rental.paymentStatus = 'up-to-date';
+        console.log('Updating rental detail after payment');
+        this.rentalService.updateRentalDetail(rental).subscribe(
+          updatedRental => {
+            console.log('Rental detail updated after payment:', updatedRental);
+          },
+          error => {
+            console.error('Error updating rental detail after payment:', error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Error recording payment:', error);
+      }
+    );
+    rental.lastPaymentDate = new Date();
+    console.log('Last payment date updated:', rental.lastPaymentDate);
+  }
+
+  isPaymentRecent(date: Date): boolean {
+    console.log('Checking if payment is recent for date:', date);
+    return date.getTime() > Date.now() - 86400000;
+  }
+
+  undoPayment(rental: RentalDetail): void {
+    console.log('Undoing payment for:', rental);
+    if (rental.lastPaymentId !== undefined) {
+      console.log('Calling deletePayment for payment ID:', rental.lastPaymentId);
+      this.paymentService.deletePayment(rental.lastPaymentId).subscribe(
+        () => {
+          console.log('Payment reversed successfully');
+          rental.paymentStatus = 'up-to-date';
+          rental.lastPaymentDate = undefined;
+        },
+        error => {
+          console.error('Error reversing payment:', error);
+        }
+      );
+    } else {
+      console.error('No payment ID available to undo the payment');
+    }
   }
 }

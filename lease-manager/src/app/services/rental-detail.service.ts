@@ -1,3 +1,4 @@
+//<!-- rental-detail.service.ts -->
 import { Injectable } from '@angular/core';
 import { RentalDetail } from '../models/rental-detail.model';
 import { HttpClient } from '@angular/common/http';

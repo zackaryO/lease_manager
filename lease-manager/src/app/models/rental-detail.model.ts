@@ -1,3 +1,4 @@
+//<-- rental-detail.model.ts -->
 export class RentalDetail {
     lotNumber: number;
     leaseHolderName: string;
@@ -10,6 +11,9 @@ export class RentalDetail {
     leaseAgreementPath: string;  // Assuming this will be a path or URL to the lease agreement file
     imageUrl: string;
     paymentStatus: 'up-to-date' | 'less-than-7' | 'over-7';
+    lastPaymentDate?: Date;
+    lastPaymentId?: number; // Add this line if your backend indeed returns such an ID
+
 
     constructor(
         lotNumber: number = 0,
