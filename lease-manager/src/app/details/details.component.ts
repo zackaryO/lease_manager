@@ -31,16 +31,49 @@ export class DetailsComponent implements OnInit {
     (event.target as HTMLInputElement).value = '';
   }
 
+  // saveChanges(): void {
+  //   if (window.confirm('Are you sure you want to make this change?')) {
+  //     this.rentalService.updateRentalDetail(this.rentalDetail).subscribe(response => {
+  //       console.log('Update successful', response);
+  //       this.originalRentalDetail = { ...this.rentalDetail }; // Update the original data
+  //     }, error => {
+  //       console.error('Update failed:', error);
+  //     });
+  //   }
+  // }
+
   saveChanges(): void {
     if (window.confirm('Are you sure you want to make this change?')) {
-      this.rentalService.updateRentalDetail(this.rentalDetail).subscribe(response => {
-        console.log('Update successful', response);
-        this.originalRentalDetail = { ...this.rentalDetail }; // Update the original data
-      }, error => {
-        console.error('Update failed:', error);
+      // Create an object that only includes the changed values
+      const updatedFields: Partial<RentalDetail> = {};
+
+      // Compare current and original rental details and assign changed values to updatedFields
+      Object.keys(this.rentalDetail).forEach(key => {
+        // Here we check for type and value equality. Adjust as necessary for your data types.
+        if (this.rentalDetail[key] !== this.originalRentalDetail[key]) {
+          updatedFields[key] = this.rentalDetail[key];
+        }
       });
+
+      // Proceed with the update if there's at least one change
+      if (Object.keys(updatedFields).length > 0) {
+        this.rentalService.updateRentalDetail(updatedFields).subscribe(response => {
+          console.log('Update successful', response);
+          // Update the original detail with the new changes
+          this.originalRentalDetail = JSON.parse(JSON.stringify(this.rentalDetail)); // Deep copy with JSON methods
+        }, error => {
+          console.error('Update failed:', error);
+        });
+      } else {
+        console.log('No changes were made.');
+      }
     }
   }
+
+
+
+
+
 
   undoChanges(): void {
     this.rentalService.undoRentalDetailUpdate(this.originalRentalDetail).subscribe(response => {

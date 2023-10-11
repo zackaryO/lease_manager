@@ -69,3 +69,5 @@ dayDeliquent: number
 ## the ComponentCanDeactivate on navbar isnt working
 
 this is supposed to ask the user if they want to save their changes before the navigate away from the page, if the made changes
+
+## the save updates on the detail page isnt working

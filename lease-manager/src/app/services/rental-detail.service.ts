@@ -14,12 +14,12 @@ export class RentalService {
 
   constructor(private http: HttpClient) { }
 
-  updateRentalDetail(detail: RentalDetail): Observable<RentalDetail> {
+  updateRentalDetail(updatedFields: Partial<RentalDetail>): Observable<any> {
     // Commenting out actual API call and returning dummy response for now
     // const apiUrl = `${this.baseUrl}/${detail.id}`;
     // return this.http.put<RentalDetail>(apiUrl, detail);
 
-    return of(detail); // Just returning the provided detail
+    return of(updatedFields); // Just returning the provided detail
   }
 
   undoRentalDetailUpdate(detail: RentalDetail): Observable<RentalDetail> {

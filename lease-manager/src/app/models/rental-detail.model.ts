@@ -1,5 +1,6 @@
 //<-- rental-detail.model.ts -->
 export class RentalDetail {
+    [key: string]: any; // Add this index signature
     lotNumber: number;
     leaseHolderName: string;
     address: string;

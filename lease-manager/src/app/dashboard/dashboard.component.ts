@@ -79,7 +79,8 @@ export class DashboardComponent implements OnInit {
     return date.getTime() > Date.now() - 86400000;
   }
 
-  undoPayment(rental: RentalDetail): void {
+  undoPayment(event: Event, rental: RentalDetail): void {
+    event.stopPropagation();
     console.log('Undoing payment for:', rental);
     if (rental.lastPaymentId !== undefined) {
       console.log('Calling deletePayment for payment ID:', rental.lastPaymentId);
