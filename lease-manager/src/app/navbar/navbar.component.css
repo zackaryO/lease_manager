@@ -1,0 +1,89 @@
+/* navbar.component.css */
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 10px;
+    background: #333;
+    color: white;
+}
+
+.navbar-brand {
+    font-size: 1.5em;
+}
+
+.navbar-menu {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-item {
+    margin-right: 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.navbar-item:last-child {
+    margin-right: 0;
+}
+
+.navbar-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    /* Adjust the gap as needed */
+}
+
+.navbar-form label {
+    margin-bottom: 0;
+}
+
+.navbar-form input {
+    margin-right: 5px;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .navbar-brand,
+    .navbar-menu {
+        text-align: center;
+    }
+
+    .navbar-menu {
+        flex-direction: column;
+        gap: 10px;
+        /* Increased gap for touch targets */
+    }
+
+    .navbar-item {
+        margin-right: 0;
+        /* Remove right margin for consistent spacing */
+    }
+
+    .navbar-form {
+        justify-content: space-around;
+        flex-direction: column;
+        gap: 20px;
+        /* Increased gap for easier interaction */
+    }
+
+    .navbar-form button {
+        width: calc(100% - 20px);
+        /* Slight space from the edges */
+        margin: 10px;
+        /* Added margin for touch comfort */
+    }
+
+    .navbar-form label,
+    .navbar-form input,
+    .navbar-form select {
+        font-size: 16px;
+        /* Larger font size for readability */
+    }
+}

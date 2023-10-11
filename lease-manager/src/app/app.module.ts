@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms'; // import FormsModule
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,14 +18,15 @@ import { NavbarComponent } from './navbar/navbar.component';
     NavbarComponent
   ],
   imports: [
-    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     DashboardModule,
     ReportsModule,
     DetailsModule,
-    AuthenticationModule  // Add this
+    AuthenticationModule,
+    HttpClientModule,
+    FormsModule  // Add FormsModule here
   ],
   providers: [],
   bootstrap: [AppComponent]
