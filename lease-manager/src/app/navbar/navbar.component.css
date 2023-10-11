@@ -1,4 +1,4 @@
-/* navbar.component.css */
+/* Global styles */
 .navbar {
     display: flex;
     flex-wrap: wrap;
@@ -32,7 +32,6 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
-    /* Adjust the gap as needed */
 }
 
 .navbar-form label {
@@ -43,11 +42,25 @@
     margin-right: 5px;
 }
 
+.hamburger-btn {
+    display: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+}
+
 /* Mobile view */
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .hamburger-btn {
+        display: block;
+        /* Make the hamburger button visible on small screens */
     }
 
     .navbar-brand,
@@ -58,32 +71,44 @@
     .navbar-menu {
         flex-direction: column;
         gap: 10px;
-        /* Increased gap for touch targets */
     }
 
     .navbar-item {
         margin-right: 0;
-        /* Remove right margin for consistent spacing */
     }
 
     .navbar-form {
-        justify-content: space-around;
+        display: none;
+        /* navbar-form is hidden by default on small screens */
         flex-direction: column;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
         gap: 20px;
-        /* Increased gap for easier interaction */
     }
 
+    .navbar-form.active {
+        display: flex;
+        /* navbar-form is shown when it has the 'active' class */
+    }
+
+    .navbar-form input,
+    .navbar-form select,
     .navbar-form button {
         width: calc(100% - 20px);
-        /* Slight space from the edges */
-        margin: 10px;
-        /* Added margin for touch comfort */
+        margin-bottom: 10px;
     }
 
-    .navbar-form label,
-    .navbar-form input,
-    .navbar-form select {
-        font-size: 16px;
-        /* Larger font size for readability */
+    .navbar-form label {
+        align-self: flex-start;
+        width: 100%;
+        margin-bottom: 5px;
     }
+}
+
+/* Show form and menu when active, applicable to all screen sizes */
+.navbar-form.active,
+.navbar-menu.active {
+    display: flex;
 }

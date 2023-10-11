@@ -1,12 +1,19 @@
-<!-- navbar.component.html -->
 <nav class="navbar">
   <div class="navbar-brand">Lease Manager</div>
-  <div class="navbar-menu">
+
+  <!-- Hamburger menu button -->
+  <button (click)="toggleMenu()" class="hamburger-btn">
+    &#9776;
+    <!-- Unicode character for the hamburger icon -->
+  </button>
+
+  <div class="navbar-menu" [ngClass]="{ active: menuActive }">
     <a routerLink="/dashboard" class="navbar-item">Dashboard</a>
     <a routerLink="/reports" class="navbar-item">Reports</a>
   </div>
 
-  <div class="navbar-form">
+  <!-- Hidden form, shown when menu is active -->
+  <div class="navbar-form" [ngClass]="{ active: menuActive }">
     <h3>Default Settings:</h3>
     <label>
       Due Day:

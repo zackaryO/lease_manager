@@ -65,3 +65,7 @@ daysLate: number
 dayDeliquent: number
 
 ### END Tables to build:
+
+## the ComponentCanDeactivate on navbar isnt working
+
+this is supposed to ask the user if they want to save their changes before the navigate away from the page, if the made changes
