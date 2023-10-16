@@ -5,13 +5,13 @@ from django.db import models
 # Create your models here.
 
 class Lot(models.Model):
-    lot_id = models.IntegerField(max_length=200)  # Primary Key
-    lot_number = models.IntegerField(max_length=200)
+    lot_id = models.IntegerField()  # Primary Key
+    lot_number = models.IntegerField()
     lot_address = models.CharField(max_length=300)
 
 
 class LeaseHolder(models.Model):
-    lease_holder_id = models.CharField(max_length=200)  # primary key
+    lease_holder_id = models.IntegerField()  # primary key
     lease_holder_name = models.CharField(max_length=200)
     lease_address = models.CharField(max_length=200)
     lease_phone = models.CharField(max_length=200)
@@ -33,8 +33,8 @@ class Lease(models.Model):
     def __str__(self):
         return f"{self.lot_number} : {self.lease_holder_name}\n"  # add later?
 
-    lot_id = models.IntegerField(max_length=200)  # Foreign Key
-    lease_holder_id = models.CharField(max_length=200) # Foreign Key
+    lot_id = models.IntegerField()  # Foreign Key
+    lease_holder_id = models.IntegerField() # Foreign Key
     monthly_rental_amount = models.CharField(max_length=200)
     due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
     grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
