@@ -5,21 +5,21 @@ from django.db import models
 # Create your models here.
 
 class Lot(models.Model):
-    lot_id = models.IntegerField()  # Primary Key
-    lot_number = models.IntegerField()
+    # removed lot_id since Django automatically creates an id field
+    lot_number = models.IntegerField(unique=True)
     lot_address = models.CharField(max_length=300)
 
 
 class LeaseHolder(models.Model):
-    lease_holder_id = models.IntegerField()  # primary key
+    # removed lease_holder_id for the same reason
     lease_holder_name = models.CharField(max_length=200)
     lease_address = models.CharField(max_length=200)
-    lease_phone = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
 
 
 class Lease(models.Model):
+
     UP_TO_DATE = 'up-to-date'
     LESS_THAN_7 = 'less-than-7'
     OVER_7 = 'over-7'
@@ -31,10 +31,12 @@ class Lease(models.Model):
     ]
 
     def __str__(self):
-        return f"{self.lot_number} : {self.lease_holder_name}\n"  # add later?
+        return (f"{self.lot_id} : {self.lease_holder_id}\n"
+                f"{self.monthly_rental_amount} : {self.due_date}\n"
+                f"{self.grace_period} : {self.payment_status}\n")  # add later?
 
-    lot_id = models.IntegerField()  # Foreign Key
-    lease_holder_id = models.IntegerField() # Foreign Key
+    lot = models.ForeignKey(Lot, on_delete=models.CASCADE)  # Foreign Key related to Lot
+    lease_holder = models.ForeignKey(LeaseHolder, on_delete=models.CASCADE)  # Foreign Key related to LeaseHolder
     monthly_rental_amount = models.CharField(max_length=200)
     due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
     grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
