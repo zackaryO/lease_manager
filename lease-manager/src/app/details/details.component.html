@@ -87,9 +87,54 @@
       <input
         [(ngModel)]="rentalDetail['leaseAgreementPath']"
         name="leaseAgreementPath"
-        readonly
       />
     </label>
+    <label>
+      Lease Holder's Name:
+      <input
+        [(ngModel)]="rentalDetail['leaseHolderName']"
+        name="leaseHolderName"
+      />
+    </label>
+
+    <label>
+      Address:
+      <input [(ngModel)]="rentalDetail['lotAddress']" name="lotAddress" />
+    </label>
+
+    <label>
+      Email:
+      <input [(ngModel)]="rentalDetail['email']" name="email" />
+    </label>
+
+    <label>
+      Phone:
+      <input [(ngModel)]="rentalDetail['phone']" name="phone" />
+    </label>
+
+    <label>
+      Monthly Rental Amount:
+      <input
+        [(ngModel)]="rentalDetail['monthlyRentalAmount']"
+        name="monthlyRentalAmount"
+      />
+    </label>
+
+    <label>
+      Due Date:
+      <input [(ngModel)]="rentalDetail['dueDate']" name="dueDate" />
+    </label>
+
+    <label>
+      Grace Period:
+      <input [(ngModel)]="rentalDetail['gracePeriod']" name="gracePeriod" />
+    </label>
     <!-- ... other parts of your form ... -->
+    <div class="buttons">
+      <button type="button" (click)="saveChanges()">Save</button>
+      <button type="button" (click)="undoChanges()">Undo</button>
+      <!-- <button (click)="onVacate()">Vacate Property</button>
+      <button (click)="onSendReminder()">Send Email Reminder</button> -->
+    </div>
   </form>
 </div>

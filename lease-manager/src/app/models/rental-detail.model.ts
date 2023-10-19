@@ -1,7 +1,7 @@
 // rental-detail.model.ts
 export class RentalDetail {
     [key: string]: any; // Keeps the index signature
-
+    id: number; // matches "id" from the API
     lotNumber: number; // matches "lot_number" from the API
     lotAddress: string; // matches "lot_address" from the API
     leaseHolderName: string; // matches "lease_holder_name" from the API
@@ -15,6 +15,7 @@ export class RentalDetail {
     paymentStatus: 'up-to-date' | 'less-than-7' | 'over-7'; // matches "payment_status" from the API
 
     constructor(
+        id: number = 0,
         lotNumber: number = 0,
         lotAddress: string = '',
         leaseHolderName: string = '',
@@ -27,6 +28,7 @@ export class RentalDetail {
         lotImagePath: string = '', // new field
         paymentStatus: 'up-to-date' | 'less-than-7' | 'over-7' = 'up-to-date'
     ) {
+        this.id = id;
         this.lotNumber = lotNumber;
         this.lotAddress = lotAddress;
         this.leaseHolderName = leaseHolderName;

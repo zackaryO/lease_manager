@@ -4,6 +4,7 @@ import { RentalService } from '../services/rental-detail.service';
 import { Router } from '@angular/router';
 import { PaymentService } from '../services/payment.service';
 import { Payment } from '../models/payment.model';
+import { PartialDeep } from 'type-fest'; // Consider using this for deep partial types
 
 @Component({
   selector: 'app-dashboard',
@@ -55,26 +56,30 @@ export class DashboardComponent implements OnInit {
     this.paymentService.recordPayment(newPayment).subscribe(
       (response) => {
         console.log('Payment recorded:', response);
-        rental.paymentStatus = 'up-to-date'; // Ensure 'up-to-date' is a valid status in your model
-        console.log('Updating rental detail after payment');
-        this.rentalService.updateRentalDetail(rental).subscribe(
-          updatedRental => {
-            console.log('Rental detail updated after payment:', updatedRental);
-          },
-          error => {
-            console.error('Error updating rental detail after payment:', error);
-          }
-        );
+        // Define the fields you want to update here
+        const updatedRentalData: PartialDeep<RentalDetail> = {
+          paymentStatus: 'up-to-date', // Ensure 'up-to-date' is a valid status in your model
+          lastPaymentDate: new Date(), // Assuming this field exists in your backend model
+        };
+        this.updateRentalAfterPayment(rental, updatedRentalData);
       },
       (error) => {
         console.error('Error recording payment:', error);
       }
     );
-
-    rental['lastPaymentDate'] = new Date();
-    console.log('Last payment date updated:', rental['lastPaymentDate']);
   }
 
+  updateRentalAfterPayment(rental: RentalDetail, updatedData: PartialDeep<RentalDetail>): void {
+    console.log('Updating rental detail after payment');
+    this.rentalService.updateRentalDetail(rental.lotNumber, updatedData).subscribe(
+      updatedRental => {
+        console.log('Rental detail updated after payment:', updatedRental);
+      },
+      error => {
+        console.error('Error updating rental detail after payment:', error);
+      }
+    );
+  }
   // Custom function to ensure a variable is a Date
   private ensureDate(date: any): Date {
     return date instanceof Date ? date : new Date(date);

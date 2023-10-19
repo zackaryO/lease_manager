@@ -44,9 +44,10 @@ export class DetailsComponent implements OnInit {
       });
 
       if (Object.keys(updatedFields).length > 0) {
-        this.rentalService.updateRentalDetail(updatedFields as RentalDetail).subscribe(response => { // casting as RentalDetail
+        // You need to pass the ID of the rental to the update method
+        this.rentalService.updateRentalDetail(this.rentalDetail['id'], updatedFields).subscribe(response => {
           console.log('Update successful', response);
-          this.originalRentalDetail = JSON.parse(JSON.stringify(this.rentalDetail));
+          this.originalRentalDetail = JSON.parse(JSON.stringify(this.rentalDetail)); // Update the original detail after a successful update
         }, error => {
           console.error('Update failed:', error);
         });
