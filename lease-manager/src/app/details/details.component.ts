@@ -17,6 +17,7 @@ export class DetailsComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
+
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
     this.rentalService.getRentalDetailById(id).subscribe(
@@ -25,7 +26,7 @@ export class DetailsComponent implements OnInit {
         this.originalRentalDetail = JSON.parse(JSON.stringify(data)); // Deep copy for original detail
       },
       (error: any) => {
-        // handle the error here
+        console.error('Error fetching rental details:', error);
       }
     );
   }
@@ -33,7 +34,6 @@ export class DetailsComponent implements OnInit {
   clearInput(event: FocusEvent): void {
     (event.target as HTMLInputElement).value = '';
   }
-
   saveChanges(): void {
     if (window.confirm('Are you sure you want to make this change?')) {
       const updatedFields: Partial<RentalDetail> = {};
@@ -44,13 +44,13 @@ export class DetailsComponent implements OnInit {
       });
 
       if (Object.keys(updatedFields).length > 0) {
-        // You need to pass the ID of the rental to the update method
-        this.rentalService.updateRentalDetail(this.rentalDetail['id'], updatedFields).subscribe(response => {
-          console.log('Update successful', response);
-          this.originalRentalDetail = JSON.parse(JSON.stringify(this.rentalDetail)); // Update the original detail after a successful update
-        }, error => {
-          console.error('Update failed:', error);
-        });
+        // Assuming updateRentalDetail takes an id and a Partial<RentalDetail>
+        // // this.rentalService.updateRentalDetail(this.rentalDetail.id, updatedFields).subscribe(response => {
+        //   console.log('Update successful', response);
+        //   this.originalRentalDetail = JSON.parse(JSON.stringify(this.rentalDetail)); // Update the original detail after a successful update
+        // }, error => {
+        //   console.error('Update failed:', error);
+        // });
       } else {
         console.log('No changes were made.');
       }

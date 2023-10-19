@@ -39,7 +39,7 @@ class Lease(models.Model):
     due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
     grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
     lease_agreement_path = models.FileField(upload_to='lease_agreements/')
-    lot_image_path = models.FileField(upload_to='lot_image/')
+    lot_image_path = models.FileField(upload_to='images/')
     payment_status = models.CharField(
         max_length=20,
         choices=PAYMENT_STATUS_CHOICES,

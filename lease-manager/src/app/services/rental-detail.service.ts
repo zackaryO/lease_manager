@@ -26,7 +26,7 @@ export class RentalService {
       item.lease_holder_name,
       item.email,
       item.phone,
-      item.monthly_rental_amount,
+      parseFloat(item.monthly_rental_amount), // parsing string to number
       item.due_date,
       item.grace_period,
       item.lease_agreement_path, // new field
@@ -41,17 +41,10 @@ export class RentalService {
     );
   }
 
-  updateRentalDetail(id: number, rental: Partial<RentalDetail>): Observable<RentalDetail> {
-    // We're using PATCH here to partially update the resource, and we need the ID for the rental
-    return this.http.patch<RentalDetail>(`${this.baseUrl}/${id}`, rental).pipe(
-      map(item => this.transformResponseToModel(item))
-    );
+  updateRentalDetail(rental: RentalDetail): Observable<RentalDetail> {
+    // Assuming your API accepts JSON and you need to PATCH or PUT the updated data
+    return this.http.patch<RentalDetail>(`${this.baseUrl}/${rental.lotNumber}`, rental);
   }
-
-  // updateRentalDetail(rental: RentalDetail): Observable<RentalDetail> {
-  //   // Assuming your API accepts JSON and you need to PATCH or PUT the updated data
-  //   return this.http.patch<RentalDetail>(`${this.baseUrl}/${rental.lotNumber}`, rental);
-  // }
 
   undoRentalDetailUpdate(rental: RentalDetail): Observable<RentalDetail> {
     // For this method, you'll need to determine what "undo" means in the context of your application.

@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('due_date', models.PositiveSmallIntegerField(validators=[django.core.validators.MaxValueValidator(30)])),
                 ('grace_period', models.PositiveSmallIntegerField(validators=[django.core.validators.MaxValueValidator(30)])),
                 ('lease_agreement_path', models.FileField(upload_to='lease_agreements/')),
-                ('lot_image_path', models.FileField(upload_to='lot_image/')),
+                ('lot_image_path', models.FileField(upload_to='images/')),
                 ('payment_status', models.CharField(choices=[('up-to-date', 'Up to date'), ('less-than-7', 'Less than 7 days overdue'), ('over-7', 'Over 7 days overdue')], default='less-than-7', max_length=20)),
                 ('lease_holder', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lots.leaseholder')),
                 ('lot', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lots.lot')),
