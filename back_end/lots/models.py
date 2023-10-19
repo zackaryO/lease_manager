@@ -5,13 +5,13 @@ from django.db import models
 # Create your models here.
 
 class Lot(models.Model):
-    # removed lot_id since Django automatically creates an id field
+    lot_id = models.AutoField(primary_key=True)
     lot_number = models.IntegerField(unique=True)
     lot_address = models.CharField(max_length=300)
 
 
 class LeaseHolder(models.Model):
-    # removed lease_holder_id for the same reason
+    lease_holder_id = models.AutoField(primary_key=True)
     lease_holder_name = models.CharField(max_length=200)
     lease_address = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
