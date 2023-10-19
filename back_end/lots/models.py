@@ -5,13 +5,11 @@ from django.db import models
 # Create your models here.
 
 class Lot(models.Model):
-    lot_id = models.AutoField(primary_key=True)
     lot_number = models.IntegerField(unique=True)
     lot_address = models.CharField(max_length=300)
 
 
 class LeaseHolder(models.Model):
-    lease_holder_id = models.AutoField(primary_key=True)
     lease_holder_name = models.CharField(max_length=200)
     lease_address = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
@@ -37,7 +35,7 @@ class Lease(models.Model):
 
     lot = models.ForeignKey(Lot, on_delete=models.CASCADE)  # Foreign Key related to Lot
     lease_holder = models.ForeignKey(LeaseHolder, on_delete=models.CASCADE)  # Foreign Key related to LeaseHolder
-    monthly_rental_amount = models.CharField(max_length=200)
+    monthly_rental_amount = models.IntegerField()
     due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
     grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
     lease_agreement_path = models.FileField(upload_to='lease_agreements/')

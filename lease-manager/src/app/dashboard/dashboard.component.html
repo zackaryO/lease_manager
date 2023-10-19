@@ -5,7 +5,7 @@
     <p><strong>Lot Number:</strong> {{ rental.lotNumber }}</p>
     <p><strong>Lease Holder:</strong> {{ rental.leaseHolderName }}</p>
   </div>
-  <img [src]="rental.imageUrl" alt="Rental Image" class="rental-image" />
+  <img [src]="rental['imageUrl']" alt="Rental Image" class="rental-image" />
   <div
     [ngClass]="{
       green: rental.paymentStatus === 'up-to-date',
@@ -39,7 +39,9 @@
   <button
     mat-raised-button
     color="warn"
-    *ngIf="rental.lastPaymentDate && isPaymentRecent(rental.lastPaymentDate)"
+    *ngIf="
+      rental['lastPaymentDate'] && isPaymentRecent(rental['lastPaymentDate'])
+    "
     (click)="undoPayment($event, rental)"
   >
     Undo Payment

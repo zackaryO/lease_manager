@@ -1,5 +1,3 @@
-// dashboard.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
@@ -42,12 +40,14 @@ export class DashboardComponent implements OnInit {
     event.stopPropagation();
     console.log('Making payment for:', rental);
 
+    const dueDate = this.ensureDate(rental.dueDate);
+
     const newPayment = new Payment(
       rental.leaseHolderName,
       rental.lotNumber,
       rental.monthlyRentalAmount,
       new Date(),
-      rental.dueDate,
+      dueDate,
       false
     );
 
@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit {
     this.paymentService.recordPayment(newPayment).subscribe(
       (response) => {
         console.log('Payment recorded:', response);
-        rental.paymentStatus = 'up-to-date';
+        rental.paymentStatus = 'up-to-date'; // Ensure 'up-to-date' is a valid status in your model
         console.log('Updating rental detail after payment');
         this.rentalService.updateRentalDetail(rental).subscribe(
           updatedRental => {
@@ -70,25 +70,32 @@ export class DashboardComponent implements OnInit {
         console.error('Error recording payment:', error);
       }
     );
-    rental.lastPaymentDate = new Date();
-    console.log('Last payment date updated:', rental.lastPaymentDate);
+
+    rental['lastPaymentDate'] = new Date();
+    console.log('Last payment date updated:', rental['lastPaymentDate']);
+  }
+
+  // Custom function to ensure a variable is a Date
+  private ensureDate(date: any): Date {
+    return date instanceof Date ? date : new Date(date);
   }
 
   isPaymentRecent(date: Date): boolean {
     console.log('Checking if payment is recent for date:', date);
-    return date.getTime() > Date.now() - 86400000;
+    return date.getTime() > Date.now() - 86400000; // 86400000ms equals one day
   }
 
   undoPayment(event: Event, rental: RentalDetail): void {
     event.stopPropagation();
     console.log('Undoing payment for:', rental);
-    if (rental.lastPaymentId !== undefined) {
-      console.log('Calling deletePayment for payment ID:', rental.lastPaymentId);
-      this.paymentService.deletePayment(rental.lastPaymentId).subscribe(
+
+    if (rental['lastPaymentId'] !== undefined) {
+      console.log('Calling deletePayment for payment ID:', rental['lastPaymentId']);
+      this.paymentService.deletePayment(rental['lastPaymentId']).subscribe(
         () => {
           console.log('Payment reversed successfully');
-          rental.paymentStatus = 'up-to-date';
-          rental.lastPaymentDate = undefined;
+          rental.paymentStatus = 'over-7'; // Ensure 'overdue' is a valid status in your model
+          rental['lastPaymentDate'] = undefined;
         },
         error => {
           console.error('Error reversing payment:', error);

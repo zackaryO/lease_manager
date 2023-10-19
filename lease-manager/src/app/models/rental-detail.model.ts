@@ -1,44 +1,42 @@
-//<-- rental-detail.model.ts -->
+// rental-detail.model.ts
 export class RentalDetail {
-    [key: string]: any; // Add this index signature
-    lotNumber: number;
-    leaseHolderName: string;
-    address: string;
-    email: string;
-    phone: string;
-    monthlyRentalAmount: number;
-    dueDate: Date;
-    gracePeriod: number;  // This can be in days or however you measure the grace period
-    leaseAgreementPath: string;  // Assuming this will be a path or URL to the lease agreement file
-    imageUrl: string;
-    paymentStatus: 'up-to-date' | 'less-than-7' | 'over-7';
-    lastPaymentDate?: Date;
-    lastPaymentId?: number; // Add this line if your backend indeed returns such an ID
+    [key: string]: any; // Keeps the index signature
 
+    lotNumber: number; // matches "lot_number" from the API
+    lotAddress: string; // matches "lot_address" from the API
+    leaseHolderName: string; // matches "lease_holder_name" from the API
+    email: string; // matches "email" from the API
+    phone: string; // matches "phone" from the API
+    monthlyRentalAmount: number; // This should be a number, but the API returns a string, you might need to parse it
+    dueDate: number; // matches "due_date" from the API, and is a number possibly representing days
+    gracePeriod: number; // matches "grace_period" from the API
+    leaseAgreementPath: string; // new field to match "lease_agreement_path" from the API
+    lotImagePath: string; // new field to match "lot_image_path" from the API
+    paymentStatus: 'up-to-date' | 'less-than-7' | 'over-7'; // matches "payment_status" from the API
 
     constructor(
         lotNumber: number = 0,
+        lotAddress: string = '',
         leaseHolderName: string = '',
-        address: string = '',
         email: string = '',
         phone: string = '',
-        monthlyRentalAmount: number = 0,
-        dueDate: Date = new Date(),
+        monthlyRentalAmount: number = 0, // consider parsing to number if necessary
+        dueDate: number = 0,
         gracePeriod: number = 0,
-        leaseAgreementPath: string = '',
-        imageUrl: string = '',
+        leaseAgreementPath: string = '', // new field
+        lotImagePath: string = '', // new field
         paymentStatus: 'up-to-date' | 'less-than-7' | 'over-7' = 'up-to-date'
     ) {
         this.lotNumber = lotNumber;
+        this.lotAddress = lotAddress;
         this.leaseHolderName = leaseHolderName;
-        this.address = address;
         this.email = email;
         this.phone = phone;
         this.monthlyRentalAmount = monthlyRentalAmount;
         this.dueDate = dueDate;
         this.gracePeriod = gracePeriod;
-        this.leaseAgreementPath = leaseAgreementPath;
-        this.imageUrl = imageUrl;
+        this.leaseAgreementPath = leaseAgreementPath; // new field
+        this.lotImagePath = lotImagePath; // new field
         this.paymentStatus = paymentStatus;
     }
 }

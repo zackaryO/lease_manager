@@ -1,10 +1,7 @@
-// details.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';  // Import ActivatedRoute
+import { ActivatedRoute } from '@angular/router';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
-
-
 
 @Component({
   selector: 'app-details',
@@ -13,54 +10,43 @@ import { RentalService } from '../services/rental-detail.service';
 })
 export class DetailsComponent implements OnInit {
   rentalDetail!: RentalDetail;
-  originalRentalDetail!: RentalDetail; // Store the original data for undoing changes
+  originalRentalDetail!: RentalDetail;
 
   constructor(
     private rentalService: RentalService,
-    private route: ActivatedRoute  // Inject ActivatedRoute
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    // Fetching the ID from the route
-    const id = +this.route.snapshot.paramMap.get('id')!; // The + is used to convert the string to a number
-    this.rentalDetail = this.rentalService.getRentalDetailById(id);
-    this.originalRentalDetail = { ...this.rentalDetail };
+    const id = +this.route.snapshot.paramMap.get('id')!;
+    this.rentalService.getRentalDetailById(id).subscribe(
+      (data: RentalDetail) => {
+        this.rentalDetail = data;
+        this.originalRentalDetail = JSON.parse(JSON.stringify(data)); // Deep copy for original detail
+      },
+      (error: any) => {
+        // handle the error here
+      }
+    );
   }
 
   clearInput(event: FocusEvent): void {
     (event.target as HTMLInputElement).value = '';
   }
 
-  // saveChanges(): void {
-  //   if (window.confirm('Are you sure you want to make this change?')) {
-  //     this.rentalService.updateRentalDetail(this.rentalDetail).subscribe(response => {
-  //       console.log('Update successful', response);
-  //       this.originalRentalDetail = { ...this.rentalDetail }; // Update the original data
-  //     }, error => {
-  //       console.error('Update failed:', error);
-  //     });
-  //   }
-  // }
-
   saveChanges(): void {
     if (window.confirm('Are you sure you want to make this change?')) {
-      // Create an object that only includes the changed values
       const updatedFields: Partial<RentalDetail> = {};
-
-      // Compare current and original rental details and assign changed values to updatedFields
       Object.keys(this.rentalDetail).forEach(key => {
-        // Here we check for type and value equality. Adjust as necessary for your data types.
-        if (this.rentalDetail[key] !== this.originalRentalDetail[key]) {
+        if (JSON.stringify(this.rentalDetail[key]) !== JSON.stringify(this.originalRentalDetail[key])) {
           updatedFields[key] = this.rentalDetail[key];
         }
       });
 
-      // Proceed with the update if there's at least one change
       if (Object.keys(updatedFields).length > 0) {
-        this.rentalService.updateRentalDetail(updatedFields).subscribe(response => {
+        this.rentalService.updateRentalDetail(updatedFields as RentalDetail).subscribe(response => { // casting as RentalDetail
           console.log('Update successful', response);
-          // Update the original detail with the new changes
-          this.originalRentalDetail = JSON.parse(JSON.stringify(this.rentalDetail)); // Deep copy with JSON methods
+          this.originalRentalDetail = JSON.parse(JSON.stringify(this.rentalDetail));
         }, error => {
           console.error('Update failed:', error);
         });
@@ -70,20 +56,10 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-
-
-
-
-
   undoChanges(): void {
-    this.rentalService.undoRentalDetailUpdate(this.originalRentalDetail).subscribe(response => {
-      console.log('Undo successful', response);
-      this.rentalDetail = { ...this.originalRentalDetail }; // Reset to the original data
-    }, error => {
-      console.error('Undo failed:', error);
-    });
+    this.rentalDetail = JSON.parse(JSON.stringify(this.originalRentalDetail));
+    console.log('Changes have been undone');
   }
-
 
   onVacate() {
     // Logic to vacate the property
