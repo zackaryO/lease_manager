@@ -29,6 +29,8 @@ export class RentalService {
       parseFloat(item.monthly_rental_amount), // parsing string to number
       item.due_date,
       item.grace_period,
+      item.lease_agreement_path, // new field
+      item.lot_image_path, // new field
       item.payment_status // removed paths that are not in the RentalDetail model
     );
   }
