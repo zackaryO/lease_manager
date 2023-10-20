@@ -2,20 +2,24 @@
 import { Injectable } from '@angular/core';
 import { RentalDetail } from '../models/rental-detail.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RentalService {
-  private baseUrl: string = 'http://127.0.0.1:8000/leases'; // or your API's base URL
+  private baseUrl: string = 'http://127.0.0.1:8000/leases';
+  private rentals = new BehaviorSubject<RentalDetail[]>([]); // holds the current value of rentals
+
+  rentals$ = this.rentals.asObservable(); // Expose an observable to stream the rentals to other components
 
   constructor(private http: HttpClient) { }
 
   fetchRentals(): Observable<RentalDetail[]> {
     return this.http.get<any[]>(this.baseUrl).pipe(
-      map(data => data.map(item => this.transformResponseToModel(item)))
+      map(data => data.map(item => this.transformResponseToModel(item))),
+      tap(rentals => this.rentals.next(rentals)) // store the rentals once retrieved
     );
   }
 

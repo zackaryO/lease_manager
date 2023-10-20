@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-details',
@@ -11,25 +12,45 @@ import { RentalService } from '../services/rental-detail.service';
 export class DetailsComponent implements OnInit {
   rentalDetail!: RentalDetail;
   originalRentalDetail!: RentalDetail;
+  private subscriptions = new Subscription();
 
   constructor(
     private rentalService: RentalService,
     private route: ActivatedRoute
   ) { }
 
-
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id')!;
-    this.rentalService.getRentalDetailById(id).subscribe(
-      (data: RentalDetail) => {
-        this.rentalDetail = data;
-        this.originalRentalDetail = JSON.parse(JSON.stringify(data)); // Deep copy for original detail
-      },
-      (error: any) => {
-        console.error('Error fetching rental details:', error);
-      }
+    const id = +this.route.snapshot.paramMap.get('id')!; // the "+" is a shortcut to convert the string to a number
+
+    // If the rentals are already fetched, this subscription will immediately receive them.
+    // If the rentals are not yet fetched, this will wait until they are.
+    this.subscriptions.add(
+      this.rentalService.rentals$.subscribe(rentals => {
+        const foundRental = rentals.find(rental => rental.lotNumber === id);
+        if (foundRental) {
+          this.rentalDetail = { ...foundRental }; // Using spread to get a copy of found rental.
+          this.originalRentalDetail = { ...foundRental }; // Storing the original data to be used later if needed.
+        } else {
+          // Handle the case when the rental is not found, e.g., redirecting to a 'Not Found' page or showing a message.
+        }
+      })
     );
+
+    // Ensure to fetch the rentals if they haven't been already.
+    // The component will receive the rentals via the rentals$ subscription when they arrive.
+    this.rentalService.fetchRentals().subscribe({
+      error: err => {
+        // Handle errors of fetchRentals here.
+      }
+    });
   }
+
+  ngOnDestroy(): void {
+    // Prevent memory leaks by unsubscribing from all subscriptions when the component is destroyed.
+    this.subscriptions.unsubscribe();
+  }
+
+
 
   clearInput(event: FocusEvent): void {
     (event.target as HTMLInputElement).value = '';
