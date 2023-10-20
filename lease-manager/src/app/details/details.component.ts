@@ -20,18 +20,30 @@ export class DetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id')!; // the "+" is a shortcut to convert the string to a number
+    const lotNumber = this.route.snapshot.paramMap.get('lotNumber');
+
+    if (lotNumber === null) {
+      // If lotNumber is null, you might want to redirect or throw an error
+      console.error('No lotNumber provided');
+      return;
+    }
 
     // If the rentals are already fetched, this subscription will immediately receive them.
     // If the rentals are not yet fetched, this will wait until they are.
     this.subscriptions.add(
       this.rentalService.rentals$.subscribe(rentals => {
-        const foundRental = rentals.find(rental => rental.lotNumber === id);
+        console.log('Rentals:', rentals); // Log the rentals data
+
+        // Convert rental.lotNumber to string for a proper comparison since lotNumber from the route is a string.
+        const foundRental = rentals.find(rental => rental.lotNumber.toString() === lotNumber);
         if (foundRental) {
           this.rentalDetail = { ...foundRental }; // Using spread to get a copy of found rental.
           this.originalRentalDetail = { ...foundRental }; // Storing the original data to be used later if needed.
+
+          console.log('Found Rental:', this.rentalDetail); // Log the found rentalDetail
         } else {
           // Handle the case when the rental is not found, e.g., redirecting to a 'Not Found' page or showing a message.
+          console.log('Rental not found for lotNumber:', lotNumber);
         }
       })
     );
@@ -41,9 +53,13 @@ export class DetailsComponent implements OnInit {
     this.rentalService.fetchRentals().subscribe({
       error: err => {
         // Handle errors of fetchRentals here.
+        console.error('Error fetching rentals:', err);
       }
     });
   }
+
+
+
 
   ngOnDestroy(): void {
     // Prevent memory leaks by unsubscribing from all subscriptions when the component is destroyed.
