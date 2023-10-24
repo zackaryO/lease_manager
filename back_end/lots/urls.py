@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import LeaseListView, LeaseDetailView
+from .views import LeaseListView, LeaseDetailUpdateView
 
 urlpatterns = [
-    path('leases/', LeaseListView.as_view(), name='lease-list'),
-    path('leases/<int:id>/', LeaseDetailView.as_view(), name='lease-detail'),  # make sure this 'id' matches with 'lookup_field' in your view
+    path('leases/', LeaseListView.as_view(), name='lease-list'),  # for listing leases
+    path('leases/<int:id>/', LeaseDetailUpdateView.as_view(), name='lease-detail-update'),  # for retrieving, updating
 ]

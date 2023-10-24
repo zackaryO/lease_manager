@@ -2,6 +2,7 @@
 <!-- Wrap the card content with an anchor tag (or div) to make it clickable -->
 <a *ngFor="let rental of rentals" (click)="viewDetails(rental)" class="card">
   <div class="rental-info">
+    <p><strong>Lease Id: </strong>{{ rental.id }}</p>
     <p><strong>Lot Number:</strong> {{ rental.lotNumber }}</p>
     <p><strong>Lease Holder:</strong> {{ rental.leaseHolderName }}</p>
   </div>

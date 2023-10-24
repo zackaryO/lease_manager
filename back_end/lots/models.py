@@ -8,6 +8,9 @@ class Lot(models.Model):
     lot_number = models.IntegerField(unique=True)
     lot_address = models.CharField(max_length=300)
 
+    def __str__(self):
+        return self.lot_number
+
 
 class LeaseHolder(models.Model):
     lease_holder_name = models.CharField(max_length=200)
@@ -15,9 +18,11 @@ class LeaseHolder(models.Model):
     email = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.lease_holder_name
+
 
 class Lease(models.Model):
-
     UP_TO_DATE = 'up-to-date'
     LESS_THAN_7 = 'less-than-7'
     OVER_7 = 'over-7'
@@ -29,7 +34,7 @@ class Lease(models.Model):
     ]
 
     def __str__(self):
-        return (f"{self.lot_id} : {self.lease_holder_id}\n"
+        return (f"{self.lease_holder}\n"
                 f"{self.monthly_rental_amount} : {self.due_date}\n"
                 f"{self.grace_period} : {self.payment_status}\n")  # add later?
 
@@ -47,6 +52,6 @@ class Lease(models.Model):
     )
 
 
-class GlobalSettings(models.Model): # should only be one entry
+class GlobalSettings(models.Model):  # should only be one entry
     due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
     grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])

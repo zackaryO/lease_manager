@@ -71,19 +71,41 @@
 <div class="card" *ngIf="rentalDetail">
   <h2>Edit Details:</h2>
   <form>
-    <label>
+    <!-- <label>
       Lot Number:
-      <input [(ngModel)]="rentalDetail.lotNumber" name="lotNumber" readonly />
+      <input [(ngModel)]="rentalDetail.lotNumber" name="lotNumber" />
+    </label>
+    <label>
+      Lease Holder Name:
+      <input
+        [(ngModel)]="rentalDetail.leaseHolderName"
+        name="leaseHolderName"
+      />
+    </label> -->
+    <label>
+      Email:
+      <input [(ngModel)]="rentalDetail.email" name="email" />
+    </label>
+    <label>
+      Phone:
+      <input [(ngModel)]="rentalDetail.phone" name="phone" />
+    </label>
+    <label>
+      Monthly Rental Amount:
+      <input
+        [(ngModel)]="rentalDetail.monthlyRentalAmount"
+        name="monthlyRentalAmount"
+      />
     </label>
     <!-- ... other input fields ... -->
-    <label>
+    <!-- <label>
       Lease Agreement Path:
       <input
         [(ngModel)]="rentalDetail.leaseAgreementPath"
         name="leaseAgreementPath"
         readonly
       />
-    </label>
+    </label> -->
     <!-- ... other input fields ... -->
     <!-- Include your Save and Undo buttons here -->
     <div class="buttons">

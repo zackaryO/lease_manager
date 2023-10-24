@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Lease, LeaseHolder
 
+
 class LeaseSerializer(serializers.ModelSerializer):
     lot_number = serializers.CharField(source='lot.lot_number', read_only=True)
     lot_address = serializers.CharField(source='lot.lot_address', read_only=True)

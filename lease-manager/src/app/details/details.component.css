@@ -70,3 +70,16 @@ input:focus {
     color: black;
     /* Color when the field is focused */
 }
+
+.rental-image {
+    max-width: 100%;
+    /* ensures the image doesn't stretch wider than its container */
+    max-height: 400px;
+    /* limits the image's height */
+    width: auto;
+    /* maintains the aspect ratio */
+    height: auto;
+    /* maintains the aspect ratio */
+    object-fit: contain;
+    /* ensures the image keeps its aspect ratio while being contained within the given dimensions */
+}
