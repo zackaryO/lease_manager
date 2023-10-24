@@ -13,13 +13,14 @@ class Lot(models.Model):
 
 
 class LeaseHolder(models.Model):
-    lease_holder_name = models.CharField(max_length=200)
-    lease_address = models.CharField(max_length=200)
+    lease_holder_first_name = models.CharField(max_length=200)
+    lease_holder_last_name = models.CharField(max_length=200)
+    lease_holder_address = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.lease_holder_name
+        return f"{self.lease_holder_first_name} : {self.lease_holder_last_name}\n"
 
 
 class Lease(models.Model):

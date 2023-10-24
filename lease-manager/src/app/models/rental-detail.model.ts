@@ -4,7 +4,9 @@ export class RentalDetail {
     id?: number; // matches "id" from the API
     lotNumber: number; // matches "lot_number" from the API
     lotAddress: string; // matches "lot_address" from the API
-    leaseHolderName: string; // matches "lease_holder_name" from the API
+    leaseHolderFirstName: string; // matches "lease_holder_name" from the API
+    leaseHolderLastName: string; // matches "lease_holder_name" from the API
+    leaseHolderAddress: string; // matches "lease_holder_address" from the API
     email: string; // matches "email" from the API
     phone: string; // matches "phone" from the API
     monthlyRentalAmount: number; // This should be a number, but the API returns a string, you might need to parse it
@@ -18,7 +20,9 @@ export class RentalDetail {
         id: number, // Adding 'id' as a new property
         lotNumber: number = 0,
         lotAddress: string = '',
-        leaseHolderName: string = '',
+        leaseHolderFirstName: string = '',
+        leaseHolderLastName: string = '',
+        leaseHolderAddress: string = '',
         email: string = '',
         phone: string = '',
         monthlyRentalAmount: number = 0, // consider parsing to number if necessary
@@ -31,7 +35,9 @@ export class RentalDetail {
         this.id = id;
         this.lotNumber = lotNumber;
         this.lotAddress = lotAddress;
-        this.leaseHolderName = leaseHolderName;
+        this.leaseHolderFirstName = leaseHolderFirstName;
+        this.leaseHolderLastName = leaseHolderLastName;
+        this.leaseHolderAddress = leaseHolderAddress;
         this.email = email;
         this.phone = phone;
         this.monthlyRentalAmount = monthlyRentalAmount;

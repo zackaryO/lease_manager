@@ -56,7 +56,8 @@ export class DashboardComponent implements OnInit { // The component class, impl
 
     // Creates a new Payment instance.
     const newPayment = new Payment(
-      rental.leaseHolderName,
+      rental.leaseHolderFirstName,
+      rental.leaseHolderLastName,
       rental.lotNumber,
       rental.monthlyRentalAmount,
       new Date(), // Current date.

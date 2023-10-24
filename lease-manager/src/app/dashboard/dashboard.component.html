@@ -4,7 +4,10 @@
   <div class="rental-info">
     <p><strong>Lease Id: </strong>{{ rental.id }}</p>
     <p><strong>Lot Number:</strong> {{ rental.lotNumber }}</p>
-    <p><strong>Lease Holder:</strong> {{ rental.leaseHolderName }}</p>
+    <p>
+      <strong>Lease Holder:</strong> {{ rental.leaseHolderFirstName }}
+      {{ rental.leaseHolderLastName }}
+    </p>
   </div>
   <img [src]="rental.lotImagePath" alt="Rental Image" class="rental-image" />
 

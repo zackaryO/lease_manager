@@ -3,37 +3,43 @@
   <!-- The header of the card -->
   <mat-card-header>
     <mat-card-title
-      >Details for Lot #{{ rentalDetail["lotNumber"] }}</mat-card-title
+      >Details for Lot #{{ rentalDetail.lotNumber }}</mat-card-title
     >
   </mat-card-header>
 
   <!-- Card content -->
   <mat-card-content>
+    <mat-list-item
+      ><strong>Lot Address:</strong>
+      {{ rentalDetail.lotAddress }}</mat-list-item
+    >
     <!-- Using Angular Material List for the details -->
     <mat-list-item
       ><strong>Lease Holder Name:</strong>
-      {{ rentalDetail["leaseHolderName"] }}</mat-list-item
+      {{ rentalDetail.leaseHolderFirstName }}
+      {{ rentalDetail.leaseHolderLastName }}</mat-list-item
     >
     <mat-list-item
-      ><strong>Address:</strong> {{ rentalDetail["address"] }}</mat-list-item
+      ><strong>Lease Holder Address:</strong>
+      {{ rentalDetail.leaseHolderAddress }}</mat-list-item
     >
     <mat-list-item
-      ><strong>Email:</strong> {{ rentalDetail["email"] }}</mat-list-item
+      ><strong>Email:</strong> {{ rentalDetail.email }}</mat-list-item
     >
     <mat-list-item
-      ><strong>Phone:</strong> {{ rentalDetail["phone"] }}</mat-list-item
+      ><strong>Phone:</strong> {{ rentalDetail.phone }}</mat-list-item
     >
     <mat-list-item
       ><strong>Monthly Rental Amount:</strong>
-      {{ rentalDetail["monthlyRentalAmount"] | currency }}</mat-list-item
+      {{ rentalDetail.monthlyRentalAmount | currency }}</mat-list-item
     >
     <mat-list-item
       ><strong>Due Date:</strong>
-      {{ rentalDetail["dueDate"] | date }}</mat-list-item
+      {{ rentalDetail.dueDate | date }}</mat-list-item
     >
     <mat-list-item
       ><strong>Grace Period:</strong>
-      {{ rentalDetail["gracePeriod"] }} days</mat-list-item
+      {{ rentalDetail.gracePeriod }} days</mat-list-item
     >
 
     <!-- Lease Agreement Link -->
@@ -71,6 +77,20 @@
 <div class="card" *ngIf="rentalDetail">
   <h2>Edit Details:</h2>
   <form>
+    <label>
+      Lease Holder Address:
+      <input
+        [(ngModel)]="rentalDetail.leaseHolderAddress"
+        name="leaseHolderAddress"
+      />
+    </label>
+    <label>
+      Monthy Rent (no $ sign):
+      <input
+        [(ngModel)]="rentalDetail.monthlyRentalAmount"
+        name="monthlyRentalAmount"
+      />
+    </label>
     <!-- <label>
       Lot Number:
       <input [(ngModel)]="rentalDetail.lotNumber" name="lotNumber" />
@@ -89,13 +109,6 @@
     <label>
       Phone:
       <input [(ngModel)]="rentalDetail.phone" name="phone" />
-    </label>
-    <label>
-      Monthly Rental Amount:
-      <input
-        [(ngModel)]="rentalDetail.monthlyRentalAmount"
-        name="monthlyRentalAmount"
-      />
     </label>
     <!-- ... other input fields ... -->
     <!-- <label>

@@ -5,7 +5,9 @@ from .models import Lease, LeaseHolder
 class LeaseSerializer(serializers.ModelSerializer):
     lot_number = serializers.CharField(source='lot.lot_number', read_only=True)
     lot_address = serializers.CharField(source='lot.lot_address', read_only=True)
-    lease_holder_name = serializers.CharField(source='lease_holder.lease_holder_name', read_only=True)
+    lease_holder_first_name = serializers.CharField(source='lease_holder.lease_holder_first_name', read_only=True)
+    lease_holder_last_name = serializers.CharField(source='lease_holder.lease_holder_last_name', read_only=True)
+    lease_holder_address = serializers.CharField(source='lease_holder.lease_holder_address', read_only=True)
     email = serializers.EmailField(source='lease_holder.email', read_only=True)
     phone = serializers.CharField(source='lease_holder.phone', read_only=True)
 
@@ -17,8 +19,8 @@ class LeaseSerializer(serializers.ModelSerializer):
         model = Lease
         fields = [
             'id',  # Add 'id' field here
-            'lot_number', 'lot_address', 'lease_holder_name',
-            'email', 'phone',
+            'lot_number', 'lot_address', 'lease_holder_first_name', 'lease_holder_last_name',
+            'lease_holder_address', 'email', 'phone',
             'monthly_rental_amount', 'due_date', 'grace_period',
             'lease_agreement_path', 'lot_image_path',
             'payment_status'

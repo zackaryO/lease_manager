@@ -42,7 +42,9 @@ export class RentalService {
       item.id,
       item.lot_number,
       item.lot_address,
-      item.lease_holder_name,
+      item.lease_holder_first_name,
+      item.lease_holder_last_name,
+      item.lease_holder_address,
       item.email,
       item.phone,
       parseFloat(item.monthly_rental_amount), // Convert the monthly_rental_amount from a string to a floating-point number.
@@ -59,7 +61,9 @@ export class RentalService {
       id: rental.id,
       lot_number: rental.lotNumber, // assuming lotNumber is the field in your RentalDetail model
       lot_address: rental.lotAddress,
-      lease_holder_name: rental.leaseHolderName,
+      lease_holder_first_name: rental.leaseHolderFirstName,
+      lease_holder_last_name: rental.leaseHolderLastName,
+      lease_holder_address: rental.leaseHolderAddress,
       email: rental.email,
       phone: rental.phone,
       monthly_rental_amount: rental.monthlyRentalAmount.toString(), // if the backend expects this as a string
