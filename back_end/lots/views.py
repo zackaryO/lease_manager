@@ -1,6 +1,7 @@
+from rest_framework import generics
 from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView, RetrieveUpdateAPIView
-from .models import Lease
-from .serializers import LeaseSerializer
+from .models import Lease, Payment
+from .serializers import LeaseSerializer, PaymentSerializer
 
 
 class LeaseListView(ListAPIView):
@@ -13,25 +14,7 @@ class LeaseDetailUpdateView(RetrieveUpdateAPIView):
     serializer_class = LeaseSerializer
     lookup_field = 'id'
 
-# from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
-# from .models import Lease
-# from .serializers import LeaseSerializer
-#
-#
-# class LeaseListView(ListAPIView):
-#     queryset = Lease.objects.all()
-#     serializer_class = LeaseSerializer
-#
-#
-# class LeaseDetailView(RetrieveAPIView):
-#     queryset = Lease.objects.all()
-#     serializer_class = LeaseSerializer
-#     lookup_field = 'id'  # or 'pk', or another unique field on the Lease model
-#
-#
-# class LeaseUpdateView(UpdateAPIView):
-#     queryset = Lease.objects.all()
-#     serializer_class = LeaseSerializer
-#     lookup_field = 'id'
-#     http_method_names = ['patch', 'put', 'get', 'head', 'options']  # explicitly allow methods
-#
+
+class PaymentListCreateView(generics.ListCreateAPIView):
+    queryset = Payment.objects.filter(is_deleted=False)
+    serializer_class = PaymentSerializer

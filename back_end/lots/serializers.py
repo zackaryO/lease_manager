@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Lease, LeaseHolder
+from .models import Lease, Payment
 
 
 class LeaseSerializer(serializers.ModelSerializer):
@@ -52,3 +52,15 @@ class LeaseSerializer(serializers.ModelSerializer):
             lot.save()
 
         return instance
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    # If you want a readable representation for the payment method instead of just the code (e.g., 'Cash' instead of 'CASH')
+    payment_method_display = serializers.CharField(source='get_payment_method_display', read_only=True)
+
+    class Meta:
+        model = Payment
+        fields = [
+            'id', 'lease', 'payment_date', 'payment_amount', 'payment_method', 'payment_method_display',
+            'transaction_id', 'notes', 'receipt', 'created_at', 'updated_at', 'is_deleted'
+        ]

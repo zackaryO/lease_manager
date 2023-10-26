@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('lots.urls')),  # Replace 'lease' with your actual Lease app's name
+    path('', include('lots.urls')),
 ]
 urlpatterns += [
                    # ... the rest of your URLconf goes here ...

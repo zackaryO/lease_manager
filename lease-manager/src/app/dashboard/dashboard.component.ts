@@ -6,6 +6,9 @@ import { RentalService } from '../services/rental-detail.service'; // Service ha
 import { Router } from '@angular/router'; // Service for navigation between routes.
 import { PaymentService } from '../services/payment.service'; // Service handling payment operations.
 import { Payment } from '../models/payment.model'; // The model or shape of a payment object.
+import { MatDialog } from '@angular/material/dialog';
+import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.component';
+
 
 // @Component is a decorator function that specifies the Angular metadata for the component.
 @Component({
@@ -19,9 +22,10 @@ export class DashboardComponent implements OnInit { // The component class, impl
   // The constructor sets up the component's services.
   // Services are injected into the constructor - this is dependency injection.
   constructor(
-    private rentalService: RentalService, // Injects the rental service.
-    private paymentService: PaymentService, // Injects the payment service.
-    private router: Router // Injects the router service for navigation.
+    private rentalService: RentalService,
+    private paymentService: PaymentService,
+    private router: Router,
+    private dialog: MatDialog // <-- Add this line
   ) { }
 
   // ngOnInit is a lifecycle hook that is called after Angular has initialized all data-bound properties.
@@ -46,52 +50,22 @@ export class DashboardComponent implements OnInit { // The component class, impl
     this.router.navigate(['/details', rental.id]);
   }
 
-  // This method is triggered when a user initiates a payment.
   makePayment(event: Event, rental: RentalDetail): void {
-    event.stopPropagation(); // Prevents the event from bubbling up the DOM tree.
+    event.stopPropagation();
     console.log('Making payment for:', rental);
 
-    // Ensure the date is a Date instance.
-    const dueDate = this.ensureDate(rental.dueDate);
+    // Open the dialog here
+    const dialogRef = this.dialog.open(PaymentDialogComponent, {
+      data: { leaseId: rental.id }
+    });
 
-    // Creates a new Payment instance.
-    const newPayment = new Payment(
-      rental.leaseHolderFirstName,
-      rental.leaseHolderLastName,
-      rental.lotNumber,
-      rental.monthlyRentalAmount,
-      new Date(), // Current date.
-      dueDate,
-      false // Initial status for payment - assuming false means unpaid.
-    );
-
-    console.log('New payment:', newPayment);
-    // Call the recordPayment method from paymentService and subscribe to the Observable it returns.
-    this.paymentService.recordPayment(newPayment).subscribe(
-      (response) => {
-        console.log('Payment recorded:', response);
-        // After successful payment, update the rental's payment status.
-        rental.paymentStatus = 'up-to-date'; // This status value should be consistent with your data model.
-        console.log('Updating rental detail after payment');
-        // Update the rental details on the server to reflect the payment.
-        this.rentalService.updateRentalDetail(rental).subscribe(
-          updatedRental => {
-            console.log('Rental detail updated after payment:', updatedRental);
-          },
-          error => {
-            console.error('Error updating rental detail after payment:', error);
-          }
-        );
-      },
-      (error) => {
-        console.error('Error recording payment:', error);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // handle result, maybe update the UI or inform the user of success
       }
-    );
-
-    // Update the local rental data with the last payment date.
-    rental['lastPaymentDate'] = new Date();
-    console.log('Last payment date updated:', rental['lastPaymentDate']);
+    });
   }
+
 
   // This method ensures that the input is a valid Date object.
   private ensureDate(date: any): Date {
