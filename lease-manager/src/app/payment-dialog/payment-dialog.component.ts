@@ -3,21 +3,23 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
+import { PaymentService } from '../services/payment.service'; // Adjust path as necessary
 
 @Component({
   selector: 'app-payment-dialog',
   templateUrl: './payment-dialog.component.html',
   styleUrls: ['./payment-dialog.component.css']
 })
-
 export class PaymentDialogComponent implements OnInit {
   paymentForm!: FormGroup;
+  selectedFile: File | null = null;
 
   constructor(
     public dialogRef: MatDialogRef<PaymentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public rentalDetailData: RentalDetail,
     private fb: FormBuilder,
-    private rentalService: RentalService
+    private rentalService: RentalService,
+    private paymentService: PaymentService
   ) { }
 
   ngOnInit(): void {
@@ -37,7 +39,6 @@ export class PaymentDialogComponent implements OnInit {
     }
   }
 
-
   initForm() {
     this.paymentForm = this.fb.group({
       lease: [this.rentalDetailData.id || this.rentalDetailData['leaseId'], Validators.required],
@@ -45,7 +46,8 @@ export class PaymentDialogComponent implements OnInit {
       payment_amount: [this.rentalDetailData?.monthlyRentalAmount || '', Validators.required],
       payment_method: ['', Validators.required],
       transaction_id: [''],
-      notes: ['']
+      notes: [''],
+      receipt: [null]
     });
   }
 
@@ -55,8 +57,47 @@ export class PaymentDialogComponent implements OnInit {
 
   onSubmit() {
     if (this.paymentForm.valid) {
-      const paymentData = this.paymentForm.value;
-      this.dialogRef.close(paymentData);
+      const payment: any = { ...this.paymentForm.value };
+
+      // Add the selected file to the payment object
+      if (this.selectedFile) {
+        payment.receipt = this.selectedFile;
+      }
+
+      this.paymentService.submitPayment(payment).subscribe(response => {
+        console.log('Payment submitted successfully.', response);
+        this.dialogRef.close(payment);
+      }, error => {
+        console.error('Error submitting payment:', error);
+      });
     }
+  }
+
+  handleDrop(event: DragEvent) {
+    event.preventDefault();
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.selectedFile = files[0];
+      this.paymentForm.patchValue({
+        receipt: this.selectedFile
+      });
+      this.paymentForm.get('receipt')?.updateValueAndValidity();
+    }
+  }
+
+  preventDefault(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFile = <File>event.target.files[0];
+    this.paymentForm.patchValue({
+      receipt: this.selectedFile
+    });
+    this.paymentForm.get('receipt')?.updateValueAndValidity();
   }
 }

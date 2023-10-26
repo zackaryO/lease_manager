@@ -1,4 +1,44 @@
   /* Add this CSS to give a margin between rental details and the form */
   .rental-details {
-      margin-bottom: 20px;
+    margin-bottom: 20px;
+  }
+
+  .file-drop-zone {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-top: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+  }
+
+  .file-drop-zone:hover {
+    background-color: #f6f6f6;
+  }
+
+  .file-drop-instruction {
+    margin: 0;
+    color: #888;
+  }
+
+  .file-name-display {
+    margin: 0;
+    color: #333;
+    font-weight: bold;
+  }
+
+  .file-input-container {
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  .file-input-container label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  button {
+    margin-right: 10px;
   }

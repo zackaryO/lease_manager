@@ -1,7 +1,6 @@
-// payment.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Payment } from '../models/payment.model';
 
 @Injectable({
@@ -9,29 +8,40 @@ import { Payment } from '../models/payment.model';
 })
 export class PaymentService {
 
-  private paymentApiUrl: string = 'http://api.example.com/payments'; // Replace with your actual payments API endpoint
+  private baseUrl = 'http://127.0.0.1:8000/payment';  // replace with your API endpoint
 
   constructor(private http: HttpClient) { }
-  recordPayment(payment: Payment): Observable<Payment> {
-    // Simulate a successful response, returning the payment data as if it was created on the server
-    // return this.http.post<Payment>(this.paymentApiUrl, payment);
-    console.log('Pretend recordPayment to API:', payment);
-    return of(payment); // Simulating the response with the same payment object
+
+  private transformModelToRequest(payment: Payment): FormData {
+    const formData = new FormData();
+
+    formData.append('lease', payment.leaseId.toString());
+    formData.append('payment_date', payment.payment_date);
+    formData.append('payment_amount', payment.payment_amount.toString());
+    formData.append('payment_method', payment.payment_method);
+
+    // Optional fields
+    if (payment.transaction_id) {
+      formData.append('transaction_id', payment.transaction_id);
+    }
+
+    if (payment.notes) {
+      formData.append('notes', payment.notes);
+    }
+
+    if (payment.receipt) {
+      formData.append('receipt', payment.receipt, payment.receipt.name);
+    }
+
+    return formData;
+  }
+
+  submitPayment(payment: Payment): Observable<any> {
+    const formData = this.transformModelToRequest(payment);
+    return this.http.post(this.baseUrl, formData);
   }
 
   deletePayment(paymentId: number): Observable<any> {
-    // Simulate a successful delete response
-    // return this.http.delete(`${this.paymentApiUrl}/${paymentId}`);
-    console.log('Pretend deletePayment to API for paymentId:', paymentId);
-    return of({ status: 'success' }); // Simulating a successful response
+    return this.http.delete(`${this.baseUrl}/${paymentId}`);  // assuming a DELETE request is needed
   }
-
-
-  // MAY BE USEFUL FOR API
-  // recordPayment(payment: Payment): Observable<Payment> {
-  //   return this.http.post<Payment>(this.paymentApiUrl, payment);
-  // }
-
-  // deletePayment(paymentId: number): Observable<any> {
-  //   return this.http.delete(`${this.paymentApiUrl}/${paymentId}`);
 }
