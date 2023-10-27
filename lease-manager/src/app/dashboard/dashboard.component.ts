@@ -5,7 +5,6 @@ import { RentalDetail } from '../models/rental-detail.model'; // The model or sh
 import { RentalService } from '../services/rental-detail.service'; // Service handling rental operations.
 import { Router } from '@angular/router'; // Service for navigation between routes.
 import { PaymentService } from '../services/payment.service'; // Service handling payment operations.
-import { Payment } from '../models/payment.model'; // The model or shape of a payment object.
 import { MatDialog } from '@angular/material/dialog';
 import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.component';
 

@@ -60,4 +60,16 @@ export class PaymentService {
   deletePayment(paymentId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${paymentId}`);  // assuming a DELETE request is needed
   }
+
+
+  getPayments(): Observable<any> {
+    return this.http.get(this.baseUrl);
+  }
+
+  deletePayments(ids: number[]): Observable<any> {
+    const deleteUrl = `${this.baseUrl}delete/`; // Adjust based on your backend DELETE endpoint
+    return this.http.post(deleteUrl, { ids });
+  }
+
+
 }
