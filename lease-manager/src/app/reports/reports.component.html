@@ -10,6 +10,8 @@
       <th>Method</th>
       <th>Transaction ID</th>
       <th>Notes</th>
+      <th>Receipt</th>
+      <!-- New column header for Receipt -->
     </tr>
   </thead>
   <tbody>
@@ -23,9 +25,16 @@
       </td>
       <td>{{ payment.payment_date }}</td>
       <td>{{ payment.payment_amount }}</td>
-      <td>{{ payment.payment_method }}</td>
+      <td>{{ payment.payment_method_display }}</td>
+      <!-- Display the human-readable payment method -->
       <td>{{ payment.transaction_id }}</td>
       <td>{{ payment.notes }}</td>
+      <td>
+        <!-- New column data for Receipt -->
+        <a *ngIf="payment.receipt" [href]="payment.receipt" target="_blank"
+          >View Receipt</a
+        >
+      </td>
     </tr>
   </tbody>
 </table>
