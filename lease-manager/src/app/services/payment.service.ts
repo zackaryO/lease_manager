@@ -8,16 +8,23 @@ import { Payment } from '../models/payment.model';
 })
 export class PaymentService {
 
-  private baseUrl = 'http://127.0.0.1:8000/payment';  // replace with your API endpoint
+  private baseUrl = 'http://127.0.0.1:8000/payments/';  // replace with your API endpoint
 
   constructor(private http: HttpClient) { }
 
   private transformModelToRequest(payment: Payment): FormData {
     const formData = new FormData();
 
-    formData.append('lease', payment.leaseId.toString());
+    // Check if payment and payment.leaseId are defined before appending to formData
+    if (payment && payment.leaseId) {
+      formData.append('lease', payment.leaseId.toString());
+    } else {
+      console.error('leaseId is missing from the payment object:', payment);
+      throw new Error('leaseId is missing from the payment object');
+    }
+
     formData.append('payment_date', payment.payment_date);
-    formData.append('payment_amount', payment.payment_amount.toString());
+    formData.append('payment_amount', payment.payment_amount ? payment.payment_amount.toString() : '');
     formData.append('payment_method', payment.payment_method);
 
     // Optional fields
@@ -37,7 +44,16 @@ export class PaymentService {
   }
 
   submitPayment(payment: Payment): Observable<any> {
+    // Before calling transformModelToRequest, check if leaseId is available in the payment object
+    if (!payment.leaseId) {
+      console.error('Error in submitPayment: leaseId is missing', payment);
+      throw new Error('Error in submitPayment: leaseId is missing');
+    }
     const formData = this.transformModelToRequest(payment);
+    for (let [key, value] of (formData as any).entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
     return this.http.post(this.baseUrl, formData);
   }
 

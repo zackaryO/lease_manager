@@ -1,3 +1,4 @@
+// payment-dialog.component.ts
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -13,13 +14,14 @@ import { PaymentService } from '../services/payment.service'; // Adjust path as 
 export class PaymentDialogComponent implements OnInit {
   paymentForm!: FormGroup;
   selectedFile: File | null = null;
+  errorMessage: string | null = null;
 
   constructor(
     public dialogRef: MatDialogRef<PaymentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public rentalDetailData: RentalDetail,
     private fb: FormBuilder,
     private rentalService: RentalService,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
   ) { }
 
   ngOnInit(): void {
@@ -56,8 +58,13 @@ export class PaymentDialogComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('Payment submitted.');
     if (this.paymentForm.valid) {
       const payment: any = { ...this.paymentForm.value };
+
+      // Map the lease property to leaseId
+      payment.leaseId = payment.lease;
+      delete payment.lease; // Remove the original lease property
 
       // Add the selected file to the payment object
       if (this.selectedFile) {
@@ -65,13 +72,26 @@ export class PaymentDialogComponent implements OnInit {
       }
 
       this.paymentService.submitPayment(payment).subscribe(response => {
+        console.log('submitPayment');
         console.log('Payment submitted successfully.', response);
         this.dialogRef.close(payment);
       }, error => {
         console.error('Error submitting payment:', error);
       });
     }
+    else {
+      console.error('Payment form is invalid.');
+      let errorFields: string[] = [];
+      for (const name in this.paymentForm.controls) {
+        if (this.paymentForm.controls[name].invalid) {
+          console.error('Form control invalid:', name, this.paymentForm.controls[name].errors);
+          errorFields.push(name.replace(/_/g, ' '));
+        }
+      }
+      this.errorMessage = `The following fields are required: ${errorFields.join(', ')}.`;
+    }
   }
+
 
   handleDrop(event: DragEvent) {
     event.preventDefault();

@@ -1,39 +1,54 @@
+<!-- // payment-dialog.component.ts -->
 <h2 mat-dialog-title>Make a Payment</h2>
+
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>
 
 <mat-dialog-content>
   <!-- Display Rental Details -->
   <div class="rental-details">
     <p><strong>Lot Number:</strong> {{ rentalDetailData.lotNumber }}</p>
     <p><strong>Lot Address:</strong> {{ rentalDetailData.lotAddress }}</p>
-    <p><strong>Lease Holder:</strong> {{ rentalDetailData.leaseHolderFirstName }} {{ rentalDetailData.leaseHolderLastName }}</p>
-    <p><strong>Monthly Rental Amount:</strong> {{ rentalDetailData.monthlyRentalAmount | currency }}</p>
+    <p>
+      <strong>Lease Holder:</strong>
+      {{ rentalDetailData.leaseHolderFirstName }}
+      {{ rentalDetailData.leaseHolderLastName }}
+    </p>
+    <p>
+      <strong>Monthly Rental Amount:</strong>
+      {{ rentalDetailData.monthlyRentalAmount | currency }}
+    </p>
   </div>
 
   <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
-
     <mat-form-field appearance="fill">
       <mat-label>Payment Date</mat-label>
-      <input matInput formControlName="payment_date" type="date">
+      <input matInput formControlName="payment_date" type="date" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Payment Amount</mat-label>
-      <input matInput formControlName="payment_amount" type="number" [value]="rentalDetailData.monthlyRentalAmount">
+      <input
+        matInput
+        formControlName="payment_amount"
+        type="number"
+        [value]="rentalDetailData.monthlyRentalAmount"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Payment Method</mat-label>
-        <mat-select formControlName="payment_method">
-          <mat-option value="CASH">Cash</mat-option>
-          <mat-option value="Credit Card">Credit Card</mat-option>
-          <mat-option value="Bank Transfer">Bank Transfer</mat-option>
-        </mat-select>
-      </mat-form-field>
-      
+      <mat-label>Payment Method</mat-label>
+      <mat-select formControlName="payment_method">
+        <mat-option value="Cash">Cash</mat-option>
+        <mat-option value="Credit Card">Credit Card</mat-option>
+        <mat-option value="Bank Transfer">Bank Transfer</mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Transaction ID</mat-label>
-      <input matInput formControlName="transaction_id" type="text">
+      <input matInput formControlName="transaction_id" type="text" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -44,16 +59,31 @@
     <!-- File Input Container -->
     <div class="file-input-container">
       <label>Upload Receipt</label>
-      <input type="file" (change)="onFileSelected($event)" style="display: none" #fileInput>
-      <button mat-raised-button color="accent" type="button" (click)="fileInput.click()">
-          <mat-icon>attach_file</mat-icon> Choose File
+      <input
+        type="file"
+        (change)="onFileSelected($event)"
+        style="display: none"
+        #fileInput
+      />
+      <button
+        mat-raised-button
+        color="accent"
+        type="button"
+        (click)="fileInput.click()"
+      >
+        <mat-icon>attach_file</mat-icon> Choose File
       </button>
-      <div 
-          class="file-drop-zone" 
-          (dragover)="preventDefault($event)" 
-          (drop)="handleDrop($event)">
-          <p *ngIf="!selectedFile" class="file-drop-instruction">Drag & Drop your file here</p>
-          <p *ngIf="selectedFile" class="file-name-display">{{ selectedFile.name }}</p>
+      <div
+        class="file-drop-zone"
+        (dragover)="preventDefault($event)"
+        (drop)="handleDrop($event)"
+      >
+        <p *ngIf="!selectedFile" class="file-drop-instruction">
+          Drag & Drop your file here
+        </p>
+        <p *ngIf="selectedFile" class="file-name-display">
+          {{ selectedFile.name }}
+        </p>
       </div>
     </div>
   </form>
