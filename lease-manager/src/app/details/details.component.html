@@ -75,7 +75,10 @@
 
 <!-- Edit Details form -->
 <div class="card" *ngIf="rentalDetail">
-  <h2>Edit Details:</h2>
+  <h2>
+    Edit Details: {{ rentalDetail.leaseHolderFirstName }}
+    {{ rentalDetail.leaseHolderLastName }}
+  </h2>
   <form>
     <label>
       Lease Holder Address:

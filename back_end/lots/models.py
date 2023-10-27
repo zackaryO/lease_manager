@@ -9,7 +9,7 @@ class Lot(models.Model):
     lot_address = models.CharField(max_length=300)
 
     def __str__(self):
-        return self.lot_number
+        return f"{self.lot_number} : {self.lot_address}\n"
 
 
 class LeaseHolder(models.Model):
