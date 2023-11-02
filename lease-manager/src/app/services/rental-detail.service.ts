@@ -21,7 +21,8 @@ export class RentalService {
   rentals$ = this.rentals.asObservable(); // This creates an Observable from the BehaviorSubject to stream the data of rentals.
 
   // The constructor sets up the service's dependencies. In this case, it needs HttpClient for HTTP requests.
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient// Assuming 0 can be a placeholder
+  ) { }
 
   // fetchRentals is a method that fetches rental data from the server.
   fetchRentals(): Observable<RentalDetail[]> {
@@ -107,5 +108,17 @@ export class RentalService {
     }
     // Since rental.id is not undefined, we can safely call getRentalDetailById
     return this.getRentalDetailById(rental.id);
+  }
+
+  addRentalDetail(rentalDetail: RentalDetail): Observable<RentalDetail> {
+    return this.http.post<RentalDetail>(`${this.baseUrl}/rental-details`, rentalDetail);
+  }
+
+  addNewLease(leaseData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl, leaseData);
+  }
+
+  getLots(): Observable<any[]> { // Replace any with your Lot type if you have one
+    return this.http.get<any[]>('/api/lots'); // Adjust the URL to your backend endpoint
   }
 }

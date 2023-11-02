@@ -18,12 +18,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { AddLeaseeComponent } from './add-leasee/add-leasee.component';
+import { RentalService } from './services/rental-detail.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    PaymentDialogComponent
+    PaymentDialogComponent,
+    AddLeaseeComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,7 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
 
   ],
-  providers: [],
+  providers: [RentalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

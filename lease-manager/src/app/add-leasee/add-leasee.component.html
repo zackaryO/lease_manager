@@ -1,0 +1,98 @@
+<!-- add-leasee.component.html -->
+<div mat-dialog-content>
+  <form [formGroup]="leaseForm" (ngSubmit)="onSubmit()">
+    <!-- Lot Selector -->
+    <mat-form-field>
+      <mat-label>Select Lot</mat-label>
+      <mat-select formControlName="lot">
+        <!-- Ideally, you'd populate this with available lots from your backend -->
+        <mat-option *ngFor="let lot of lots" [value]="lot.id">{{
+          lot.lot_address
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- LeaseHolder Details -->
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="First Name"
+        formControlName="lease_holder_first_name"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Last Name"
+        formControlName="lease_holder_last_name"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Address"
+        formControlName="lease_holder_address"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Email" formControlName="email" />
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Phone" formControlName="phone" />
+    </mat-form-field>
+
+    <!-- Monthly Rental Amount -->
+    <mat-form-field>
+      <input
+        matInput
+        type="number"
+        placeholder="Monthly Rental Amount"
+        formControlName="monthly_rental_amount"
+      />
+    </mat-form-field>
+
+    <!-- Due Date -->
+    <mat-form-field>
+      <input
+        matInput
+        type="number"
+        placeholder="Due Date (1-30)"
+        formControlName="due_date"
+      />
+    </mat-form-field>
+
+    <!-- Grace Period -->
+    <mat-form-field>
+      <input
+        matInput
+        type="number"
+        placeholder="Grace Period (1-30)"
+        formControlName="grace_period"
+      />
+    </mat-form-field>
+
+    <!-- Lease Agreement Upload -->
+    <mat-form-field>
+      <mat-label>Upload Lease Agreement</mat-label>
+      <input type="file" matInput formControlName="lease_agreement_path" />
+    </mat-form-field>
+
+    <!-- Lot Image Upload -->
+    <mat-form-field>
+      <mat-label>Upload Lot Image</mat-label>
+      <input type="file" matInput formControlName="lot_image_path" />
+    </mat-form-field>
+
+    <!-- Payment Status -->
+    <mat-form-field>
+      <mat-label>Payment Status</mat-label>
+      <mat-select formControlName="payment_status">
+        <mat-option value="up-to-date">Up to date</mat-option>
+        <mat-option value="less-than-7">Less than 7 days overdue</mat-option>
+        <mat-option value="over-7">Over 7 days overdue</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-button type="submit">Add Leasee</button>
+  </form>
+</div>
