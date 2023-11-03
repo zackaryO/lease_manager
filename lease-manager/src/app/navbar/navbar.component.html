@@ -10,13 +10,14 @@
   <div class="navbar-menu" [ngClass]="{ active: menuActive }">
     <a routerLink="/dashboard" class="navbar-item">Dashboard</a>
     <a routerLink="/reports" class="navbar-item">Reports</a>
+    <button (click)="openAddLeaseDialog()">Add Lease</button>
     <a href="http://127.0.0.1:8000/admin/" target="_blank" class="navbar-item"
       >Database</a
     >
   </div>
 
   <!-- Hidden form, shown when menu is active -->
-  <div class="navbar-form" [ngClass]="{ active: menuActive }">
+  <!-- <div class="navbar-form" [ngClass]="{ active: menuActive }">
     <h3>Default Settings:</h3>
     <label>
       Due Day:
@@ -40,5 +41,5 @@
       <input type="number" [(ngModel)]="updatedGlobalDefault.dayDelinquent" />
     </label>
     <button (click)="saveUpdates()">Save</button>
-  </div>
+  </div> -->
 </nav>

@@ -3,6 +3,9 @@ import { GlobalDefault } from '../models/global-default.model';
 import { GlobalDefaultService } from '../services/global-default.service';
 import { ComponentCanDeactivate } from '../unsaved-changes.guard';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { AddLeaseeComponent } from '../add-leasee/add-leasee.component';
+
 
 @Component({
   selector: 'app-navbar',
@@ -15,7 +18,7 @@ export class NavbarComponent implements OnInit, ComponentCanDeactivate {
   daysInMonth: number[] = [];
   menuActive = false;
 
-  constructor(private cdr: ChangeDetectorRef, private globalDefaultService: GlobalDefaultService) { }
+  constructor(private cdr: ChangeDetectorRef, private globalDefaultService: GlobalDefaultService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.fillDaysInMonth();
@@ -64,5 +67,17 @@ export class NavbarComponent implements OnInit, ComponentCanDeactivate {
     for (let i = 1; i <= 31; i++) {
       this.daysInMonth.push(i);
     }
+  }
+  openAddLeaseDialog(): void {
+    const dialogRef = this.dialog.open(AddLeaseeComponent, {
+      width: '250px', // or any other size
+      // Pass data to dialog if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      // You can refresh data or handle the result here
+    });
+
   }
 }
