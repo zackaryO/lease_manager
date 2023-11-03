@@ -46,6 +46,11 @@ class LotListView(ListAPIView):
     serializer_class = LotSerializer
 
 
-class UnoccupiedLotListView(generics.ListAPIView):
+class UnoccupiedLotListView(ListAPIView):
     queryset = Lot.objects.filter(occupied=False)
     serializer_class = LotSerializer
+
+
+class LeaseCreateView(generics.CreateAPIView):
+    queryset = Lease.objects.all()
+    serializer_class = LeaseSerializer

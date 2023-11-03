@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Lease, Payment, Lot
+from .models import Lease, Payment, Lot, LeaseHolder
 
 
 class LeaseSerializer(serializers.ModelSerializer):
@@ -70,3 +70,9 @@ class LotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lot
         fields = '__all__'  # You can list the fields you want to include.
+
+
+class LeaseHolderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LeaseHolder
+        fields = '__all__'  # Assuming you want to expose all fields

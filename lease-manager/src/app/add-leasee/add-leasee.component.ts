@@ -102,6 +102,7 @@ export class AddLeaseeComponent implements OnInit {
       }
 
       // Call the service to send the form data to the backend
+      console.log('Form data before sending:', formData);
       this.rentalService.addNewLease(formData).subscribe(
         (response) => {
           console.log('Lease created successfully', response);

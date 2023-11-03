@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 
 // Here we're importing various items used within our service.
 import { RentalDetail } from '../models/rental-detail.model'; // The model or shape of a rental detail object.
-import { HttpClient } from '@angular/common/http'; // HttpClient is used to make HTTP requests.
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'; // HttpClient is used to make HTTP requests.
 import { throwError, Observable, of, BehaviorSubject } from 'rxjs'; // Imports related to RxJS, a library for reactive programming using Observables.
-import { map, tap } from 'rxjs/operators'; // Operators for processing Observables.
+import { catchError, map, tap } from 'rxjs/operators'; // Operators for processing Observables.
 import { Lot } from '../models/lot.model';
 
 // The @Injectable decorator marks the class as one that participates in the dependency injection system.
@@ -116,7 +116,13 @@ export class RentalService {
   }
 
   addNewLease(leaseData: any): Observable<any> {
-    return this.http.post<any>(this.baseUrl, leaseData);
+    console.log('Lease data being sent:', leaseData); // Log the leaseData to the console
+    return this.http.post<any>(`${this.baseUrl}/create/`, leaseData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error occurred while creating the lease', error.error);
+        return throwError(() => new Error('Error occurred while creating the lease'));
+      })
+    );
   }
 
   getLots(): Observable<any[]> { // Replace any with your Lot type if you have one
@@ -125,6 +131,8 @@ export class RentalService {
 
   getUnoccupiedLots(): Observable<Lot[]> {
     // Assuming '/api/lots/unoccupied' returns lots where 'occupied' is false
-    return this.http.get<Lot[]>('/lots/unoccupied');
+    return this.http.get<Lot[]>(`${this.baseUrl}/lots/unoccupied`);
   }
+
+  // return this.http.get<RentalDetail>(`${this.baseUrl}/${id}`) /
 }
