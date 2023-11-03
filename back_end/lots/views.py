@@ -3,8 +3,8 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView,
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Lease, Payment
-from .serializers import LeaseSerializer, PaymentSerializer
+from .models import Lease, Payment, Lot
+from .serializers import LeaseSerializer, PaymentSerializer, LotSerializer
 
 
 class LeaseListView(ListAPIView):
@@ -39,3 +39,13 @@ class PaymentBulkDeleteView(APIView):
         payments.update(is_deleted=True)
 
         return Response({'status': 'payments successfully deleted'}, status=status.HTTP_200_OK)
+
+
+class LotListView(ListAPIView):
+    queryset = Lot.objects.all()
+    serializer_class = LotSerializer
+
+
+class UnoccupiedLotListView(generics.ListAPIView):
+    queryset = Lot.objects.filter(occupied=False)
+    serializer_class = LotSerializer

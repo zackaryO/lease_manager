@@ -7,6 +7,7 @@ from django.db import models
 class Lot(models.Model):
     lot_number = models.IntegerField(unique=True)
     lot_address = models.CharField(max_length=300)
+    occupied = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.lot_number} : {self.lot_address}\n"

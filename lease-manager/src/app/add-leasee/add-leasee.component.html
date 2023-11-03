@@ -2,15 +2,15 @@
 <div mat-dialog-content>
   <form [formGroup]="leaseForm" (ngSubmit)="onSubmit()">
     <!-- Lot Selector -->
-    <mat-form-field>
-      <mat-label>Select Lot</mat-label>
-      <mat-select formControlName="lot">
-        <!-- Ideally, you'd populate this with available lots from your backend -->
-        <mat-option *ngFor="let lot of lots" [value]="lot.id">{{
-          lot.lot_address
-        }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div>
+      <label for="lot">Select Lot:</label>
+      <select formControlName="lot">
+        <!-- Change 'lot.lotId' to 'lot.id' or whatever the identifier property is named in your Lot model -->
+        <option *ngFor="let lot of availableLots" [value]="lot.id">
+          {{ lot.lot_number }}: {{ lot.lot_address }}
+        </option>
+      </select>
+    </div>
 
     <!-- LeaseHolder Details -->
     <mat-form-field>
@@ -20,6 +20,7 @@
         formControlName="lease_holder_first_name"
       />
     </mat-form-field>
+
     <mat-form-field>
       <input
         matInput
@@ -27,6 +28,7 @@
         formControlName="lease_holder_last_name"
       />
     </mat-form-field>
+
     <mat-form-field>
       <input
         matInput
@@ -34,64 +36,78 @@
         formControlName="lease_holder_address"
       />
     </mat-form-field>
+
     <mat-form-field>
       <input matInput placeholder="Email" formControlName="email" />
     </mat-form-field>
+
     <mat-form-field>
       <input matInput placeholder="Phone" formControlName="phone" />
     </mat-form-field>
 
-    <!-- Monthly Rental Amount -->
-    <mat-form-field>
-      <input
-        matInput
-        type="number"
-        placeholder="Monthly Rental Amount"
-        formControlName="monthly_rental_amount"
-      />
-    </mat-form-field>
-
-    <!-- Due Date -->
-    <mat-form-field>
-      <input
-        matInput
-        type="number"
-        placeholder="Due Date (1-30)"
-        formControlName="due_date"
-      />
-    </mat-form-field>
-
-    <!-- Grace Period -->
-    <mat-form-field>
-      <input
-        matInput
-        type="number"
-        placeholder="Grace Period (1-30)"
-        formControlName="grace_period"
-      />
-    </mat-form-field>
-
     <!-- Lease Agreement Upload -->
-    <mat-form-field>
-      <mat-label>Upload Lease Agreement</mat-label>
-      <input type="file" matInput formControlName="lease_agreement_path" />
-    </mat-form-field>
+    <div class="file-input-container">
+      <label>Upload Lease Agreement</label>
+      <input
+        type="file"
+        (change)="onFileSelected($event, 'lease')"
+        hidden
+        #fileInputLease
+      />
+      <button
+        mat-raised-button
+        color="accent"
+        type="button"
+        (click)="fileInputLease.click()"
+      >
+        <mat-icon>attach_file</mat-icon> Choose File
+      </button>
+      <div
+        class="file-drop-zone"
+        (dragover)="$event.preventDefault()"
+        (drop)="handleDrop($event, 'lease')"
+      >
+        <p *ngIf="!selectedLeaseFile" class="file-drop-instruction">
+          Drag & Drop your file here or click to select
+        </p>
+        <p *ngIf="selectedLeaseFile" class="file-name-display">
+          {{ selectedLeaseFile.name }}
+        </p>
+      </div>
+    </div>
 
     <!-- Lot Image Upload -->
-    <mat-form-field>
-      <mat-label>Upload Lot Image</mat-label>
-      <input type="file" matInput formControlName="lot_image_path" />
-    </mat-form-field>
+    <div class="file-input-container">
+      <label>Upload Lot Image</label>
+      <input
+        type="file"
+        (change)="onFileSelected($event, 'lot')"
+        hidden
+        #fileInputLot
+      />
+      <button
+        mat-raised-button
+        color="accent"
+        type="button"
+        (click)="fileInputLot.click()"
+      >
+        <mat-icon>attach_file</mat-icon> Choose File
+      </button>
+      <div
+        class="file-drop-zone"
+        (dragover)="$event.preventDefault()"
+        (drop)="handleDrop($event, 'lot')"
+      >
+        <p *ngIf="!selectedLotImage" class="file-drop-instruction">
+          Drag & Drop your file here or click to select
+        </p>
+        <p *ngIf="selectedLotImage" class="file-name-display">
+          {{ selectedLotImage.name }}
+        </p>
+      </div>
+    </div>
 
-    <!-- Payment Status -->
-    <mat-form-field>
-      <mat-label>Payment Status</mat-label>
-      <mat-select formControlName="payment_status">
-        <mat-option value="up-to-date">Up to date</mat-option>
-        <mat-option value="less-than-7">Less than 7 days overdue</mat-option>
-        <mat-option value="over-7">Over 7 days overdue</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <!-- Add other form controls as necessary -->
 
     <button mat-button type="submit">Add Leasee</button>
   </form>

@@ -8,6 +8,7 @@ import { RentalDetail } from '../models/rental-detail.model'; // The model or sh
 import { HttpClient } from '@angular/common/http'; // HttpClient is used to make HTTP requests.
 import { throwError, Observable, of, BehaviorSubject } from 'rxjs'; // Imports related to RxJS, a library for reactive programming using Observables.
 import { map, tap } from 'rxjs/operators'; // Operators for processing Observables.
+import { Lot } from '../models/lot.model';
 
 // The @Injectable decorator marks the class as one that participates in the dependency injection system.
 // The 'providedIn: 'root'' property means this service is available throughout the application.
@@ -119,6 +120,11 @@ export class RentalService {
   }
 
   getLots(): Observable<any[]> { // Replace any with your Lot type if you have one
-    return this.http.get<any[]>('/api/lots'); // Adjust the URL to your backend endpoint
+    return this.http.get<any[]>('/lots'); // Adjust the URL to your backend endpoint
+  }
+
+  getUnoccupiedLots(): Observable<Lot[]> {
+    // Assuming '/api/lots/unoccupied' returns lots where 'occupied' is false
+    return this.http.get<Lot[]>('/lots/unoccupied');
   }
 }

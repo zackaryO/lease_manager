@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Lease, Payment
+from .models import Lease, Payment, Lot
 
 
 class LeaseSerializer(serializers.ModelSerializer):
@@ -64,3 +64,9 @@ class PaymentSerializer(serializers.ModelSerializer):
             'id', 'lease', 'payment_date', 'payment_amount', 'payment_method', 'payment_method_display',
             'transaction_id', 'notes', 'receipt', 'created_at', 'updated_at', 'is_deleted'
         ]
+
+
+class LotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lot
+        fields = '__all__'  # You can list the fields you want to include.
