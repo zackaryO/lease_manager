@@ -1,46 +1,41 @@
-// rental-detail.service.ts
-// This line imports the Injectable decorator from Angular core. 
-// The decorator is a function that specifies this class is available to an injector for instantiation.
+// rentat-detail.service.ts
 import { Injectable } from '@angular/core';
-
-// Here we're importing various items used within our service.
-import { RentalDetail } from '../models/rental-detail.model'; // The model or shape of a rental detail object.
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'; // HttpClient is used to make HTTP requests.
-import { throwError, Observable, of, BehaviorSubject } from 'rxjs'; // Imports related to RxJS, a library for reactive programming using Observables.
-import { catchError, map, tap } from 'rxjs/operators'; // Operators for processing Observables.
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { throwError, Observable, BehaviorSubject } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { RentalDetail } from '../models/rental-detail.model';
 import { Lot } from '../models/lot.model';
+import { AuthService } from './auth.service';
 
-// The @Injectable decorator marks the class as one that participates in the dependency injection system.
-// The 'providedIn: 'root'' property means this service is available throughout the application.
 @Injectable({
   providedIn: 'root'
 })
 export class RentalService {
-  private baseUrl: string = 'http://127.0.0.1:8000/leases'; // Base URL for the API.
-  private rentals = new BehaviorSubject<RentalDetail[]>([]); // This BehaviorSubject holds the current value of rentals. It's like a "current state."
+  private baseUrl: string = 'http://127.0.0.1:8000/leases';
+  private rentals = new BehaviorSubject<RentalDetail[]>([]);
+  rentals$ = this.rentals.asObservable();
 
-  rentals$ = this.rentals.asObservable(); // This creates an Observable from the BehaviorSubject to stream the data of rentals.
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
-  // The constructor sets up the service's dependencies. In this case, it needs HttpClient for HTTP requests.
-  constructor(private http: HttpClient// Assuming 0 can be a placeholder
-  ) { }
+  private getHeaders(): HttpHeaders {
+    const authToken = this.authService.getAuthToken();
+    return new HttpHeaders({
+      'Authorization': authToken ? `Bearer ${authToken}` : '',
+    });
+  }
 
-  // fetchRentals is a method that fetches rental data from the server.
   fetchRentals(): Observable<RentalDetail[]> {
-    return this.http.get<any[]>(this.baseUrl) // Makes a GET request to the API.
+    const headers = this.getHeaders();
+    return this.http.get<any[]>(this.baseUrl, { headers })
       .pipe(
-        tap(data => console.log('Server response:', data)), // Log the entire server response here.
-        map(data => data.map(item => this.transformResponseToModel(item))), // Transforms the raw data into our model.
-        tap(rentals => this.rentals.next(rentals)) // Pushes the new rentals into our BehaviorSubject.
+        tap(data => console.log('Server response:', data)),
+        map(data => data.map(item => this.transformResponseToModel(item))),
+        tap(rentals => this.rentals.next(rentals))
       );
   }
 
-  // This method converts raw response objects into instances of the RentalDetail model.
   private transformResponseToModel(item: any): RentalDetail {
-    // 'new RentalDetail' creates a new instance of RentalDetail, ensuring data shape consistency throughout the application.
     return new RentalDetail(
-      // These arguments are fields expected by the RentalDetail model.
-      // Each corresponds to a property of the data returned from the API.
       item.id,
       item.lot_number,
       item.lot_address,
@@ -49,7 +44,7 @@ export class RentalService {
       item.lease_holder_address,
       item.email,
       item.phone,
-      parseFloat(item.monthly_rental_amount), // Convert the monthly_rental_amount from a string to a floating-point number.
+      parseFloat(item.monthly_rental_amount),
       item.due_date,
       item.grace_period,
       item.lease_agreement_path,
@@ -61,78 +56,80 @@ export class RentalService {
   private transformModelToRequest(rental: RentalDetail): any {
     return {
       id: rental.id,
-      lot_number: rental.lotNumber, // assuming lotNumber is the field in your RentalDetail model
+      lot_number: rental.lotNumber,
       lot_address: rental.lotAddress,
       lease_holder_first_name: rental.leaseHolderFirstName,
       lease_holder_last_name: rental.leaseHolderLastName,
       lease_holder_address: rental.leaseHolderAddress,
       email: rental.email,
       phone: rental.phone,
-      monthly_rental_amount: rental.monthlyRentalAmount.toString(), // if the backend expects this as a string
+      monthly_rental_amount: rental.monthlyRentalAmount.toString(),
       due_date: rental.dueDate,
       grace_period: rental.gracePeriod,
-      // lease_agreement_path: rental.leaseAgreementPath,
-      // lot_image_path: rental.lotImagePath,
       payment_status: rental.paymentStatus
-      // ... any other necessary transformations
     };
   }
 
-
-  // This method retrieves a specific rental detail by its identifier.
   getRentalDetailById(id: number): Observable<RentalDetail> {
-    return this.http.get<RentalDetail>(`${this.baseUrl}/${id}`) // GET request to fetch data for a single rental by its ID.
+    const headers = this.getHeaders();
+    return this.http.get<RentalDetail>(`${this.baseUrl}/${id}`, { headers })
       .pipe(
-        map(item => this.transformResponseToModel(item)) // Transform the raw data into our RentalDetail model.
+        map(item => this.transformResponseToModel(item))
       );
   }
 
-
-  // This method updates a rental detail entry.
   updateRentalDetail(rental: RentalDetail): Observable<RentalDetail> {
-    const requestBody = this.transformModelToRequest(rental); // Transform the model to the request body format
-
-    // Makes a PATCH request to the URL for the specific rental detail, passing in the updated rental detail object.
-    // Note: Depending on your backend, this could be a PUT request instead of PATCH.
-    return this.http.patch<any>(`${this.baseUrl}/${rental.id}/`, requestBody)
+    const headers = this.getHeaders();
+    const requestBody = this.transformModelToRequest(rental);
+    return this.http.patch<any>(`${this.baseUrl}/${rental.id}/`, requestBody, { headers })
       .pipe(
-        map(item => this.transformResponseToModel(item)) // Transform the response back to your model
+        map(item => this.transformResponseToModel(item))
       );
   }
 
-  // This method is intended to "undo" a rental detail update, but specifics depend on your application's requirements.
   undoRentalDetailUpdate(rental: RentalDetail): Observable<RentalDetail> {
-    // Check if rental.id is undefined
     if (rental.id === undefined) {
-      // Handle the error appropriately, e.g., throw an error or return an Observable with an error
-      throw new Error('Rental ID is undefined'); // This will need to be caught wherever undoRentalDetailUpdate is subscribed to.
+      throw new Error('Rental ID is undefined');
     }
-    // Since rental.id is not undefined, we can safely call getRentalDetailById
     return this.getRentalDetailById(rental.id);
   }
 
   addRentalDetail(rentalDetail: RentalDetail): Observable<RentalDetail> {
-    return this.http.post<RentalDetail>(`${this.baseUrl}/rental-details`, rentalDetail);
+    const headers = this.getHeaders();
+    return this.http.post<RentalDetail>(`${this.baseUrl}/rental-details`, rentalDetail, { headers });
   }
 
-  addNewLease(leaseData: any): Observable<any> {
-    console.log('Lease data being sent:', leaseData); // Log the leaseData to the console
-    return this.http.post<any>(`${this.baseUrl}/create/`, leaseData).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Error occurred while creating the lease', error.error);
-        return throwError(() => new Error('Error occurred while creating the lease'));
-      })
-    );
+  addNewLease(leaseData: FormData): Observable<any> {
+    const transformedLeaseData = new FormData();
+    leaseData.forEach((value, key) => {
+      // Here, transform the value if necessary. 
+      // For example, if the 'monthly_rental_amount' needs to be converted to a string:
+      if (key === 'monthly_rental_amount') {
+        transformedLeaseData.append(key, value.toString());
+      } else {
+        transformedLeaseData.append(key, value);
+      }
+      // Add similar conditions for other fields that need transformation
+    });
+
+    const headers = this.getHeaders().delete('Content-Type');
+    return this.http.post<any>(`${this.baseUrl}/create/`, transformedLeaseData, { headers })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error occurred while creating the lease', error.error);
+          return throwError(() => new Error('Error occurred while creating the lease'));
+        })
+      );
   }
 
-  getLots(): Observable<any[]> { // Replace any with your Lot type if you have one
-    return this.http.get<any[]>('/lots'); // Adjust the URL to your backend endpoint
+
+  getLots(): Observable<any[]> {
+    const headers = this.getHeaders();
+    return this.http.get<any[]>('/lots', { headers });
   }
 
   getUnoccupiedLots(): Observable<Lot[]> {
-    // Assuming '/api/lots/unoccupied' returns lots where 'occupied' is false
-    return this.http.get<Lot[]>(`${this.baseUrl}/lots/unoccupied`);
+    const headers = this.getHeaders();
+    return this.http.get<Lot[]>(`${this.baseUrl}/lots/unoccupied`, { headers });
   }
-
-  // return this.http.get<RentalDetail>(`${this.baseUrl}/${id}`) /
 }

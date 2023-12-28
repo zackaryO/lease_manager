@@ -1,4 +1,4 @@
-// Make sure to replace '../models/lot.model' with the correct path to your Lot model
+// add-leasee.components.ts
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RentalService } from '../services/rental-detail.service';
@@ -16,6 +16,7 @@ export class AddLeaseeComponent implements OnInit {
   selectedLotImage: File | null = null;
   leaseForm!: FormGroup;
   availableLots: Lot[] = []; // Assuming you have a Lot model defined
+  unoccupiedLotsAvailable = true; // Property to track availability of unoccupied lots
 
   constructor(
     private fb: FormBuilder,
@@ -35,8 +36,12 @@ export class AddLeaseeComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
       lot: [null, Validators.required], // Assuming you're selecting a lot by ID
-      lease_agreement_path: [null], // Path for the lease agreement file
-      lot_image_path: [null] // Path for the lot image file
+      monthly_rental_amount: [0, Validators.required], // Assuming this is a required field
+      due_date: [0, Validators.required], // Assuming this is a required field
+      grace_period: [0, Validators.required], // Assuming this is a required field
+      payment_status: ['up-to-date'], // Default value set, modify as necessary
+      lease_agreement_path: [''], // Path updated after file upload
+      lot_image_path: [''] // Path updated after file upload
     });
   }
 
@@ -44,75 +49,91 @@ export class AddLeaseeComponent implements OnInit {
     this.rentalService.getUnoccupiedLots().subscribe(
       (lots: Lot[]) => {
         this.availableLots = lots;
+        this.unoccupiedLotsAvailable = lots.length > 0; // Update the flag based on lots availability
       },
       (error) => {
         console.error('Error loading unoccupied lots:', error);
+        this.unoccupiedLotsAvailable = false; // Set flag to false in case of error
       }
     );
   }
 
-  onFileSelected(event: Event, type: 'lease' | 'lot'): void {
+  onFileSelected(event: Event, type: 'lease_agreement_file' | 'lot_image_file'): void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) {
       return;
     }
-    if (type === 'lease') {
+
+    if (type === 'lease_agreement_file') {
       this.selectedLeaseFile = input.files[0];
-    } else {
+    } else if (type === 'lot_image_file') {
       this.selectedLotImage = input.files[0];
     }
-    // Update form control with the file's name (assuming the backend expects the file's name)
-    this.leaseForm.patchValue({
-      [type === 'lease' ? 'lease_agreement_path' : 'lot_image_path']: input.files[0].name
-    });
+
+    // Update form control logic (if needed)
   }
 
-  handleDrop(event: DragEvent, type: 'lease' | 'lot'): void {
+  handleDrop(event: DragEvent, type: 'lease_agreement_file' | 'lot_image_file'): void {
     event.preventDefault();
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
-      if (type === 'lease') {
+      if (type === 'lease_agreement_file') {
         this.selectedLeaseFile = files[0];
-      } else {
+      } else if (type === 'lot_image_file') {
         this.selectedLotImage = files[0];
       }
-      // Update form control with the file's name
-      this.leaseForm.patchValue({
-        [type === 'lease' ? 'lease_agreement_path' : 'lot_image_path']: files[0].name
-      });
+
+      // Update form control logic (if needed)
     }
+  }
+
+  private logFormErrors(): void {
+    Object.keys(this.leaseForm.controls).forEach(key => {
+      const controlErrors = this.leaseForm.get(key)?.errors;
+      if (controlErrors) {
+        console.error(`Validation error in '${key}':`, controlErrors);
+      }
+    });
   }
 
   onSubmit(): void {
     if (this.leaseForm.valid) {
-      // Prepare the form data to be sent to the backend
       const formData = new FormData();
-      Object.entries(this.leaseForm.value).forEach(
-        ([key, value]: [string, any]) => {
+
+      Object.entries(this.leaseForm.value).forEach(([key, value]: [string, any]) => {
+        if (typeof value === 'string' || value instanceof Blob) {
           formData.append(key, value);
+        } else {
+          formData.append(key, String(value));
         }
-      );
+      });
 
-      // Append the files to the form data if they have been selected
       if (this.selectedLeaseFile) {
-        formData.append('lease_agreement_file', this.selectedLeaseFile, this.selectedLeaseFile.name);
-      }
-      if (this.selectedLotImage) {
-        formData.append('lot_image_file', this.selectedLotImage, this.selectedLotImage.name);
+        // Ensure that this field name matches what your backend expects
+        formData.append('lease_agreement_path', this.selectedLeaseFile, this.selectedLeaseFile.name);
       }
 
-      // Call the service to send the form data to the backend
-      console.log('Form data before sending:', formData);
+      if (this.selectedLotImage) {
+        // Ensure that this field name matches what your backend expects
+        formData.append('lot_image_path', this.selectedLotImage, this.selectedLotImage.name);
+      }
+
       this.rentalService.addNewLease(formData).subscribe(
-        (response) => {
+        response => {
           console.log('Lease created successfully', response);
-          // Additional logic for a successful creation
+          // Handle successful response
         },
-        (error) => {
+        error => {
           console.error('Error occurred while creating the lease', error);
-          // Additional logic for handling errors
+          // Handle error response
         }
       );
+    } else {
+      console.log('Form is not valid. Logging errors:');
+      this.logFormErrors();
     }
   }
+
+
+
 }

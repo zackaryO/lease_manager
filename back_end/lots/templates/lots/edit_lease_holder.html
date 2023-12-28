@@ -1,0 +1,9 @@
+{% extends 'lots/base.html' %}  <!-- Replace with your base template -->
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+</form>
+{% endblock %}

@@ -1,5 +1,15 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from .models import Lease, Payment, Lot, LeaseHolder
+from .models import Lease, Payment, Lot, LeaseHolder, User
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'user_type')
+
+    def validate_password(self, value: str) -> str:
+        return make_password(value)
 
 
 class LeaseSerializer(serializers.ModelSerializer):

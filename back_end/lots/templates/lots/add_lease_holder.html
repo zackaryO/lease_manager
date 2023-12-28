@@ -1,0 +1,11 @@
+<!-- add_lease_holder.html -->
+{% extends 'lots/base.html' %}  <!-- Replace with your base template -->
+
+{% block content %}
+  <h2>Add Lease Holder</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}

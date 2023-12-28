@@ -1,11 +1,12 @@
-<!-- add-leasee.component.html -->
 <div mat-dialog-content>
+  <div *ngIf="!unoccupiedLotsAvailable" class="alert alert-warning">
+    Warning: No unoccupied lots are available. You cannot create a new lease at this time.
+  </div>
   <form [formGroup]="leaseForm" (ngSubmit)="onSubmit()">
     <!-- Lot Selector -->
     <div>
       <label for="lot">Select Lot:</label>
       <select formControlName="lot">
-        <!-- Change 'lot.lotId' to 'lot.id' or whatever the identifier property is named in your Lot model -->
         <option *ngFor="let lot of availableLots" [value]="lot.id">
           {{ lot.lot_number }}: {{ lot.lot_address }}
         </option>
@@ -14,27 +15,15 @@
 
     <!-- LeaseHolder Details -->
     <mat-form-field>
-      <input
-        matInput
-        placeholder="First Name"
-        formControlName="lease_holder_first_name"
-      />
+      <input matInput placeholder="First Name" formControlName="lease_holder_first_name" />
     </mat-form-field>
 
     <mat-form-field>
-      <input
-        matInput
-        placeholder="Last Name"
-        formControlName="lease_holder_last_name"
-      />
+      <input matInput placeholder="Last Name" formControlName="lease_holder_last_name" />
     </mat-form-field>
 
     <mat-form-field>
-      <input
-        matInput
-        placeholder="Address"
-        formControlName="lease_holder_address"
-      />
+      <input matInput placeholder="Address" formControlName="lease_holder_address" />
     </mat-form-field>
 
     <mat-form-field>
@@ -48,25 +37,12 @@
     <!-- Lease Agreement Upload -->
     <div class="file-input-container">
       <label>Upload Lease Agreement</label>
-      <input
-        type="file"
-        (change)="onFileSelected($event, 'lease')"
-        hidden
-        #fileInputLease
-      />
-      <button
-        mat-raised-button
-        color="accent"
-        type="button"
-        (click)="fileInputLease.click()"
-      >
+      <input type="file" (change)="onFileSelected($event, 'lease_agreement_file')" hidden #fileInputLease />
+      <button mat-raised-button color="accent" type="button" (click)="fileInputLease.click()">
         <mat-icon>attach_file</mat-icon> Choose File
       </button>
-      <div
-        class="file-drop-zone"
-        (dragover)="$event.preventDefault()"
-        (drop)="handleDrop($event, 'lease')"
-      >
+      <div class="file-drop-zone" (dragover)="$event.preventDefault()"
+        (drop)="handleDrop($event, 'lease_agreement_file')">
         <p *ngIf="!selectedLeaseFile" class="file-drop-instruction">
           Drag & Drop your file here or click to select
         </p>
@@ -79,25 +55,11 @@
     <!-- Lot Image Upload -->
     <div class="file-input-container">
       <label>Upload Lot Image</label>
-      <input
-        type="file"
-        (change)="onFileSelected($event, 'lot')"
-        hidden
-        #fileInputLot
-      />
-      <button
-        mat-raised-button
-        color="accent"
-        type="button"
-        (click)="fileInputLot.click()"
-      >
+      <input type="file" (change)="onFileSelected($event, 'lot_image_file')" hidden #fileInputLot />
+      <button mat-raised-button color="accent" type="button" (click)="fileInputLot.click()">
         <mat-icon>attach_file</mat-icon> Choose File
       </button>
-      <div
-        class="file-drop-zone"
-        (dragover)="$event.preventDefault()"
-        (drop)="handleDrop($event, 'lot')"
-      >
+      <div class="file-drop-zone" (dragover)="$event.preventDefault()" (drop)="handleDrop($event, 'lot_image_file')">
         <p *ngIf="!selectedLotImage" class="file-drop-instruction">
           Drag & Drop your file here or click to select
         </p>
@@ -106,8 +68,6 @@
         </p>
       </div>
     </div>
-
-    <!-- Add other form controls as necessary -->
 
     <button mat-button type="submit">Add Leasee</button>
   </form>

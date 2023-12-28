@@ -1,0 +1,66 @@
+/* Body Styling */
+body {
+    font-family: 'Roboto', sans-serif; /* Set Roboto as the primary font */
+    font-size: 18px;                   /* Base font size */
+    color: #333;                       /* Default text color */
+    padding-top: 60px;                 /* Padding to offset content from top (useful for fixed navbars) */
+}
+
+/* Heading Styling */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;                  /* Make all headings bold */
+}
+
+ Navbar Styling
+.navbar {
+    position: fixed !important;       /* Fix navbar at the top of the viewport */
+    top: 0 !important;                /* Align to the top of the viewport */
+    left: 0 !important;               /* Align to the left of the viewport */
+    width: 100% !important;           /* Ensure the navbar takes the full viewport width */
+    z-index: 9999;                    /* Set a high stacking order to keep navbar above other elements */
+}
+
+/* Card Styling */
+.card {
+    border: 1px solid rgba(0, 0, 0, 0.1);         /* Add a subtle border */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);    /* Add shadow for depth effect */
+    background: linear-gradient(135deg, #ffffff, #f4f4f4);  /* Gradient background */
+    transition: all 0.3s ease-in-out;             /* Transition effect for smooth transformations */
+}
+
+/* Card Hover Effect */
+.card:hover {
+    transform: scale(1.01);                /* Slightly enlarge card on hover */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);  /* Increase shadow for more depth on hover */
+}
+
+
+.custom-title {
+    font-weight: bold;                          /* Bold title text */
+    text-align: center;                        /* Center-align the title text */
+    padding: 10px;                             /* Padding around the title text */
+    margin: -20px -20px 20px -20px;            /* Adjust the margin to fit design needs */
+    background-color: rgba(255, 255, 255, 0.9);/* Slightly transparent background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Add shadow for depth effect */
+    border-radius: 5px;                        /* Rounded corners for the title background */
+    color: darkblue;                           /* Text color for the title */
+}
+
+.project-card {
+    margin-bottom: 20px; /* Space between cards */
+    overflow: hidden; /* Prevents content from spilling outside */
+}
+
+.p-image {
+    width: 100%; /* Or any other percentage */
+    /*height: auto;*/
+    /*object-fit: cover !important;*/
+    border-radius: 5px !important; /* Rounded corners */
+}
+
+
+/*.card .project-image {*/
+/*    width: 50%;*/
+/*    max-height: 200px;*/
+/*    object-fit: cover;*/
+/*}*/

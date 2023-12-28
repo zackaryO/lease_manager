@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { AddLeaseeComponent } from './add-leasee/add-leasee.component';
 import { RentalService } from './services/rental-detail.service';
 
@@ -41,6 +42,7 @@ import { RentalService } from './services/rental-detail.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatCardModule,
     MatIconModule,
     MatDialogModule,
     MatSelectModule,

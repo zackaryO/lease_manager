@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { throwError, Observable, BehaviorSubject } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Payment } from '../models/payment.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +12,11 @@ export class PaymentService {
 
   private baseUrl = 'http://127.0.0.1:8000/payments/';  // replace with your API endpoint
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   private transformModelToRequest(payment: Payment): FormData {
     const formData = new FormData();
-
+    const headers = this.getHeaders();
     // Check if payment and payment.leaseId are defined before appending to formData
     if (payment && payment.leaseId) {
       formData.append('lease', payment.leaseId.toString());
@@ -43,6 +45,13 @@ export class PaymentService {
     return formData;
   }
 
+  private getHeaders(): HttpHeaders {
+    const authToken = this.authService.getAuthToken();
+    return new HttpHeaders({
+      'Authorization': authToken ? `Bearer ${authToken}` : '',
+    });
+  }
+
   submitPayment(payment: Payment): Observable<any> {
     // Before calling transformModelToRequest, check if leaseId is available in the payment object
     if (!payment.leaseId) {
@@ -50,25 +59,29 @@ export class PaymentService {
       throw new Error('Error in submitPayment: leaseId is missing');
     }
     const formData = this.transformModelToRequest(payment);
+    const headers = this.getHeaders();
     for (let [key, value] of (formData as any).entries()) {
       console.log(`${key}: ${value}`);
     }
 
-    return this.http.post(this.baseUrl, formData);
+    return this.http.post(this.baseUrl, formData, { headers });
   }
 
   deletePayment(paymentId: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${paymentId}`);  // assuming a DELETE request is needed
+    const headers = this.getHeaders();
+    return this.http.delete(`${this.baseUrl}/${paymentId}`, { headers });  // assuming a DELETE request is needed
   }
 
 
   getPayments(): Observable<any> {
-    return this.http.get(this.baseUrl);
+    const headers = this.getHeaders();
+    return this.http.get(this.baseUrl, { headers });
   }
 
   deletePayments(ids: number[]): Observable<any> {
+    const headers = this.getHeaders();
     const deleteUrl = `${this.baseUrl}delete/`; // Adjust based on your backend DELETE endpoint
-    return this.http.post(deleteUrl, { ids });
+    return this.http.post(deleteUrl, { ids }, { headers });
   }
 
 

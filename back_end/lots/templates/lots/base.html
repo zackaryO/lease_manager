@@ -1,0 +1,36 @@
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Site Name</title>
+    <!-- Include your CSS files here -->
+    <link rel="stylesheet" href="{% static 'lots/style.css' %}">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="{% url 'lease_holder_list' %}">Lease Holders</a></li>
+            <li><a href="{% url 'user_list' %}">Users</a></li>
+            <li><a href="{% url 'lot_list' %}">Lots</a></li>
+            <li><a href="{% url 'lease_back_list' %}">Leases</a></li>
+
+            <!-- Add other links as needed -->
+        </ul>
+    </nav>
+</header>
+
+<main>
+    {% block content %}
+    <!-- Content will go here -->
+    {% endblock content %}
+</main>
+
+<footer>
+    <p>&copy; 2023 Your Site Name</p>
+</footer>
+</body>
+</html>

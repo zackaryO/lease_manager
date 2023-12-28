@@ -1,0 +1,31 @@
+<!-- lease_holder_list.html -->
+{% extends 'lots/base.html' %}  <!-- Replace with your base template -->
+
+{% block content %}
+  <h2>Lease Holders</h2>
+  <a href="{% url 'add_lease_holder' %}">Add New Lease Holder</a> <!-- Link to add a new lease holder -->
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lease_holder in lease_holders %}
+        <tr>
+          <td>{{ lease_holder.lease_holder_first_name }} {{ lease_holder.lease_holder_last_name }}</td>
+          <td>{{ lease_holder.email }}</td>
+          <td>
+            <a href="{% url 'lease_holder_detail' lease_holder.id %}">View</a> | <!-- Link to view details -->
+            <a href="{% url 'edit_lease_holder' lease_holder.id %}">Edit</a> | <!-- Link to edit lease holder -->
+            <a href="{% url 'delete_lease_holder' lease_holder.id %}" onclick="return confirm('Are you sure?');">Delete</a> <!-- Link to delete lease holder -->
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3">No lease holders available.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

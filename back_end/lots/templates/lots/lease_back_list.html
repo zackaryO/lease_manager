@@ -1,0 +1,17 @@
+{% extends 'lots/base.html' %}
+
+{% block content %}
+<body>
+    <h1>Leases</h1>
+    <a href="{% url 'lease_create' %}">Add New Lease</a>
+    <ul>
+        {% for lease in leases %}
+        <li>
+            {{ lease }}
+            <a href="{% url 'lease_update' lease.pk %}">Edit</a>
+            <a href="{% url 'delete_lease_back' lease.pk %}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}

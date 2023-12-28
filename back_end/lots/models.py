@@ -1,8 +1,17 @@
 from django.core.validators import MaxValueValidator
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
 # Create your models here.
+class User(AbstractUser):
+    USER_TYPE_CHOICES = (
+      (1, 'staff'),
+      (2, 'customer'),
+    )
+
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
+
 
 class Lot(models.Model):
     lot_number = models.IntegerField(unique=True)

@@ -1,0 +1,16 @@
+{% extends 'lots/base.html' %}
+
+{% block content %}
+<h2>Lease Holder Detail</h2>
+<p>First Name: {{ lease_holder.lease_holder_first_name }}</p>
+<p>Last Name: {{ lease_holder.lease_holder_last_name }}</p>
+<p>Address: {{ lease_holder.lease_holder_address }}</p>
+<p>Email: {{ lease_holder.email }}</p>
+<p>Phone: {{ lease_holder.phone }}</p>
+
+<p>
+    <a href="{% url 'edit_lease_holder' lease_holder.id %}">Edit</a> |
+    <a href="{% url 'delete_lease_holder' lease_holder.id %}">Delete</a>
+</p>
+{% endblock %}
+

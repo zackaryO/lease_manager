@@ -1,0 +1,12 @@
+{% extends 'lots/base.html' %}  <!-- Replace with your base template -->
+
+{% block content %}
+<body>
+    <h1>Lease Form</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</body>
+{% endblock %}

@@ -1,0 +1,28 @@
+<!-- create_user.html -->
+{% extends 'lots/base.html' %}
+
+{% block content %}
+  <h2>Create User</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userTypeSelect = document.querySelector('[name="user_type"]');
+        const isStaffCheckbox = document.querySelector('[name="is_staff"]');
+
+        function updateUserType() {
+            if (userTypeSelect.value === 'staff') {
+                isStaffCheckbox.checked = true;
+            } else {
+                isStaffCheckbox.checked = false;
+            }
+        }
+
+        userTypeSelect.addEventListener('change', updateUserType);
+    });
+</script>
+{% endblock %}

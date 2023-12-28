@@ -1,0 +1,13 @@
+{% extends 'lots/base.html' %}  <!-- Replace with your base template -->
+
+{% block content %}
+<body>
+    <h1>Update Lease</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+    <a href="{% url 'lease-list' %}">Back to Lease List</a>
+</body>
+{% endblock %}

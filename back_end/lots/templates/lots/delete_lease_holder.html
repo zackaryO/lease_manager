@@ -1,0 +1,10 @@
+{% extends 'lots/base.html' %}  <!-- Replace with your base template -->
+
+{% block content %}
+<h2>Confirm Deletion</h2>
+<p>Are you sure you want to delete {{ lease_holder.lease_holder_first_name }} {{ lease_holder.lease_holder_last_name }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+</form>
+{% endblock %}

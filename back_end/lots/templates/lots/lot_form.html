@@ -1,0 +1,13 @@
+<!-- lots/templates/lots/lot_form.html -->
+{% extends 'lots/base.html' %}
+
+{% block title %}Lot Form{% endblock %}
+
+{% block content %}
+<h1>Lot Form</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+{% endblo
