@@ -9,6 +9,7 @@ import { AuthGuard } from './authentication/auth.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DetailsComponent } from './details/details.component';
 import { ReportsComponent } from './reports/reports.component';
+import { ManageLeaseComponent } from './manage-lease/manage-lease.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'details/:id', component: DetailsComponent, canActivate: [AuthGuard] },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+  { path: 'manage', component: ManageLeaseComponent, canActivate: [AuthGuard] },
 
   // This wildcard route should be last in the list. It ensures that any unmatched path will be redirected to the login
   { path: '**', redirectTo: 'login' }

@@ -21,13 +21,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { AddLeaseeComponent } from './add-leasee/add-leasee.component';
 import { RentalService } from './services/rental-detail.service';
+import { ManageLeaseComponent } from './manage-lease/manage-lease.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     PaymentDialogComponent,
-    AddLeaseeComponent
+    AddLeaseeComponent,
+    ManageLeaseComponent
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddLeaseeComponent } from '../add-leasee/add-leasee.component';
 
 
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',

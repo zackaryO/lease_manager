@@ -3,7 +3,7 @@ from .views import LeaseListView, LeaseDetailUpdateView, PaymentListCreateView, 
     UnoccupiedLotListView, LeaseCreateView, UserRegistrationAPIView, add_lease_holder, LeaseHolderListView, create_user, \
     UserListView, UserUpdateView, UserDeleteView, lease_holder_detail, edit_lease_holder, delete_lease_holder, \
     lease_create, lease_back_detail, lease_back_list, delete_lease_back, lease_update, lot_list, lot_create, lot_update, \
-    lot_delete, CustomLoginView
+    lot_delete, CustomLoginView, LeaseHolderView
 
 urlpatterns = [
     path('leases/', LeaseListView.as_view(), name='lease-list'),  # for listing leases
@@ -15,6 +15,7 @@ urlpatterns = [
     path('leases/create/', LeaseCreateView.as_view(), name='lease-create'),  # Endpoint for creating a new lease
     path('register/', UserRegistrationAPIView.as_view(), name='register'),
     path('add_lease_holder/', add_lease_holder, name='add_lease_holder'),
+    path('leases/lease_holder/', LeaseHolderView.as_view(), name='lease_holder'),  # For API (frontend)
     path('lease_holders/', LeaseHolderListView.as_view(), name='lease_holder_list'),
     path('lease_holders/<int:lease_holder_id>/', lease_holder_detail, name='lease_holder_detail'),
     path('lease_holders/edit/<int:lease_holder_id>/', edit_lease_holder, name='edit_lease_holder'),

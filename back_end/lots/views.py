@@ -17,7 +17,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .forms import LeaseHolderForm, CustomUserCreationForm, LeaseForm, LotForm
 from .permissions import IsAdminUser, IsStaffUser
 from .models import Lease, Payment, Lot, User, LeaseHolder
-from .serializers import LeaseSerializer, PaymentSerializer, LotSerializer, UserRegistrationSerializer
+from .serializers import LeaseSerializer, PaymentSerializer, LotSerializer, UserRegistrationSerializer, \
+    LeaseHolderSerializer
 
 
 class UserRegistrationAPIView(generics.CreateAPIView):
@@ -46,6 +47,17 @@ class LeaseListView(ListAPIView):
     """
     queryset = Lease.objects.all()
     serializer_class = LeaseSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsStaffUser]
+
+
+class LeaseHolderView(ListAPIView):
+    """
+    API view to retrieve a list of leases.
+    Uses JWT for authentication and allows access only to authenticated users.
+    """
+    queryset = LeaseHolder.objects.all()
+    serializer_class = LeaseHolderSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsStaffUser]
 
