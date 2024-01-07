@@ -287,7 +287,6 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return HttpResponseForbidden("You do not have permission to delete this user.")
 
 
-
 def lot_list(request):
     lots = Lot.objects.all()
     return render(request, 'lots/lot_list.html', {'lots': lots})
