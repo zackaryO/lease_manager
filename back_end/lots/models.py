@@ -35,13 +35,13 @@ class LeaseHolder(models.Model):
 
 class Lease(models.Model):
     UP_TO_DATE = 'up-to-date'
-    LESS_THAN_7 = 'less-than-7'
-    OVER_7 = 'over-7'
+    LATE = 'late'
+    DELINQUENT = 'delinquent'
 
     PAYMENT_STATUS_CHOICES = [
         (UP_TO_DATE, 'Up to date'),
-        (LESS_THAN_7, 'Less than 7 days overdue'),
-        (OVER_7, 'Over 7 days overdue'),
+        (LATE, 'Late'),
+        (DELINQUENT, 'Delinquent'),
     ]
 
     def __str__(self):
@@ -51,6 +51,8 @@ class Lease(models.Model):
 
     lot = models.ForeignKey(Lot, on_delete=models.CASCADE)  # Foreign Key related to Lot
     lease_holder = models.ForeignKey(LeaseHolder, on_delete=models.PROTECT)  # Foreign Key related to LeaseHolder
+    last_payment_date = models.DateField(null=True, blank=True, help_text="Date of the most recent payment")
+    last_payment_date_id = models.ForeignKey('Payment', on_delete=models.SET_NULL, null=True, blank=True, related_name='last_payment_for_lease', help_text="ID of the most recent payment")
     monthly_rental_amount = models.IntegerField()
     due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
     grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)])
@@ -59,7 +61,7 @@ class Lease(models.Model):
     payment_status = models.CharField(
         max_length=20,
         choices=PAYMENT_STATUS_CHOICES,
-        default=LESS_THAN_7,
+        default=LATE,
     )
 
 
@@ -94,11 +96,14 @@ class Payment(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        # Before saving the payment, update the payment_status of the associated lease
-        related_lease = self.lease
-        related_lease.payment_status = Lease.UP_TO_DATE
-        related_lease.save()
+        # Save the current Payment instance first to generate an ID
         super(Payment, self).save(*args, **kwargs)
+
+        # Now update the last_payment_date and last_payment_date_id of the associated lease
+        related_lease = self.lease
+        related_lease.last_payment_date = self.payment_date
+        related_lease.last_payment_date_id = self
+        related_lease.save()
 
     def delete(self, using=None, keep_parents=False):
         self.is_deleted = True

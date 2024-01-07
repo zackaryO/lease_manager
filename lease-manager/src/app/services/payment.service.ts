@@ -64,8 +64,15 @@ export class PaymentService {
       console.log(`${key}: ${value}`);
     }
 
-    return this.http.post(this.baseUrl, formData, { headers });
+    return this.http.post(this.baseUrl, formData, { headers })
+      .pipe(
+        catchError((error) => {
+          console.error('Server error in submitPayment:', error.message);
+          return throwError(error); // rethrow the error to keep the observable in an error state
+        })
+      );
   }
+
 
   deletePayment(paymentId: number): Observable<any> {
     const headers = this.getHeaders();

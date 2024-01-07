@@ -14,7 +14,9 @@ export class RentalDetail {
     gracePeriod: number; // matches "grace_period" from the API
     leaseAgreementPath: string; // new field to match "lease_agreement_path" from the API
     lotImagePath: string; // new field to match "lot_image_path" from the API
-    paymentStatus: 'up-to-date' | 'less-than-7' | 'over-7'; // matches "payment_status" from the API
+    lastPaymentDate?: Date;
+    paymentStatus: 'up-to-date' | 'late' | 'delinquent'; // matches "payment_status" from the API
+
 
     constructor(
         id: number, // Adding 'id' as a new property
@@ -30,7 +32,8 @@ export class RentalDetail {
         gracePeriod: number = 0,
         leaseAgreementPath: string = '', // new field
         lotImagePath: string = '', // new field
-        paymentStatus: 'up-to-date' | 'less-than-7' | 'over-7' = 'up-to-date'
+        lastPaymentDate: Date,
+        paymentStatus: 'up-to-date' | 'late' | 'delinquent' = 'up-to-date'
     ) {
         this.id = id;
         this.lotNumber = lotNumber;
@@ -46,5 +49,6 @@ export class RentalDetail {
         this.leaseAgreementPath = leaseAgreementPath; // new field
         this.lotImagePath = lotImagePath; // new field
         this.paymentStatus = paymentStatus;
+        this.lastPaymentDate = lastPaymentDate;
     }
 }

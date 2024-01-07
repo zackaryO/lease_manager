@@ -24,6 +24,7 @@ class LeaseSerializer(serializers.ModelSerializer):
     # Explicitly define the file fields to ensure they're serialized correctly.
     lease_agreement_path = serializers.FileField(max_length=None, use_url=True, required=False)
     lot_image_path = serializers.FileField(max_length=None, use_url=True, required=False)
+    last_payment_date = serializers.DateField(read_only=True)
 
     class Meta:
         model = Lease
@@ -33,7 +34,7 @@ class LeaseSerializer(serializers.ModelSerializer):
             'lease_holder_address', 'email', 'phone',
             'monthly_rental_amount', 'due_date', 'grace_period',
             'lease_agreement_path', 'lot_image_path',
-            'payment_status'
+            'payment_status', 'last_payment_date'
         ]
         read_only_fields = ['payment_status']  # if 'payment_status' is not supposed to be updated directly
 

@@ -41,6 +41,7 @@ export class RentalService {
       item.grace_period,
       item.lease_agreement_path,
       item.lot_image_path,
+      item.last_payment_date,
       item.payment_status
     );
   }

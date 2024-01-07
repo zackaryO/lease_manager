@@ -2,51 +2,35 @@
 <mat-card class="rental-detail-card" *ngIf="rentalDetail; else loadingContent">
   <!-- The header of the card -->
   <mat-card-header>
-    <mat-card-title
-      >Details for Lot #{{ rentalDetail.lotNumber }}</mat-card-title
-    >
+    <mat-card-title>Details for Lot #{{ rentalDetail.lotNumber }}</mat-card-title>
   </mat-card-header>
 
   <!-- Card content -->
   <mat-card-content>
-    <mat-list-item
-      ><strong>Lot Address:</strong>
-      {{ rentalDetail.lotAddress }}</mat-list-item
-    >
+    <mat-list-item><strong>Lot Address:</strong>
+      {{ rentalDetail.lotAddress }}</mat-list-item>
     <!-- Using Angular Material List for the details -->
-    <mat-list-item
-      ><strong>Lease Holder Name:</strong>
+    <mat-list-item><strong>Lease Holder Name:</strong>
       {{ rentalDetail.leaseHolderFirstName }}
-      {{ rentalDetail.leaseHolderLastName }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Lease Holder Address:</strong>
-      {{ rentalDetail.leaseHolderAddress }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Email:</strong> {{ rentalDetail.email }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Phone:</strong> {{ rentalDetail.phone }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Monthly Rental Amount:</strong>
-      {{ rentalDetail.monthlyRentalAmount | currency }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Due Date:</strong>
-      {{ rentalDetail.dueDate | date }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Grace Period:</strong>
-      {{ rentalDetail.gracePeriod }} days</mat-list-item
-    >
+      {{ rentalDetail.leaseHolderLastName }}</mat-list-item>
+    <mat-list-item><strong>Lease Holder Address:</strong>
+      {{ rentalDetail.leaseHolderAddress }}</mat-list-item>
+    <mat-list-item><strong>Email:</strong> {{ rentalDetail.email }}</mat-list-item>
+    <mat-list-item><strong>Phone:</strong> {{ rentalDetail.phone }}</mat-list-item>
+    <mat-list-item><strong>Monthly Rental Amount:</strong>
+      {{ rentalDetail.monthlyRentalAmount | currency }}</mat-list-item>
+    <mat-list-item><strong>Last Payment Date:</strong>
+      {{ rentalDetail.lastPaymentDate | date }}</mat-list-item>
+    <mat-list-item><strong>Due Date:</strong>
+      {{ rentalDetail.dueDate | date }}</mat-list-item>
+    <mat-list-item><strong>Grace Period:</strong>
+      {{ rentalDetail.gracePeriod }} days</mat-list-item>
 
     <!-- Lease Agreement Link -->
     <div class="lease-agreement">
       <strong>Lease Agreement:</strong>
       <!-- Uncomment and adjust the following line if you have a lease agreement link -->
-      <!-- <a [href]="rentalDetail?.leaseAgreementPath" target="_blank">View Lease Agreement</a> -->
+      <a [href]="rentalDetail.leaseAgreementPath" target="_blank">View Lease Agreement</a>
     </div>
   </mat-card-content>
 </mat-card>
@@ -54,11 +38,7 @@
 <!-- Placeholder for lot image -->
 <mat-card class="lot-image-card" *ngIf="rentalDetail?.lotImagePath">
   <mat-card-content>
-    <img
-      [src]="rentalDetail['lotImagePath']"
-      alt="Rental Image"
-      class="rental-image"
-    />
+    <img [src]="rentalDetail['lotImagePath']" alt="Rental Image" class="rental-image" />
   </mat-card-content>
 </mat-card>
 
@@ -82,17 +62,11 @@
   <form>
     <label>
       Lease Holder Address:
-      <input
-        [(ngModel)]="rentalDetail.leaseHolderAddress"
-        name="leaseHolderAddress"
-      />
+      <input [(ngModel)]="rentalDetail.leaseHolderAddress" name="leaseHolderAddress" />
     </label>
     <label>
       Monthy Rent (no $ sign):
-      <input
-        [(ngModel)]="rentalDetail.monthlyRentalAmount"
-        name="monthlyRentalAmount"
-      />
+      <input [(ngModel)]="rentalDetail.monthlyRentalAmount" name="monthlyRentalAmount" />
     </label>
     <!-- <label>
       Lot Number:
