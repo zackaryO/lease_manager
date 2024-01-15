@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from .models import Lease, Payment, Lot, LeaseHolder, User
+from .models import Lease, Payment, Lot, LeaseHolder, User, GlobalSettings
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -80,10 +80,16 @@ class PaymentSerializer(serializers.ModelSerializer):
 class LotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lot
-        fields = '__all__'  # You can list the fields you want to include.
+        fields = '__all__'
 
 
 class LeaseHolderSerializer(serializers.ModelSerializer):
     class Meta:
         model = LeaseHolder
-        fields = '__all__'  # Assuming you want to expose all fields
+        fields = '__all__'
+
+
+class GlobalSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GlobalSettings
+        fields = '__all__'

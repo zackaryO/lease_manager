@@ -22,6 +22,7 @@ import { MatCardModule } from '@angular/material/card';
 import { AddLeaseeComponent } from './add-leasee/add-leasee.component';
 import { RentalService } from './services/rental-detail.service';
 import { ManageLeaseComponent } from './manage-lease/manage-lease.component';
+import { GlobalSettingsModalComponent } from './global-settings-modal/global-settings-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ManageLeaseComponent } from './manage-lease/manage-lease.component';
     NavbarComponent,
     PaymentDialogComponent,
     AddLeaseeComponent,
-    ManageLeaseComponent
+    ManageLeaseComponent,
+    GlobalSettingsModalComponent
   ],
   imports: [
     BrowserModule,

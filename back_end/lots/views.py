@@ -16,15 +16,18 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .forms import LeaseHolderForm, CustomUserCreationForm, LeaseForm, LotForm
 from .permissions import IsAdminUser, IsStaffUser
-from .models import Lease, Payment, Lot, User, LeaseHolder
+from .models import Lease, Payment, Lot, User, LeaseHolder, GlobalSettings
 from .serializers import LeaseSerializer, PaymentSerializer, LotSerializer, UserRegistrationSerializer, \
-    LeaseHolderSerializer
+    LeaseHolderSerializer, GlobalSettingsSerializer
 
 
 class UserRegistrationAPIView(generics.CreateAPIView):
     """
     API view for user registration.
-    Only accessible to admin users.
+    (generics.CreateAPIView) This view allows creating new user accounts.
+    It's accessible only to admin users for security reasons.
+    Uses JWT for authentication.
+    Inherits from generics.CreateAPIView.
     """
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
@@ -32,6 +35,7 @@ class UserRegistrationAPIView(generics.CreateAPIView):
     permission_classes = [IsAdminUser]  # Accessible only to admin users
 
     def post(self, request, *args, **kwargs):
+        # Override the post method to handle the user registration process.
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -40,10 +44,12 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
-class LeaseListView(ListAPIView):
+class LeaseListView(generics.ListAPIView):
     """
-    API view to retrieve a list of leases.
-    Uses JWT for authentication and allows access only to authenticated users.
+    API view to retrieve a list of all leases.
+    (generics.ListAPIView) It's a read-only endpoint for listing lease instances.
+    Accessible only to staff users authenticated with JWT.
+    Inherits from generics.ListAPIView.
     """
     queryset = Lease.objects.all()
     serializer_class = LeaseSerializer
@@ -51,10 +57,12 @@ class LeaseListView(ListAPIView):
     permission_classes = [IsStaffUser]
 
 
-class LeaseHolderView(ListAPIView):
+class LeaseHolderView(generics.ListAPIView):
     """
-    API view to retrieve a list of leases.
-    Uses JWT for authentication and allows access only to authenticated users.
+    API view to retrieve a list of lease holders.
+    (generics.ListAPIView) Provides a list of all lease holders in a read-only format.
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.ListAPIView.
     """
     queryset = LeaseHolder.objects.all()
     serializer_class = LeaseHolderSerializer
@@ -62,10 +70,12 @@ class LeaseHolderView(ListAPIView):
     permission_classes = [IsStaffUser]
 
 
-class LeaseDetailUpdateView(RetrieveUpdateAPIView):
+class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
     """
-    API view to retrieve and update a lease instance.
-    Uses JWT for authentication and allows access only to authenticated users.
+    API view for retrieving and updating a specific lease instance.
+    (generics.RetrieveUpdateAPIView) Handles GET requests for lease details and PUT/PATCH requests for updates.
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.RetrieveUpdateAPIView.
     """
     queryset = Lease.objects.all()
     serializer_class = LeaseSerializer
@@ -76,9 +86,11 @@ class LeaseDetailUpdateView(RetrieveUpdateAPIView):
 
 class PaymentListCreateView(generics.ListCreateAPIView):
     """
-    API view to list and create payments.
-    Filters out any payments marked as deleted.
-    Uses JWT for authentication and allows access only to authenticated users.
+    API view to list existing payments and create new ones.
+    Filters out payments marked as deleted.
+    (generics.ListCreateAPIView) Supports both GET (for listing) and POST (for creating new payments).
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.ListCreateAPIView.
     """
     queryset = Payment.objects.filter(is_deleted=False)
     serializer_class = PaymentSerializer
@@ -88,24 +100,28 @@ class PaymentListCreateView(generics.ListCreateAPIView):
 
 class PaymentBulkDeleteView(APIView):
     """
-    API view to delete multiple payments.
+    API view for bulk deletion of payments.
     Accepts a POST request with a list of payment IDs and marks them as deleted.
-    Uses JWT for authentication and allows access only to authenticated users.
+    Specifically designed for admin users authenticated with JWT.
+    Inherits from rest_framework.views.APIView.
     """
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
 
     def post(self, request, *args, **kwargs):
+        # Custom logic to handle bulk deletion based on provided IDs.
         payment_ids = request.data.get('ids', [])
         payments = Payment.objects.filter(id__in=payment_ids)
         payments.update(is_deleted=True)
         return Response({'status': 'payments successfully deleted'}, status=status.HTTP_200_OK)
 
 
-class LotListView(ListAPIView):
+class LotListView(generics.ListAPIView):
     """
     API view to list all lots.
-    Uses JWT for authentication and allows access only to authenticated users.
+    (generics.ListAPIView) Provides a read-only list of all lot instances.
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.ListAPIView.
     """
     queryset = Lot.objects.all()
     serializer_class = LotSerializer
@@ -113,11 +129,12 @@ class LotListView(ListAPIView):
     permission_classes = [IsStaffUser]
 
 
-class UnoccupiedLotListView(ListAPIView):
+class UnoccupiedLotListView(generics.ListAPIView):
     """
     API view to list all unoccupied lots.
-    Filters the lots to only include those that are not occupied.
-    Uses JWT for authentication and allows access only to authenticated users.
+    Filters to include only lots that are not currently occupied.
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.ListAPIView.
     """
     queryset = Lot.objects.filter(occupied=False)
     serializer_class = LotSerializer
@@ -127,13 +144,41 @@ class UnoccupiedLotListView(ListAPIView):
 
 class LeaseCreateView(generics.CreateAPIView):
     """
-    API view to create a new lease.
-    Uses JWT for authentication and allows access only to authenticated users.
+    API view to create new lease instances.
+    Handles the creation of lease records.
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.CreateAPIView.
     """
     queryset = Lease.objects.all()
     serializer_class = LeaseSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsStaffUser]
+
+
+class GlobalSettingsView(generics.RetrieveUpdateAPIView):
+    """
+    API view to read and update global settings.
+    Handles fetching (GET) and updating (PUT/PATCH) the global settings.
+    Assumes there's only a single entry in the GlobalSettings table.
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.RetrieveUpdateAPIView.
+    """
+    queryset = GlobalSettings.objects.all()
+    serializer_class = GlobalSettingsSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsStaffUser]
+    lookup_field = 'id'  # Assuming 'id' is the primary key field
+
+    def get_object(self):
+        """
+        Override the get_object method to always return the first entry of the table,
+        since there's only a single entry in the GlobalSettings table.
+        """
+        return GlobalSettings.objects.first()
+
+
+def is_staff_or_admin(user):
+    return user.is_staff or user.is_superuser
 
 
 def add_lease_holder(request):
@@ -182,11 +227,15 @@ class LeaseHolderListView(ListView):
     context_object_name = 'lease_holders'
 
 
+@login_required
+@user_passes_test(is_staff_or_admin)
 def lease_back_list(request):
     leases = Lease.objects.all()
     return render(request, 'lots/lease_back_list.html', {'leases': leases})
 
 
+@login_required
+@user_passes_test(is_staff_or_admin)
 def lease_create(request):
     form = LeaseForm(request.POST or None, request.FILES or None)
     if form.is_valid():
@@ -195,6 +244,8 @@ def lease_create(request):
     return render(request, 'lots/lease_create.html', {'form': form})
 
 
+@login_required
+@user_passes_test(is_staff_or_admin)
 def lease_update(request, lease_id):  # lease_id matches the URL pattern
     lease = get_object_or_404(Lease, pk=lease_id)
     if request.method == "POST":
@@ -207,6 +258,8 @@ def lease_update(request, lease_id):  # lease_id matches the URL pattern
     return render(request, 'lots/lease_update.html', {'form': form})
 
 
+@login_required
+@user_passes_test(is_staff_or_admin)
 def delete_lease_back(request, lease_id):
     lease = get_object_or_404(Lease, pk=lease_id)  # Corrected to fetch Lease by primary key
 
@@ -217,13 +270,11 @@ def delete_lease_back(request, lease_id):
     return render(request, 'lots/delete_lease_back.html', {'object': lease})
 
 
+@login_required
+@user_passes_test(is_staff_or_admin)
 def lease_back_detail(request, lease_holder_id):
     lease_holder = get_object_or_404(LeaseHolder, id=lease_holder_id)
     return render(request, 'lots/lease_back_detail.html', {'lease_holder': lease_holder})
-
-
-def is_staff_or_admin(user):
-    return user.is_staff or user.is_superuser
 
 
 @login_required

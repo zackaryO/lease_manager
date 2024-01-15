@@ -3,7 +3,7 @@ from .views import LeaseListView, LeaseDetailUpdateView, PaymentListCreateView, 
     UnoccupiedLotListView, LeaseCreateView, UserRegistrationAPIView, add_lease_holder, LeaseHolderListView, create_user, \
     UserListView, UserUpdateView, UserDeleteView, lease_holder_detail, edit_lease_holder, delete_lease_holder, \
     lease_create, lease_back_detail, lease_back_list, delete_lease_back, lease_update, lot_list, lot_create, lot_update, \
-    lot_delete, CustomLoginView, LeaseHolderView
+    lot_delete, CustomLoginView, LeaseHolderView, GlobalSettingsView
 
 urlpatterns = [
     path('leases/', LeaseListView.as_view(), name='lease-list'),  # for listing leases
@@ -37,4 +37,6 @@ urlpatterns = [
     path('lots/create/', lot_create, name='lot_create'),
     path('lots/<int:pk>/edit/', lot_update, name='lot_update'),
     path('lots/<int:pk>/delete/', lot_delete, name='lot_delete'),
+
+    path('global/', GlobalSettingsView.as_view(), name='global'),
 ]

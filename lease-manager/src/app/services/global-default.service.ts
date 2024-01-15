@@ -1,32 +1,39 @@
-// global-default.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { GlobalDefault } from '../models/global-default.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GlobalDefaultService {
-  // This is a placeholder for your actual API call
-  private globalDefaults: GlobalDefault = new GlobalDefault({
-    dueDate: new Date(),
-    lateFee: 50,
-    daysLate: 3,
-    dayDelinquent: 5
-  });
+export class
+  GlobalDefaultService {
+  private globalSettingsUrl = 'http://127.0.0.1:8000/global/'; // URL to your Django global settings endpoint
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  getGlobalDefault(): Observable<GlobalDefault> {
-    // Here, you would make a GET request to fetch the global defaults
-    // return this.http.get<GlobalDefault>(this.apiUrl);
-    return of(this.globalDefaults); // Mock data
+  private getHeaders(): HttpHeaders {
+    const authToken = localStorage.getItem('authToken');
+    return new HttpHeaders({ 'Authorization': 'Bearer ' + authToken });
   }
 
-  updateGlobalDefault(data: any): Observable<any> {
-    // Here, you would make a POST or PUT request to update the global defaults
-    // return this.http.post(this.apiUrl, data);
-    Object.assign(this.globalDefaults, data); // Mock update
-    return of({ status: 'success' }); // Mock response
+  fetchGlobalSettings(): Observable<any> {
+    return this.http.get<any>(this.globalSettingsUrl, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching global settings', error);
+          throw error;
+        })
+      );
+  }
+
+  updateGlobalSettings(settings: any): Observable<any> {
+    return this.http.put<any>(this.globalSettingsUrl, settings, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          console.error('Error updating global settings', error);
+          throw error;
+        })
+      );
   }
 }

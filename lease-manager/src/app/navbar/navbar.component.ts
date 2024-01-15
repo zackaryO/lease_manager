@@ -1,10 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { GlobalDefault } from '../models/global-default.model';
-import { GlobalDefaultService } from '../services/global-default.service';
+import { GlobalSettingsModalComponent } from '../global-settings-modal/global-settings-modal.component'; // Adjust path
 import { ComponentCanDeactivate } from '../unsaved-changes.guard';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AddLeaseeComponent } from '../add-leasee/add-leasee.component';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 
 
@@ -19,19 +21,15 @@ export class NavbarComponent implements OnInit, ComponentCanDeactivate {
   daysInMonth: number[] = [];
   menuActive = false;
 
-  constructor(private cdr: ChangeDetectorRef, private globalDefaultService: GlobalDefaultService, public dialog: MatDialog) { }
+  constructor(
+    private cdr: ChangeDetectorRef,
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.fillDaysInMonth();
-    this.globalDefaultService.getGlobalDefault().subscribe(
-      globalDefault => {
-        this.globalDefault = globalDefault;
-        this.updatedGlobalDefault = GlobalDefault.deserialize(globalDefault.serialize());
-      },
-      error => {
-        console.error('Error fetching global defaults:', error);
-      }
-    );
   }
 
   canDeactivate(): boolean | Observable<boolean> {
@@ -40,22 +38,6 @@ export class NavbarComponent implements OnInit, ComponentCanDeactivate {
 
   onDueDayChange(newDueDay: number): void {
     this.globalDefault.dueDay = newDueDay;
-  }
-
-  saveUpdates(): void {
-    const confirmation = confirm('Do you want to save these changes?');
-    if (confirmation) {
-      this.globalDefaultService.updateGlobalDefault(this.updatedGlobalDefault.serialize()).subscribe(
-        () => {
-          console.log('Update successful');
-          alert('Changes saved successfully.');
-        },
-        error => {
-          console.error('An error occurred while updating settings.', error);
-          alert('An error occurred while saving changes.');
-        }
-      );
-    }
   }
 
   toggleMenu(): void {
@@ -79,6 +61,21 @@ export class NavbarComponent implements OnInit, ComponentCanDeactivate {
       console.log('The dialog was closed', result);
       // You can refresh data or handle the result here
     });
+  }
 
+  openGlobalSettingsModal() {
+    if (this.authService.isLoggedIn()) {
+      const dialogRef = this.dialog.open(GlobalSettingsModalComponent, {
+        width: '250px' // You can set the width or other properties as needed
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+        // You can handle any actions after the modal is closed
+      });
+    } else {
+      // Redirect to login
+      this.router.navigate(['/login']);
+    }
   }
 }
