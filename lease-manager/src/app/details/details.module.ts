@@ -4,9 +4,14 @@ import { DetailsComponent } from './details.component';
 import { SharedModule } from '../shared/shared.module';  // Import SharedModule
 import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
+import { DatePipe } from '@angular/common';
 
 
 @NgModule({
+
+  providers: [
+    DatePipe
+  ],
   declarations: [
     DetailsComponent
   ],

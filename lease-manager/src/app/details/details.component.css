@@ -83,3 +83,12 @@ input:focus {
     object-fit: contain;
     /* ensures the image keeps its aspect ratio while being contained within the given dimensions */
 }
+
+.days-past-due {
+    font-weight: bold;
+    /* Makes the text bold */
+    color: red;
+    /* Sets the text color to red */
+    font-size: 1.2em;
+    /* Increases the font size */
+}

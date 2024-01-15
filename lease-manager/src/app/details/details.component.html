@@ -1,3 +1,5 @@
+<!-- // details.component.ts -->
+<!-- Using Angular Material Card for wrapping the content -->
 <!-- Using Angular Material Card for wrapping the content -->
 <mat-card class="rental-detail-card" *ngIf="rentalDetail; else loadingContent">
   <!-- The header of the card -->
@@ -7,29 +9,33 @@
 
   <!-- Card content -->
   <mat-card-content>
-    <mat-list-item><strong>Lot Address:</strong>
-      {{ rentalDetail.lotAddress }}</mat-list-item>
-    <!-- Using Angular Material List for the details -->
-    <mat-list-item><strong>Lease Holder Name:</strong>
-      {{ rentalDetail.leaseHolderFirstName }}
-      {{ rentalDetail.leaseHolderLastName }}</mat-list-item>
-    <mat-list-item><strong>Lease Holder Address:</strong>
-      {{ rentalDetail.leaseHolderAddress }}</mat-list-item>
+    <!-- Displaying various details of the rental -->
+    <mat-list-item><strong>Lot Address:</strong> {{ rentalDetail.lotAddress }}</mat-list-item>
+    <mat-list-item><strong>Lease Holder Name:</strong> {{ rentalDetail.leaseHolderFirstName }} {{
+      rentalDetail.leaseHolderLastName }}</mat-list-item>
+    <mat-list-item><strong>Lease Holder Address:</strong> {{ rentalDetail.leaseHolderAddress }}</mat-list-item>
     <mat-list-item><strong>Email:</strong> {{ rentalDetail.email }}</mat-list-item>
     <mat-list-item><strong>Phone:</strong> {{ rentalDetail.phone }}</mat-list-item>
-    <mat-list-item><strong>Monthly Rental Amount:</strong>
-      {{ rentalDetail.monthlyRentalAmount | currency }}</mat-list-item>
-    <mat-list-item><strong>Last Payment Date:</strong>
-      {{ rentalDetail.lastPaymentDate | date }}</mat-list-item>
-    <mat-list-item><strong>Due Date:</strong>
-      {{ rentalDetail.dueDate | date }}</mat-list-item>
-    <mat-list-item><strong>Grace Period:</strong>
-      {{ rentalDetail.gracePeriod }} days</mat-list-item>
+    <mat-list-item><strong>Monthly Rental Amount:</strong> {{ rentalDetail.monthlyRentalAmount | currency
+      }}</mat-list-item>
+    <mat-list-item><strong>Last Payment Date:</strong> {{ rentalDetail.lastPaymentDate | date }}</mat-list-item>
+
+    <!-- Modified Due Date display logic -->
+    <mat-list-item><strong>Due Date:</strong> {{ getFormattedDueDate(rentalDetail.dueDate) }}</mat-list-item>
+
+    <!-- Logic to display "days past due" if applicable -->
+    <!-- Check if lastPaymentDate is defined before using it in getDaysPastDue -->
+    <mat-list-item *ngIf="rentalDetail.lastPaymentDate && getDaysPastDue(rentalDetail.lastPaymentDate)">
+      <span class="days-past-due">
+        <strong>Days Past Due:</strong> {{ getDaysPastDue(rentalDetail.lastPaymentDate) }}
+      </span>
+    </mat-list-item>
+
+    <mat-list-item><strong>Grace Period:</strong> {{ rentalDetail.gracePeriod }} days</mat-list-item>
 
     <!-- Lease Agreement Link -->
     <div class="lease-agreement">
       <strong>Lease Agreement:</strong>
-      <!-- Uncomment and adjust the following line if you have a lease agreement link -->
       <a [href]="rentalDetail.leaseAgreementPath" target="_blank">View Lease Agreement</a>
     </div>
   </mat-card-content>

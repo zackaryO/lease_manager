@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
+from django.db.models import F
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404, resolve_url
 from django.urls import reverse_lazy
@@ -160,6 +161,7 @@ class GlobalSettingsView(generics.RetrieveUpdateAPIView):
     API view to read and update global settings.
     Handles fetching (GET) and updating (PUT/PATCH) the global settings.
     Assumes there's only a single entry in the GlobalSettings table.
+    When fetching global settings, it also updates all leases' due_date and grace_period.
     Accessible to staff users authenticated with JWT.
     Inherits from generics.RetrieveUpdateAPIView.
     """
@@ -169,12 +171,39 @@ class GlobalSettingsView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsStaffUser]
     lookup_field = 'id'  # Assuming 'id' is the primary key field
 
+    # def get(self, request, *args, **kwargs):
+    #     """
+    #     Overrides the default GET method to update due_date and grace_period in Lease
+    #     before returning the global settings.
+    #     """
+    #     # First, update Lease entries
+    #     global_settings = self.get_object()
+    #     Lease.objects.all().update(due_date=F('due_date') + global_settings.due_date,
+    #                                grace_period=F('grace_period') + global_settings.grace_period)
+    #
+    #     # Then, continue with the usual GET method to retrieve the global settings
+    #     return super().get(request, *args, **kwargs)
+
     def get_object(self):
         """
         Override the get_object method to always return the first entry of the table,
         since there's only a single entry in the GlobalSettings table.
         """
         return GlobalSettings.objects.first()
+
+    def put(self, request, *args, **kwargs):
+        """
+        Overrides the default PUT method to update the GlobalSettings and then
+        update all leases' due_date and grace_period.
+        """
+        response = super().put(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            global_settings = self.get_object()
+            Lease.objects.all().update(
+                due_date=global_settings.due_date,
+                grace_period=global_settings.grace_period
+            )
+        return response
 
 
 def is_staff_or_admin(user):
