@@ -137,37 +137,31 @@ export class DashboardComponent implements OnInit {
 
   evaluateAndUpdatePaymentStatus(rental: RentalDetail): void {
     if (!rental.lastPaymentDate) {
-      // Handle cases where there is no last payment date
       rental.paymentStatus = 'up-to-date';
       this.updateRental(rental);
       return;
     }
 
-    // Determine the due date for this month
-    const dueDateThisMonth = new Date(new Date().getFullYear(), new Date().getMonth(), rental.dueDate);
+    // Calculate the due date, which is one month after the last payment date
+    let dueDate = new Date(rental.lastPaymentDate);
+    dueDate.setMonth(dueDate.getMonth() + 1);
 
-    // Check if the last payment was before the due date of this month
-    const isPastDue = new Date(rental.lastPaymentDate) < dueDateThisMonth;
+    const today = new Date();
+    const daysSinceDueDate = Math.ceil((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
 
-    if (isPastDue) {
-      // Calculate days past due since the due date of this month
-      const daysPastDue = this.getDaysPastDue(dueDateThisMonth);
-
-      // If payment is past due, check against grace period
-      if (daysPastDue <= rental.gracePeriod) {
+    // Compare days since due date with grace period
+    if (daysSinceDueDate > 0) {
+      if (daysSinceDueDate <= rental.gracePeriod) {
         rental.paymentStatus = 'late';
       } else {
         rental.paymentStatus = 'delinquent';
       }
     } else {
-      // If payment is not past due, set status to 'up-to-date'
       rental.paymentStatus = 'up-to-date';
     }
 
-    // Update the rental with the new payment status
     this.updateRental(rental);
   }
-
 
 
   updateRental(rental: RentalDetail): void {
