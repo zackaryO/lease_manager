@@ -1,6 +1,6 @@
 # lease_manager
 
-## what it is:
+## breif description:
 
 This application is accessible two different ways, either using (Django SSR) Server Side Rendered pages (not very stylized), or using the Angular client side application.
 
