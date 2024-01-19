@@ -27,8 +27,6 @@ I plan to put this entire package into a common virtual enviroment using Docker.
 
 modify up-to-date, 'late' logic to implement GlobalSettings table to see if todays date is later than due date, but less than grace period (late) or if after the due date AND greater than the grace_period (delenquent). if delenquent, add the days since last_payment_date subtracting the days between last_payment_date and first missed payment (1 month)
 
-# done
-
 in the future I'd like to account for changes in due dates, like if the person changes the due date to two weeks later, it won't show as late or delinquent when the new due date hasn't yet occurred.
 
 ### To launch Back end server (virtaul enviroment)
