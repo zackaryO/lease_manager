@@ -23,30 +23,46 @@ export class GlobalSettingsModalComponent implements OnInit {
   }
 
   fetchSettings() {
-    this.globalDefaultService.fetchGlobalSettings().subscribe(
-      (settings: GlobalSettings) => {
+    this.globalDefaultService.fetchGlobalSettings().subscribe({
+      // 'next' is called whenever the Observable emits a value.
+      // In this case, it's called when global settings data is successfully fetched.
+      next: (settings: GlobalSettings) => {
+        // The emitted value (the fetched settings) is assigned to 'this.globalSettings'.
         this.globalSettings = settings;
       },
-      error => {
+
+      // 'error' is called if the Observable encounters an error condition.
+      // This could happen if there's a network issue, server error, etc.
+      error: error => {
+        // Logs the error to the console.
         console.error('Error fetching global settings:', error);
-        // Handle the error appropriately
+        // This is where you can handle the error appropriately.
+        // For example, you could show a user-friendly message or retry the operation.
       }
-    );
+
+      // Note: The 'complete' handler is not used here.
+      // 'complete' is called when the Observable completes (i.e., emits all its values).
+      // For an HTTP request, 'complete' would be called after the response is received.
+      // However, for this specific use case, handling the 'complete' notification is not necessary.
+    });
   }
 
+
+
   updateSettings() {
-    this.globalDefaultService.updateGlobalSettings(this.globalSettings).subscribe(
-      updatedSettings => {
+    this.globalDefaultService.updateGlobalSettings(this.globalSettings).subscribe({
+      next: updatedSettings => {
         // Handle successful update
         // You might want to give feedback to the user or close the modal here
         console.log('Settings updated:', updatedSettings);
       },
-      error => {
+      error: error => {
         console.error('Error updating settings:', error);
         // Handle the error appropriately
       }
-    );
+    });
   }
+
 
   // Add modal closing logic here
   closeModal() {

@@ -11,13 +11,25 @@
   </div>
   <img [src]="rental.lotImagePath" alt="Rental Image" class="rental-image" />
 
-  <div [ngClass]="{
+  <!-- Remove !!!-->
+  <span class="days-past-due">
+    <strong>Days Past Due:</strong>
+    {{ rental.lastPaymentDate ? getDaysPastDue(rental.lastPaymentDate) : "" }}
+  </span>
+  <!-- Remove !!!-->
+
+  <div
+    [ngClass]="{
       green: rental.paymentStatus === 'up-to-date',
       yellow: rental.paymentStatus === 'late',
       red: rental.paymentStatus === 'delinquent'
-    }" class="status-box">
+    }"
+    class="status-box"
+  >
     <!-- Display based on paymentStatus -->
-    <ng-container *ngIf="rental.paymentStatus === 'up-to-date'; else notUpToDate">
+    <ng-container
+      *ngIf="rental.paymentStatus === 'up-to-date'; else notUpToDate"
+    >
       Up to Date
     </ng-container>
     <ng-template #notUpToDate>
@@ -27,7 +39,11 @@
     </ng-template>
     <ng-template #delinquent> delinquent </ng-template>
   </div>
-  <button mat-raised-button color="primary" (click)="makePayment($event, rental)">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="makePayment($event, rental)"
+  >
     Pay Now
   </button>
   <!-- <button mat-raised-button color="warn" *ngIf="

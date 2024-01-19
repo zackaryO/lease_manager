@@ -36,7 +36,7 @@ class LeaseSerializer(serializers.ModelSerializer):
             'lease_agreement_path', 'lot_image_path',
             'payment_status', 'last_payment_date'
         ]
-        read_only_fields = ['payment_status']  # if 'payment_status' is not supposed to be updated directly
+        # read_only_fields = ['payment_status']  # if 'payment_status' is not supposed to be updated directly
 
     def update(self, instance, validated_data):
         # Custom update logic if needed
