@@ -1,3 +1,4 @@
+<!-- navbar.component.html -->
 <nav class="navbar">
   <div class="navbar-brand">Lease Manager</div>
 
@@ -13,32 +14,6 @@
     <a routerLink="/manage" class="navbar-item">Manage Details</a>
     <a href="http://127.0.0.1:8000/leases_back/" target="_blank" class="navbar-item">Database</a>
     <button (click)="openGlobalSettingsModal()">Global Settings</button>
+    <button (click)="logout()">Logout</button>
   </div>
-
-  <!-- Hidden form, shown when menu is active -->
-  <!-- <div class="navbar-form" [ngClass]="{ active: menuActive }">
-    <h3>Default Settings:</h3>
-    <label>
-      Due Day:
-      <select
-        [(ngModel)]="updatedGlobalDefault.dueDay"
-        (ngModelChange)="onDueDayChange($event)"
-      >
-        <option *ngFor="let day of daysInMonth" [value]="day">{{ day }}</option>
-      </select>
-    </label>
-    <label>
-      Late Fee:
-      <input type="number" [(ngModel)]="updatedGlobalDefault.lateFee" />
-    </label>
-    <label>
-      Days Late:
-      <input type="number" [(ngModel)]="updatedGlobalDefault.daysLate" />
-    </label>
-    <label>
-      Day Delinquent:
-      <input type="number" [(ngModel)]="updatedGlobalDefault.dayDelinquent" />
-    </label>
-    <button (click)="saveUpdates()">Save</button>
-  </div> -->
 </nav>

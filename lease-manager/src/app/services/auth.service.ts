@@ -1,6 +1,7 @@
+// auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -8,6 +9,7 @@ import { tap, catchError } from 'rxjs/operators';
 })
 export class AuthService {
   private authUrl = 'http://127.0.0.1:8000/api/token/'; // URL to your Django auth endpoint
+  private logoutUrl = 'http://127.0.0.1:8000/api/logout/'; // URL for the logout endpoint
 
   // Constructor initializes the service.
   // The HttpClient is injected to make HTTP requests.
@@ -36,9 +38,19 @@ export class AuthService {
   }
 
   // Logout function: Clears the authentication token and login time from localStorage.
-  logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('loginTime');
+  logout(): Observable<any> {
+    return this.http.post(this.logoutUrl, {}).pipe(
+      tap(() => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('loginTime');
+      }),
+      catchError(error => {
+        console.error('Error during backend logout:', error);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('loginTime');
+        return throwError(error);
+      })
+    );
   }
 
   // Function to check if the user is currently logged in.

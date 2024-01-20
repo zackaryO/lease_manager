@@ -1,3 +1,4 @@
+// navbar.component.ts
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { GlobalDefault } from '../models/global-default.model';
 import { GlobalSettingsModalComponent } from '../global-settings-modal/global-settings-modal.component'; // Adjust path
@@ -77,5 +78,18 @@ export class NavbarComponent implements OnInit, ComponentCanDeactivate {
       // Redirect to login
       this.router.navigate(['/login']);
     }
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: error => {
+        console.error('Logout failed', error);
+        // Handle error or still navigate to login
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }
