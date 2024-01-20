@@ -1,3 +1,4 @@
+// global-settings-modal.component.ts
 import { Component, OnInit } from '@angular/core';
 import { GlobalDefaultService } from '../services/global-default.service';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -47,22 +48,25 @@ export class GlobalSettingsModalComponent implements OnInit {
     });
   }
 
-
-
   updateSettings() {
     this.globalDefaultService.updateGlobalSettings(this.globalSettings).subscribe({
       next: updatedSettings => {
-        // Handle successful update
-        // You might want to give feedback to the user or close the modal here
+        // Notify the user of successful update.
+        alert('Settings successfully updated.');
+
+        // Close the modal after the user acknowledges the success message.
+        this.closeModal();
+
         console.log('Settings updated:', updatedSettings);
       },
       error: error => {
+        // Notify the user of the error.
+        alert('Error updating settings. Please try again.');
+
         console.error('Error updating settings:', error);
-        // Handle the error appropriately
       }
     });
   }
-
 
   // Add modal closing logic here
   closeModal() {
