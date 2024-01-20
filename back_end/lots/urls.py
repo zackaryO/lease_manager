@@ -6,6 +6,7 @@ from .views import LeaseListView, LeaseDetailUpdateView, PaymentListCreateView, 
     lot_delete, CustomLoginView, LeaseHolderView, GlobalSettingsView
 
 urlpatterns = [
+    # API urls for client side page interaction start
     path('leases/', LeaseListView.as_view(), name='lease-list'),  # for listing leases
     path('leases/<int:id>/', LeaseDetailUpdateView.as_view(), name='lease-detail-update'),  # for retrieving, updating
     path('payments/', PaymentListCreateView.as_view(), name='payment-list-create'),
@@ -20,7 +21,10 @@ urlpatterns = [
     path('lease_holders/<int:lease_holder_id>/', lease_holder_detail, name='lease_holder_detail'),
     path('lease_holders/edit/<int:lease_holder_id>/', edit_lease_holder, name='edit_lease_holder'),
     path('lease_holders/delete/<int:lease_holder_id>/', delete_lease_holder, name='delete_lease_holder'),
+    path('global/', GlobalSettingsView.as_view(), name='global'),
+    # API urls for client side page interaction start
 
+    # Server Side Rendered templates (pages) start
     path('accounts/login/', CustomLoginView.as_view(), name='login'),
     path('users/', UserListView.as_view(), name='user_list'),
     path('users/create/', create_user, name='create_user'),
@@ -37,6 +41,5 @@ urlpatterns = [
     path('lots/create/', lot_create, name='lot_create'),
     path('lots/<int:pk>/edit/', lot_update, name='lot_update'),
     path('lots/<int:pk>/delete/', lot_delete, name='lot_delete'),
-
-    path('global/', GlobalSettingsView.as_view(), name='global'),
+    # Server Side Rendered templates (pages) end
 ]

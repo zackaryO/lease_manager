@@ -171,19 +171,6 @@ class GlobalSettingsView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsStaffUser]
     lookup_field = 'id'  # Assuming 'id' is the primary key field
 
-    # def get(self, request, *args, **kwargs):
-    #     """
-    #     Overrides the default GET method to update due_date and grace_period in Lease
-    #     before returning the global settings.
-    #     """
-    #     # First, update Lease entries
-    #     global_settings = self.get_object()
-    #     Lease.objects.all().update(due_date=F('due_date') + global_settings.due_date,
-    #                                grace_period=F('grace_period') + global_settings.grace_period)
-    #
-    #     # Then, continue with the usual GET method to retrieve the global settings
-    #     return super().get(request, *args, **kwargs)
-
     def get_object(self):
         """
         Override the get_object method to always return the first entry of the table,
