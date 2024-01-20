@@ -7,22 +7,19 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = false;
-  private authToken: string | null = null;
   private authUrl = 'http://127.0.0.1:8000/api/token/'; // URL to your Django auth endpoint
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.checkTokenExpiration();
+  }
 
   login(username: string, password: string): Observable<any> {
     return this.http.post<any>(this.authUrl, { username, password })
       .pipe(
         tap(response => {
-          this.isAuthenticated = true;
-          this.authToken = response.access; // Adjust this based on your API response
-          // Only store the token if it's not null
-          if (this.authToken) {
-            localStorage.setItem('authToken', this.authToken);
-          }
+          const currentTime = new Date().getTime();
+          localStorage.setItem('authToken', response.access); // Store token
+          localStorage.setItem('loginTime', currentTime.toString()); // Store login time
         }),
         catchError(error => {
           console.error('An error occurred', error);
@@ -32,17 +29,36 @@ export class AuthService {
   }
 
   logout(): void {
-    this.isAuthenticated = false;
-    this.authToken = null;
     localStorage.removeItem('authToken');
+    localStorage.removeItem('loginTime');
   }
 
   isLoggedIn(): boolean {
-    return this.isAuthenticated;
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+      return false;
+    }
+    return !this.isTokenExpired();
   }
 
   getAuthToken(): string | null {
-    return this.authToken;
+    return localStorage.getItem('authToken');
   }
 
+  private checkTokenExpiration(): void {
+    if (this.isTokenExpired()) {
+      this.logout();
+    }
+  }
+
+  private isTokenExpired(): boolean {
+    const loginTime = localStorage.getItem('loginTime');
+    if (!loginTime) {
+      return true;
+    }
+    const currentTime = new Date().getTime();
+    const timeElapsed = currentTime - parseInt(loginTime);
+    const thirtyMinutes = 30 * 60 * 1000; // 30 minutes in milliseconds
+    return timeElapsed > thirtyMinutes;
+  }
 }

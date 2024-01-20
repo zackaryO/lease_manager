@@ -61,8 +61,6 @@ export class DashboardComponent implements OnInit {
     this.fetchSettings();
   }
 
-
-
   viewDetails(rental: RentalDetail): void {
     console.log('Navigating to details for lot number:', rental.id);
     this.router.navigate(['/details', rental.id]);

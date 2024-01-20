@@ -47,3 +47,8 @@ Using command prompt or powershell:
 3. run command: ng serve click link in the message which should look something like this, "** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **. or you could simply navigate to the local host by typing the url into a browser.
 
 The tempary admin username: admin, password: admin.
+
+
+# Important
+delete this code in thw login component```    // Note: Logging credentials is a security risk and should be avoided in production.
+    console.log('Logging in with:', this.username, this.password);```
