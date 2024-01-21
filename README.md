@@ -1,5 +1,9 @@
 # lease_manager
 # UML sequnce diagrams (coming soon!)
+Authentication UML 
+![Authentication UML](https://github.com/zackaryO/Git-Portfolio/blob/main/assets/images/authenticationUML.png)
+
+
 
 ## breif description:
 
