@@ -58,5 +58,5 @@ the details component will only displays "Days Past Due", if indeed the payment 
 
 # UML sequnce diagrams (coming soon!)
 Authentication UML 
-![Authentication UML](https://github.com/zackaryO/Git-Portfolio/blob/main/assets/images/authenticationUML.png)
+![Authentication UML](https://github.com/zackaryO/lease_manager/blob/main/UML/images/authenticationUML.png)
 
