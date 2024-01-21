@@ -1,9 +1,4 @@
 # lease_manager
-# UML sequnce diagrams (coming soon!)
-Authentication UML 
-![Authentication UML](https://github.com/zackaryO/Git-Portfolio/blob/main/assets/images/authenticationUML.png)
-
-
 
 ## breif description:
 
@@ -60,3 +55,8 @@ delete this code in thw login component```    // Note: Logging credentials is a 
 
 # known bugs
 the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.  
+
+# UML sequnce diagrams (coming soon!)
+Authentication UML 
+![Authentication UML](https://github.com/zackaryO/Git-Portfolio/blob/main/assets/images/authenticationUML.png)
+
