@@ -56,7 +56,9 @@ delete this code in thw login component```    // Note: Logging credentials is a 
 # known bugs
 the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.  
 
-# UML sequnce diagrams (coming soon!)
+# UML sequnce diagrams (more coming soon!)
 Authentication UML 
 ![Authentication UML](https://github.com/zackaryO/lease_manager/blob/main/UML/images/authenticationUML.png)
 
+Dashboard UML 
+![Authentication UML](https://github.com/zackaryO/lease_manager/blob/main/UML/images/dashboardUML.png)
