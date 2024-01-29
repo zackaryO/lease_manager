@@ -52,8 +52,8 @@ export class ManageLeaseComponent implements OnInit {
 
   ngOnInit() {
     this.loadLeases();
-    this.loadLots(); // Make sure this method exists and is correctly implemented
-    this.loadLeaseHolders(); // Make sure this method exists and is correctly implemented
+    this.loadLots();
+    this.loadLeaseHolders();
     this.loadUnoccupiedLots();
   }
 
@@ -228,6 +228,7 @@ export class ManageLeaseComponent implements OnInit {
         this.rentalService.addNewLease(formData).subscribe(() => {
           this.loadLeases();
           this.loadUnoccupiedLots();
+          this.loadLots();
           this.leaseForm.reset();
         });
       }
@@ -245,8 +246,10 @@ export class ManageLeaseComponent implements OnInit {
 
   deleteLease(lease: Lease) {
     this.rentalService.deleteLease(lease.id).subscribe(() => {
-      this.loadLeases(); // Reload leases to update the list
       this.loadUnoccupiedLots();
+      this.loadLeases();
+      this.loadLots();
+      this.leaseForm.reset();
     });
   }
 
