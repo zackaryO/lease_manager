@@ -1,190 +1,239 @@
+<!-- manage-lease.component.ts -->
 <div class="container">
-
-    <!-- Leases Section -->
-    <mat-card>
-        <mat-card-title>Leases</mat-card-title>
-        <mat-card-content>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Lease ID</th>
-                        <th>Lot Number</th>
-                        <th>Lease Holder Name</th>
-                        <th>Amount</th>
-                        <!-- Add other fields as needed -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let lease of leases">
-                        <td>{{ lease.id }}</td>
-                        <td>{{ lease.lot_number }}</td>
-                        <td>{{ lease.lease_holder_first_name }} {{
-                            lease.lease_holder_last_name }}</td>
-                        <td>${{ lease.monthly_rental_amount }}</td>
-                        <!-- Add other values as needed -->
-                        <td>
-                            <button (click)="selectLease(lease)">Edit</button>
-                            <button (click)="deleteLease(lease)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </mat-card-content>
-        <!-- <mat-card-actions>
+  <!-- Leases Section -->
+  <mat-card>
+    <mat-card-title>Leases</mat-card-title>
+    <mat-card-content>
+      <table>
+        <thead>
+          <tr>
+            <th>Lease ID</th>
+            <th>Lot Number</th>
+            <th>Lease Holder Name</th>
+            <th>Amount</th>
+            <!-- Add other fields as needed -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lease of leases">
+            <td>{{ lease.id }}</td>
+            <td>{{ lease.lot_number }}</td>
+            <td>
+              {{ lease.lease_holder_first_name }}
+              {{ lease.lease_holder_last_name }}
+            </td>
+            <td>${{ lease.monthly_rental_amount }}</td>
+            <!-- Add other values as needed -->
+            <td>
+              <button (click)="selectLease(lease)">Edit</button>
+              <button (click)="deleteLease(lease)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+    <!-- <mat-card-actions>
             <button (click)="createLease()" [disabled]="unoccupiedLots.length == 0 || leaseHolders.length == 0">Add New
                 Lease</button>
         </mat-card-actions> -->
-    </mat-card>
+  </mat-card>
 
-    <!-- Lease Form -->
-    <mat-card *ngIf="selectedLease || (unoccupiedLots.length > 0 && leaseHolders.length > 0)">
-        <mat-card-title>{{ selectedLease ? 'Edit Lease' : 'Create Lease' }}</mat-card-title>
-        <mat-card-content>
-            <form [formGroup]="leaseForm" (ngSubmit)="submitForm()">
+  <!-- Lease Form -->
+  <mat-card
+    *ngIf="
+      selectedLease || (unoccupiedLots.length > 0 && leaseHolders.length > 0)
+    "
+  >
+    <mat-card-title>{{
+      selectedLease ? "Edit Lease" : "Create Lease"
+    }}</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="leaseForm" (ngSubmit)="submitForm()">
+        <!-- Current Lease Details -->
+        <div *ngIf="selectedLease">
+          <!-- ... existing details ... -->
+        </div>
 
-                <!-- Current Lease Details -->
-                <div *ngIf="selectedLease">
-                    <!-- ... existing details ... -->
-                </div>
+        <!-- New Lot Selection -->
+        <mat-form-field>
+          <mat-label>New Lot</mat-label>
+          <mat-select formControlName="lot">
+            <mat-option *ngFor="let lot of unoccupiedLots" [value]="lot.id">{{
+              lot.lot_number
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-                <!-- New Lot Selection -->
-                <mat-form-field>
-                    <mat-label>New Lot</mat-label>
-                    <mat-select formControlName="lot">
-                        <mat-option *ngFor="let lot of unoccupiedLots" [value]="lot.id">{{ lot.lot_number
-                            }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+        <!-- Lease Holder Selection -->
+        <mat-form-field *ngIf="!selectedLease">
+          <mat-label>Lease Holder</mat-label>
+          <mat-select formControlName="lease_holder">
+            <mat-option *ngFor="let holder of leaseHolders" [value]="holder.id"
+              >{{ holder.lease_holder_first_name }}
+              {{ holder.lease_holder_last_name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
 
-                <!-- Lease Holder Selection -->
-                <mat-form-field *ngIf="!selectedLease">
-                    <mat-label>Lease Holder</mat-label>
-                    <mat-select formControlName="lease_holder">
-                        <mat-option *ngFor="let holder of leaseHolders" [value]="holder.id">{{
-                            holder.lease_holder_first_name }} {{ holder.lease_holder_last_name }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+        <!-- Monthly Rental Amount -->
+        <mat-form-field>
+          <mat-label>Monthly Rental Amount</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="monthly_rental_amount"
+          />
+        </mat-form-field>
 
-                <!-- Monthly Rental Amount -->
-                <mat-form-field>
-                    <mat-label>Monthly Rental Amount</mat-label>
-                    <input matInput type="number" formControlName="monthly_rental_amount">
-                </mat-form-field>
+        <!-- File Input for Lease Agreement -->
+        <div class="file-input-container">
+          <label>Upload Lease Agreement</label>
+          <input
+            type="file"
+            (change)="onFileSelected($event, 'lease_agreement_path')"
+            style="display: none"
+            #leaseAgreementInput
+          />
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="leaseAgreementInput.click()"
+          >
+            <mat-icon>attach_file</mat-icon> Choose File
+          </button>
+          <div
+            class="file-drop-zone"
+            (dragover)="preventDefault($event)"
+            (drop)="onFileDrop($event, 'lease_agreement_path')"
+          >
+            <p
+              *ngIf="!leaseForm.get('lease_agreement_path')?.value"
+              class="file-drop-instruction"
+            >
+              Drag & Drop your file here
+            </p>
+            <p
+              *ngIf="leaseForm.get('lease_agreement_path')?.value"
+              class="file-name-display"
+            >
+              {{ leaseForm.get("lease_agreement_path")?.value?.name }}
+            </p>
+          </div>
+        </div>
 
-                <!-- File Input for Lease Agreement -->
-                <div class="file-input-container">
-                    <label>Upload Lease Agreement</label>
-                    <input type="file" (change)="onFileSelected($event, 'lease_agreement_path')" style="display: none"
-                        #leaseAgreementInput />
-                    <button mat-raised-button color="primary" type="button" (click)="leaseAgreementInput.click()">
-                        <mat-icon>attach_file</mat-icon> Choose File
-                    </button>
-                    <div class="file-drop-zone" (dragover)="preventDefault($event)"
-                        (drop)="onFileDrop($event, 'lease_agreement_path')">
-                        <p *ngIf="!leaseForm.get('lease_agreement_path')?.value" class="file-drop-instruction">
-                            Drag & Drop your file here
-                        </p>
-                        <p *ngIf="leaseForm.get('lease_agreement_path')?.value" class="file-name-display">
-                            {{ leaseForm.get('lease_agreement_path')?.value?.name }}
-                        </p>
-                    </div>
-                </div>
+        <!-- File Input for Lot Image -->
+        <div class="file-input-container">
+          <label>Upload Lot Image</label>
+          <input
+            type="file"
+            (change)="onFileSelected($event, 'lot_image_path')"
+            style="display: none"
+            #lotImageInput
+          />
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="lotImageInput.click()"
+          >
+            <mat-icon>attach_file</mat-icon> Choose File
+          </button>
+          <div
+            class="file-drop-zone"
+            (dragover)="preventDefault($event)"
+            (drop)="onFileDrop($event, 'lot_image_path')"
+          >
+            <p
+              *ngIf="!leaseForm.get('lot_image_path')?.value"
+              class="file-drop-instruction"
+            >
+              Drag & Drop your file here
+            </p>
+            <p
+              *ngIf="leaseForm.get('lot_image_path')?.value"
+              class="file-name-display"
+            >
+              {{ leaseForm.get("lot_image_path")?.value?.name }}
+            </p>
+          </div>
+        </div>
 
-                <!-- File Input for Lot Image -->
-                <div class="file-input-container">
-                    <label>Upload Lot Image</label>
-                    <input type="file" (change)="onFileSelected($event, 'lot_image_path')" style="display: none"
-                        #lotImageInput />
-                    <button mat-raised-button color="primary" type="button" (click)="lotImageInput.click()">
-                        <mat-icon>attach_file</mat-icon> Choose File
-                    </button>
-                    <div class="file-drop-zone" (dragover)="preventDefault($event)"
-                        (drop)="onFileDrop($event, 'lot_image_path')">
-                        <p *ngIf="!leaseForm.get('lot_image_path')?.value" class="file-drop-instruction">
-                            Drag & Drop your file here
-                        </p>
-                        <p *ngIf="leaseForm.get('lot_image_path')?.value" class="file-name-display">
-                            {{ leaseForm.get('lot_image_path')?.value?.name }}
-                        </p>
-                    </div>
-                </div>
+        <!-- Submit and Cancel Buttons -->
+        <button mat-raised-button color="primary" type="submit">
+          {{ selectedLease ? "Update" : "Create" }}
+        </button>
+        <button mat-raised-button type="button" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
+  <!-- Lots Section -->
+  <mat-card>
+    <mat-card-title>Lots</mat-card-title>
+    <mat-card-content>
+      <table>
+        <thead>
+          <tr>
+            <th>Lot Number</th>
+            <th>Address</th>
+            <th>Occupied</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lot of lots">
+            <td>{{ lot.lot_number }}</td>
+            <td>{{ lot.lot_address }}</td>
+            <td>{{ lot.occupied ? "Yes" : "No" }}</td>
+            <td>
+              <button (click)="openLotFormModal(lot)">Edit</button>
+              <button (click)="deleteLot(lot)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+    <mat-card-actions>
+      <button (click)="openLotFormModal(null)">Add New Lot</button>
+    </mat-card-actions>
+  </mat-card>
 
-                <!-- Submit and Cancel Buttons -->
-                <button mat-raised-button color="primary" type="submit">{{ selectedLease ? 'Update' : 'Create'
-                    }}</button>
-                <button mat-raised-button type="button" (click)="cancelEdit()">Cancel</button>
-            </form>
-        </mat-card-content>
-    </mat-card>
-
-
-    <!-- Lots Section -->
-    <mat-card>
-        <mat-card-title>Lots</mat-card-title>
-        <mat-card-content>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Lot Number</th>
-                        <th>Address</th>
-                        <th>Occupied</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let lot of lots">
-                        <td>{{ lot.lot_number }}</td>
-                        <td>{{ lot.lot_address }}</td>
-                        <td>{{ lot.occupied ? 'Yes' : 'No' }}</td>
-                        <td>
-                            <button (click)="selectLot(lot)">Edit</button>
-                            <button (click)="deleteLot(lot)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </mat-card-content>
-        <mat-card-actions>
-            <button (click)="createLot()">Add New Lot</button>
-        </mat-card-actions>
-    </mat-card>
-
-    <!-- Lot Form -->
-    <!-- Include a form similar to Lease for Lot entity -->
-
-    <!-- Lease Holders Section -->
-    <mat-card>
-        <mat-card-title>Lease Holders</mat-card-title>
-        <mat-card-content>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let holder of leaseHolders">
-                        <td>{{ holder.lease_holder_first_name }} {{ holder.lease_holder_last_name }}</td>
-                        <td>{{ holder.lease_holder_address }}</td>
-                        <td>{{ holder.email }}</td>
-                        <td>{{ holder.phone }}</td>
-                        <td>
-                            <button (click)="selectLeaseHolder(holder)">Edit</button>
-                            <button (click)="deleteLeaseHolder(holder)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </mat-card-content>
-        <mat-card-actions>
-            <button (click)="createLeaseHolder()">Add New Lease Holder</button>
-        </mat-card-actions>
-    </mat-card>
-
-    <!-- Lease Holder Form -->
-    <!-- Include a form similar to Lease for LeaseHolder entity -->
-
+  <!-- Lease Holders Section -->
+  <mat-card>
+    <mat-card-title>Lease Holders</mat-card-title>
+    <mat-card-content>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let holder of leaseHolders">
+            <td>
+              {{ holder.lease_holder_first_name }}
+              {{ holder.lease_holder_last_name }}
+            </td>
+            <td>{{ holder.lease_holder_address }}</td>
+            <td>{{ holder.email }}</td>
+            <td>{{ holder.phone }}</td>
+            <td>
+              <button (click)="openLeaseHolderFormModal(holder)">Edit</button>
+              <button (click)="deleteLeaseHolder(holder)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+    <mat-card-actions>
+      <button (click)="openLeaseHolderFormModal(null)">
+        Add New Lease Holder
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>

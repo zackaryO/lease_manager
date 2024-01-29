@@ -23,6 +23,8 @@ import { AddLeaseeComponent } from './add-leasee/add-leasee.component';
 import { RentalService } from './services/rental-detail.service';
 import { ManageLeaseComponent } from './manage-lease/manage-lease.component';
 import { GlobalSettingsModalComponent } from './global-settings-modal/global-settings-modal.component';
+import { LotFormModalComponent } from './lot-form-modal/lot-form-modal.component';
+import { LeaseHolderFormModalComponent } from './lease-holder-form-modal/lease-holder-form-modal.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { GlobalSettingsModalComponent } from './global-settings-modal/global-set
     PaymentDialogComponent,
     AddLeaseeComponent,
     ManageLeaseComponent,
-    GlobalSettingsModalComponent
+    GlobalSettingsModalComponent,
+    LotFormModalComponent,
+    LeaseHolderFormModalComponent
   ],
   imports: [
     BrowserModule,

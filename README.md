@@ -8,12 +8,7 @@ The Angular client side is secured using Authgaurd that is currently working wit
 
 ## Work in progress
 
-need to add an angular dialog to allow the staff to create a lot
-the add leasee logic is bad, if we need to keep it, it will need to be modified to deal with each table seperately for data integrity, such as populating the lease holder into a pull down, similarly to the lot
-
-when a lease is created, the lot table isn't updated to show occupied or not
-
-ability to change due and deliquent num days
+create Django views to handle CUD operations for both lots and leaseholders using an API
 
 see what is wrong with due date in detail page
 
@@ -21,7 +16,7 @@ add a feild in leaseholder table to see if customer wants payment reminder (bool
 
 add email client that sends a missing payment notication / payment reminder with default message(s), pulls leaseholders name, email, days/weeks/months late to build the body
 
-I need to implement a token so I can utilize https:
+I need to implement a certificate so I can utilize https:
 
 I plan to put this entire package into a common virtual enviroment using Docker.
 
@@ -50,17 +45,19 @@ Using command prompt or powershell:
 
 The tempary admin username: admin, password: admin.
 
-
 # Important todo
-delete this code in thw login component```    // Note: Logging credentials is a security risk and should be avoided in production.
-    console.log('Logging in with:', this.username, this.password);```
+
+delete this code in thw login component`    // Note: Logging credentials is a security risk and should be avoided in production.
+    console.log('Logging in with:', this.username, this.password);`
 
 # known bugs
-the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.  
+
+the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.
 
 # UML sequnce diagrams (more coming soon!)
-Authentication UML 
+
+Authentication UML
 ![Authentication UML](https://github.com/zackaryO/lease_manager/blob/main/UML/images/authenticationUML.png)
 
-Dashboard UML 
+Dashboard UML
 ![Authentication UML](https://github.com/zackaryO/lease_manager/blob/main/UML/images/dashboardUML.png)

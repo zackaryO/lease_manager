@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{ data ? "Edit" : "Add" }} Lease Holder</h2>
+<mat-dialog-content>
+  <form [formGroup]="leaseHolderForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>First Name</mat-label>
+      <input
+        matInput
+        formControlName="lease_holder_first_name"
+        aria-label="First Name"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Last Name</mat-label>
+      <input
+        matInput
+        formControlName="lease_holder_last_name"
+        aria-label="Last Name"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Address</mat-label>
+      <input
+        matInput
+        formControlName="lease_holder_address"
+        aria-label="Address"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" aria-label="Email" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Phone</mat-label>
+      <input matInput formControlName="phone" aria-label="Phone Number" />
+    </mat-form-field>
+    <!-- Add other fields in a similar way -->
+
+    <div mat-dialog-actions>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-button color="primary" type="submit">Save</button>
+    </div>
+  </form>
+</mat-dialog-content>

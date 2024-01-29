@@ -1,9 +1,13 @@
+// manage-lease.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RentalService } from '../services/rental-detail.service';
 import { Lot } from '../models/lot.model';
 import { Lease } from '../models/lease.model';
 import { LeaseHolder } from '../models/lease-holder.model';
+import { MatDialog } from '@angular/material/dialog';
+import { LotFormModalComponent } from '../lot-form-modal/lot-form-modal.component'; // Update the path as necessary
+import { LeaseHolderFormModalComponent } from '../lease-holder-form-modal/lease-holder-form-modal.component'; // Update the path as necessary
 
 @Component({
   selector: 'app-manage-lease',
@@ -23,7 +27,7 @@ export class ManageLeaseComponent implements OnInit {
   selectedLeaseHolder: LeaseHolder | null = null;
   isDataLoading: boolean = false;
 
-  constructor(private rentalService: RentalService) {
+  constructor(private rentalService: RentalService, private dialog: MatDialog) {
     this.leaseForm = new FormGroup({
       lot: new FormControl('', Validators.required),
       lease_holder: new FormControl('', Validators.required),
@@ -34,13 +38,13 @@ export class ManageLeaseComponent implements OnInit {
       lot_image_path: new FormControl(null),
       payment_status: new FormControl('up-to-date', Validators.required)
     });
-    this.leaseHolderForm = new FormGroup({
+    this.lotForm = new FormGroup({
       lot_number: new FormControl('', Validators.required),
       lot_address: new FormControl('', Validators.required),
-      // occupied: new FormControl(false, Validators.required)
+      occupied: new FormControl(false, Validators.required)
       // Add other fields as necessary
     });
-    this.lotForm = new FormGroup({
+    this.leaseHolderForm = new FormGroup({
       lease_holder_first_name: new FormControl('', Validators.required),
       lease_holder_last_name: new FormControl('', Validators.required),
       lease_holder_address: new FormControl('', Validators.required),
@@ -56,15 +60,6 @@ export class ManageLeaseComponent implements OnInit {
     this.loadLeaseHolders();
     this.loadUnoccupiedLots();
   }
-
-  // private Reload() {
-  //   setTimeout(() => {
-  //     this.loadLeases();
-  //     this.loadLots(); // Make sure this method exists and is correctly implemented
-  //     this.loadLeaseHolders(); // Make sure this method exists and is correctly implemented
-  //     this.loadUnoccupiedLots();
-  //   }, 3000);
-  // }
 
   private loadLeases() {
     this.isDataLoading = true;
@@ -103,26 +98,38 @@ export class ManageLeaseComponent implements OnInit {
     this.lotForm.patchValue(lot);
   }
 
-  createLot() {
-    if (this.lotForm.valid) {
-      this.rentalService.addLot(this.lotForm.value).subscribe(() => {
-        this.loadLots();
-        this.selectedLot = null;
-        this.lotForm.reset();
-      });
-    }
+  createLot(lotData: Lot) {
+    this.rentalService.addLot(lotData).subscribe(() => {
+      this.loadLots();
+    });
   }
 
-  updateLot() {
-    if (this.selectedLot && this.lotForm.valid) {
-      const updatedLot = { ...this.selectedLot, ...this.lotForm.value };
-      this.rentalService.updateLot(updatedLot).subscribe(() => {
-        this.loadUnoccupiedLots();
-        this.selectedLot = null;
-        this.lotForm.reset();
-      });
-    }
+  // createLot() {
+  //   if (this.lotForm.valid) {
+  //     this.rentalService.addLot(this.lotForm.value).subscribe(() => {
+  //       this.loadLots();
+  //       this.selectedLot = null;
+  //       this.lotForm.reset();
+  //     });
+  //   }
+  // }
+
+  updateLot(lotData: Lot) {
+    this.rentalService.updateLot(lotData).subscribe(() => {
+      this.loadUnoccupiedLots();
+    });
   }
+
+  // updateLot() {
+  //   if (this.selectedLot && this.lotForm.valid) {
+  //     const updatedLot = { ...this.selectedLot, ...this.lotForm.value };
+  //     this.rentalService.updateLot(updatedLot).subscribe(() => {
+  //       this.loadUnoccupiedLots();
+  //       this.selectedLot = null;
+  //       this.lotForm.reset();
+  //     });
+  //   }
+  // }
 
   deleteLot(lot: Lot) {
     this.rentalService.deleteLot(lot.id).subscribe(() => {
@@ -149,28 +156,44 @@ export class ManageLeaseComponent implements OnInit {
     });
   }
 
-
-  createLeaseHolder() {
-    if (this.leaseHolderForm.valid) {
-      this.rentalService.addLeaseHolder(this.leaseHolderForm.value).subscribe(() => {
-        this.loadLeaseHolders();
-        this.selectedLeaseHolder = null;
-        this.leaseHolderForm.reset();
-      });
-    }
+  createLeaseHolder(leaseHolderData: LeaseHolder) {
+    this.rentalService.addLeaseHolder(leaseHolderData).subscribe(() => {
+      this.loadLeaseHolders();
+    });
   }
 
-  updateLeaseHolder() {
-    if (this.selectedLeaseHolder && this.leaseHolderForm.valid) {
-      const updatedLeaseHolder = { ...this.selectedLeaseHolder, ...this.leaseHolderForm.value };
-      this.rentalService.updateLeaseHolder(updatedLeaseHolder).subscribe(() => {
-        this.loadUnoccupiedLots();
-        this.loadLeases();
-        this.selectedLeaseHolder = null;
-        this.leaseHolderForm.reset();
-      });
-    }
+  // createLeaseHolder() {
+  //   if (this.leaseHolderForm.valid) {
+  //     this.rentalService.addLeaseHolder(this.leaseHolderForm.value).subscribe(() => {
+  //       this.loadLeaseHolders();
+  //       this.selectedLeaseHolder = null;
+  //       this.leaseHolderForm.reset();
+  //     });
+  //   }
+  // }
+
+  // updateLeaseHolder() {
+  //   if (this.selectedLeaseHolder && this.leaseHolderForm.valid) {
+  //     const updatedLeaseHolder = { ...this.selectedLeaseHolder, ...this.leaseHolderForm.value };
+  //     this.rentalService.updateLeaseHolder(updatedLeaseHolder).subscribe(() => {
+  //       this.loadUnoccupiedLots();
+  //       this.loadLeases();
+  //       this.selectedLeaseHolder = null;
+  //       this.leaseHolderForm.reset();
+  //     });
+  //   }
+  // }
+
+  updateLeaseHolder(leaseHolderData: LeaseHolder) {
+    this.rentalService.updateLeaseHolder(leaseHolderData).subscribe(() => {
+      this.loadUnoccupiedLots();
+      this.loadLeases();
+    });
   }
+
+
+
+
 
   deleteLeaseHolder(leaseHolder: LeaseHolder) {
     this.rentalService.deleteLeaseHolder(leaseHolder.id).subscribe(() => {
@@ -235,15 +258,6 @@ export class ManageLeaseComponent implements OnInit {
     }
   }
 
-  // createLease() {
-  //   if (this.unoccupiedLots.length > 0 && this.leaseHolders.length > 0) {
-  //     this.selectedLease = null;
-  //     this.leaseForm.reset();
-  //   } else {
-  //     // Handle case where either unoccupied lots or leaseholders are not available
-  //   }
-  // }
-
   deleteLease(lease: Lease) {
     this.rentalService.deleteLease(lease.id).subscribe(() => {
       this.loadUnoccupiedLots();
@@ -257,4 +271,50 @@ export class ManageLeaseComponent implements OnInit {
     this.selectedLease = null;
     this.leaseForm.reset();
   }
+
+
+  // Method to open the Lot form in a modal
+  openLotFormModal(lot: Lot | null) {
+    const dialogRef = this.dialog.open(LotFormModalComponent, {
+      width: '250px',
+      data: lot // Pass existing lot or null for a new lot
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (lot) {
+          this.updateLot(result);
+        } else {
+          this.createLot(result);
+        }
+      }
+    });
+  }
+
+  // Method to open the LeaseHolder form in a modal
+  openLeaseHolderFormModal(leaseHolder: LeaseHolder | null) {
+    const dialogRef = this.dialog.open(LeaseHolderFormModalComponent, {
+      width: '250px',
+      data: leaseHolder // Pass existing leaseHolder or null for a new lease holder
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (leaseHolder) {
+          this.updateLeaseHolder(result);
+        } else {
+          this.createLeaseHolder(result);
+        }
+      }
+    });
+  }
+
+  // Refactor CRUD methods to accept parameter from modal result
+
+
+
+
+
+
+
 }
