@@ -8,7 +8,7 @@ The Angular client side is secured using Authgaurd that is currently working wit
 
 ## Work in progress
 
-create Django views to handle CUD operations for both lots and leaseholders using an API
+create Django views to handle CUD operations for both lots and leaseholders using an API, may be able to delete the lots and leaseholder forms from manage-lease.component.ts since they are now in dialogs(modals)
 
 see what is wrong with due date in detail page
 
