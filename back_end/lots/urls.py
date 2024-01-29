@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import LeaseListView, LeaseDetailUpdateView, PaymentListCreateView, PaymentBulkDeleteView, LotListView, \
+from .views import LeaseListView, LeaseDetailUpdateView, PaymentListCreateView, PaymentBulkDeleteView, \
     UnoccupiedLotListView, LeaseCreateView, UserRegistrationAPIView, add_lease_holder, LeaseHolderListView, create_user, \
     UserListView, UserUpdateView, UserDeleteView, lease_holder_detail, edit_lease_holder, delete_lease_holder, \
     lease_create, lease_back_detail, lease_back_list, delete_lease_back, lease_update, lot_list, lot_create, lot_update, \
-    lot_delete, CustomLoginView, LeaseHolderView, GlobalSettingsView, LeaseDeleteView
+    lot_delete, CustomLoginView, LeaseHolderView, GlobalSettingsView, LeaseDeleteView, LotListCreateView, \
+    LotRetrieveUpdateDestroyView
 
 urlpatterns = [
     # API urls for client side page interaction start
@@ -12,7 +13,8 @@ urlpatterns = [
     path('leases/<int:id>/', LeaseDetailUpdateView.as_view(), name='lease-detail-update'),  # for retrieving, updating
     path('payments/', PaymentListCreateView.as_view(), name='payment-list-create'),
     path('payments/delete/', PaymentBulkDeleteView.as_view(), name='payment-bulk-delete'),
-    path('leases/lots/', LotListView.as_view(), name='lot-list'),
+    path('leases/lots/', LotListCreateView.as_view(), name='lot-list'),
+    path('leases/lots/mod/<int:pk>/', LotRetrieveUpdateDestroyView.as_view(), name='lot-mod'),
     path('leases/lots/unoccupied/', UnoccupiedLotListView.as_view(), name='unoccupied-lot-list'),
     path('leases/create/', LeaseCreateView.as_view(), name='lease-create'),  # Endpoint for creating a new lease
     path('register/', UserRegistrationAPIView.as_view(), name='register'),

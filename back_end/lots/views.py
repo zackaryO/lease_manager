@@ -211,18 +211,44 @@ class PaymentBulkDeleteView(APIView):
         return Response({'status': 'payments successfully deleted'}, status=status.HTTP_200_OK)
 
 
-class LotListView(generics.ListAPIView):
+# class LotListView(generics.ListAPIView):
+#     """
+#     API view to list all lots.
+#     (generics.ListAPIView) Provides a read-only list of all lot instances.
+#     Accessible to staff users authenticated with JWT.
+#     Inherits from generics.ListAPIView.
+#     """
+#     queryset = Lot.objects.all()
+#     serializer_class = LotSerializer
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsStaffUser]
+
+class LotListCreateView(generics.ListCreateAPIView):
     """
-    API view to list all lots.
-    (generics.ListAPIView) Provides a read-only list of all lot instances.
-    Accessible to staff users authenticated with JWT.
-    Inherits from generics.ListAPIView.
+    API view to list all lots and create a new lot.
+    Inherits from generics.ListCreateAPIView.
     """
     queryset = Lot.objects.all()
     serializer_class = LotSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsStaffUser]
+    permission_classes = [IsAuthenticated]  # or [IsStaffUser] if you have a custom permission class
 
+    def perform_create(self, serializer):
+        # Add any custom creation logic here if necessary
+        serializer.save()
+
+
+class LotRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view to retrieve, update, or delete a lot instance.
+    Inherits from generics.RetrieveUpdateDestroyAPIView.
+    """
+    queryset = Lot.objects.all()
+    serializer_class = LotSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]  # or [IsStaffUser]
+
+    # You can override methods like perform_update() if you need custom logic
 
 class UnoccupiedLotListView(generics.ListAPIView):
     """

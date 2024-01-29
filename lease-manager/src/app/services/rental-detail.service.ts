@@ -195,12 +195,12 @@ export class RentalService {
   }
 
   updateLot(lot: Lot): Observable<Lot> {
-    return this.http.put<Lot>(`${this.baseUrl}/lots/${lot.id}/`, lot, { headers: this.getHeaders() })
+    return this.http.put<Lot>(`${this.baseUrl}/lots/mod/${lot.id}/`, lot, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   deleteLot(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/lots/${id}/`, { headers: this.getHeaders() })
+    return this.http.delete(`${this.baseUrl}/lots/mod/${id}/`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 

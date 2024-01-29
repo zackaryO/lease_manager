@@ -27,6 +27,7 @@ export class ManageLeaseComponent implements OnInit {
   selectedLeaseHolder: LeaseHolder | null = null;
   isDataLoading: boolean = false;
 
+
   constructor(private rentalService: RentalService, private dialog: MatDialog) {
     this.leaseForm = new FormGroup({
       lot: new FormControl('', Validators.required),
@@ -101,6 +102,8 @@ export class ManageLeaseComponent implements OnInit {
   createLot(lotData: Lot) {
     this.rentalService.addLot(lotData).subscribe(() => {
       this.loadLots();
+      this.loadUnoccupiedLots();
+      this.loadLeases();
     });
   }
 
@@ -131,12 +134,32 @@ export class ManageLeaseComponent implements OnInit {
   //   }
   // }
 
-  deleteLot(lot: Lot) {
-    this.rentalService.deleteLot(lot.id).subscribe(() => {
-      this.loadUnoccupiedLots();
-    });
+  // deleteLot(lot: Lot) {
+  //   this.rentalService.deleteLot(lot.id).subscribe(() => {
+  //     this.loadUnoccupiedLots();
+  //     this.loadLots();
+  //   });
+  // }
+
+  // Add a method to check if a lot is unoccupied
+  isLotUnoccupied(lotId: number): boolean {
+    return this.unoccupiedLots.some(unoccupiedLot => unoccupiedLot.id === lotId);
   }
 
+  // Modify the deleteLot method
+  deleteLot(lot: Lot) {
+    if (this.isLotUnoccupied(lot.id)) {
+      // Proceed with deletion as the lot is unoccupied
+      this.rentalService.deleteLot(lot.id).subscribe(() => {
+        this.loadUnoccupiedLots();
+        this.loadLots();
+        // Optionally, show a success message
+      });
+    } else {
+      // Show a warning message as the lot is occupied
+      alert('Cannot delete this lot as it is currently occupied. Please delete or modify the associated lease first.');
+    }
+  }
 
   // LeaseHolder CRUD methods
   selectLeaseHolder(leaseHolder: LeaseHolder) {

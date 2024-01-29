@@ -3,6 +3,10 @@
   <!-- Leases Section -->
   <mat-card>
     <mat-card-title>Leases</mat-card-title>
+    <p>
+      New leases cannot be created until there are at least on lease holder and
+      at least on unoccupied lot
+    </p>
     <mat-card-content>
       <table>
         <thead>
@@ -32,10 +36,6 @@
         </tbody>
       </table>
     </mat-card-content>
-    <!-- <mat-card-actions>
-            <button (click)="createLease()" [disabled]="unoccupiedLots.length == 0 || leaseHolders.length == 0">Add New
-                Lease</button>
-        </mat-card-actions> -->
   </mat-card>
 
   <!-- Lease Form -->
