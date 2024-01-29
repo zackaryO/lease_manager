@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']  # for local development
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -124,7 +125,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
+os.environ['DJANGO_SETTINGS_MODULE'] = 'your_project.settings'
 STATIC_URL = '/static/'
 
 # Default primary key field type

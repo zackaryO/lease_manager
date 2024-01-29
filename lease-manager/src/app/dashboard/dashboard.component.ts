@@ -34,8 +34,6 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('OnInit called for DashboardComponent');
-
     this.rentalService.fetchRentals().subscribe({
       next: rentals => {
         console.log('Rentals fetched:', rentals);

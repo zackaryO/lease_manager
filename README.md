@@ -11,6 +11,8 @@ The Angular client side is secured using Authgaurd that is currently working wit
 need to add an angular dialog to allow the staff to create a lot
 the add leasee logic is bad, if we need to keep it, it will need to be modified to deal with each table seperately for data integrity, such as populating the lease holder into a pull down, similarly to the lot
 
+when a lease is created, the lot table isn't updated to show occupied or not
+
 ability to change due and deliquent num days
 
 see what is wrong with due date in detail page

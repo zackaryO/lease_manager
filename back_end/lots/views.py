@@ -2,11 +2,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
+from django.core.files.storage import default_storage
 from django.db.models import F
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404, resolve_url
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, DeleteView
+from django.db import IntegrityError
 from rest_framework import generics, status
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
@@ -19,7 +21,7 @@ from .forms import LeaseHolderForm, CustomUserCreationForm, LeaseForm, LotForm
 from .permissions import IsAdminUser, IsStaffUser
 from .models import Lease, Payment, Lot, User, LeaseHolder, GlobalSettings
 from .serializers import LeaseSerializer, PaymentSerializer, LotSerializer, UserRegistrationSerializer, \
-    LeaseHolderSerializer, GlobalSettingsSerializer
+    LeaseHolderSerializer, GlobalSettingsSerializer, LeaseCreateSerializer
 
 
 class UserRegistrationAPIView(generics.CreateAPIView):
@@ -43,6 +45,98 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         return Response({
             "user": UserRegistrationSerializer(user).data
         }, status=status.HTTP_201_CREATED)
+
+
+class LeaseCreateView(generics.CreateAPIView):
+    queryset = Lease.objects.all()
+    serializer_class = LeaseCreateSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def perform_create(self, serializer):
+        lease_agreement_file = self.request.FILES.get('lease_agreement_path')
+        lot_image_file = self.request.FILES.get('lot_image_path')
+
+        if lease_agreement_file:
+            lease_agreement_path = default_storage.save(
+                f'images/lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
+            serializer.validated_data['lease_agreement_path'] = f'http://127.0.0.1:8000/{lease_agreement_path}'
+
+        if lot_image_file:
+            lot_image_path = default_storage.save(
+                f'images/lot_images/{lot_image_file.name}', lot_image_file)
+            serializer.validated_data['lot_image_path'] = f'http://127.0.0.1:8000/{lot_image_path}'
+
+        serializer.save()
+        # After successfully creating a lease, update the occupied field in the Lot table
+
+
+class LeaseDeleteView(generics.DestroyAPIView):
+    """
+    API view for deleting a specific lease instance.
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.DestroyAPIView.
+    """
+    queryset = Lease.objects.all()
+    serializer_class = LeaseSerializer
+    lookup_field = 'id'
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsStaffUser]
+
+    def delete(self, request, *args, **kwargs):
+        lease = self.get_object()
+        lease.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @staticmethod
+    def update_lot_occupancy(leased_lot_id=None):
+        # Update the occupancy status of the specific lot if provided
+        if leased_lot_id:
+            Lot.objects.filter(id=leased_lot_id).update(occupied=False)
+
+        # Get all currently leased lot IDs
+        leased_lot_ids = Lease.objects.values_list('lot_id', flat=True)
+
+        # Update occupancy status for all lots
+        Lot.objects.all().update(occupied=F('id').in_(leased_lot_ids))
+
+
+class GlobalSettingsView(generics.RetrieveUpdateAPIView):
+    """
+    API view to read and update global settings.
+    Handles fetching (GET) and updating (PUT/PATCH) the global settings.
+    Assumes there's only a single entry in the GlobalSettings table.
+    When fetching global settings, it also updates all leases' due_date and grace_period.
+    Accessible to staff users authenticated with JWT.
+    Inherits from generics.RetrieveUpdateAPIView.
+    """
+    queryset = GlobalSettings.objects.all()
+    serializer_class = GlobalSettingsSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsStaffUser]
+    lookup_field = 'id'  # Assuming 'id' is the primary key field
+
+    def get_object(self):
+        """
+        Override the get_object method to always return the first entry of the table,
+        since there's only a single entry in the GlobalSettings table.
+        """
+        return GlobalSettings.objects.first()
+
+    def put(self, request, *args, **kwargs):
+        """
+        Overrides the default PUT method to update the GlobalSettings and then
+        update all leases' due_date and grace_period.
+        """
+        response = super().put(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            global_settings = self.get_object()
+            Lease.objects.all().update(
+                due_date=global_settings.due_date,
+                grace_period=global_settings.grace_period
+            )
+        return response
 
 
 class LeaseListView(generics.ListAPIView):
@@ -143,56 +237,6 @@ class UnoccupiedLotListView(generics.ListAPIView):
     permission_classes = [IsStaffUser]
 
 
-class LeaseCreateView(generics.CreateAPIView):
-    """
-    API view to create new lease instances.
-    Handles the creation of lease records.
-    Accessible to staff users authenticated with JWT.
-    Inherits from generics.CreateAPIView.
-    """
-    queryset = Lease.objects.all()
-    serializer_class = LeaseSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsStaffUser]
-
-
-class GlobalSettingsView(generics.RetrieveUpdateAPIView):
-    """
-    API view to read and update global settings.
-    Handles fetching (GET) and updating (PUT/PATCH) the global settings.
-    Assumes there's only a single entry in the GlobalSettings table.
-    When fetching global settings, it also updates all leases' due_date and grace_period.
-    Accessible to staff users authenticated with JWT.
-    Inherits from generics.RetrieveUpdateAPIView.
-    """
-    queryset = GlobalSettings.objects.all()
-    serializer_class = GlobalSettingsSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsStaffUser]
-    lookup_field = 'id'  # Assuming 'id' is the primary key field
-
-    def get_object(self):
-        """
-        Override the get_object method to always return the first entry of the table,
-        since there's only a single entry in the GlobalSettings table.
-        """
-        return GlobalSettings.objects.first()
-
-    def put(self, request, *args, **kwargs):
-        """
-        Overrides the default PUT method to update the GlobalSettings and then
-        update all leases' due_date and grace_period.
-        """
-        response = super().put(request, *args, **kwargs)
-        if response.status_code == status.HTTP_200_OK:
-            global_settings = self.get_object()
-            Lease.objects.all().update(
-                due_date=global_settings.due_date,
-                grace_period=global_settings.grace_period
-            )
-        return response
-
-
 def is_staff_or_admin(user):
     return user.is_staff or user.is_superuser
 
@@ -255,7 +299,12 @@ def lease_back_list(request):
 def lease_create(request):
     form = LeaseForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        form.save()
+        new_lease = form.save(commit=False)
+        # Set the lot as occupied
+        lot = new_lease.lot
+        lot.occupied = True
+        lot.save()
+        new_lease.save()
         return redirect('lease_back_list')
     return render(request, 'lots/lease_create.html', {'form': form})
 
@@ -264,10 +313,19 @@ def lease_create(request):
 @user_passes_test(is_staff_or_admin)
 def lease_update(request, lease_id):  # lease_id matches the URL pattern
     lease = get_object_or_404(Lease, pk=lease_id)
+    original_lot = lease.lot
     if request.method == "POST":
         form = LeaseForm(request.POST, instance=lease)
         if form.is_valid():
-            form.save()
+            updated_lease = form.save(commit=False)
+            new_lot = updated_lease.lot
+            # Update lot occupied status
+            if original_lot != new_lot:
+                original_lot.occupied = False
+                original_lot.save()
+                new_lot.occupied = True
+                new_lot.save()
+            updated_lease.save()
             return redirect('lease_back_list')
     else:
         form = LeaseForm(instance=lease)

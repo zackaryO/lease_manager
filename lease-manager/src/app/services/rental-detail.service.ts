@@ -71,35 +71,40 @@ export class RentalService {
 
   fetchLeases(): Observable<Lease[]> {
     const headers = this.getHeaders();
-    return this.http.get<Lease[]>(`${this.baseUrl}/leases`, { headers })
+    return this.http.get<Lease[]>(`${this.baseUrl}`, { headers })
       .pipe(catchError(this.handleError));
   }
 
   // Fetch lease by ID
   getLeaseById(id: number): Observable<Lease> {
     const headers = this.getHeaders();
-    return this.http.get<Lease>(`${this.baseUrl}/leases/${id}`, { headers })
+    return this.http.get<Lease>(`${this.baseUrl}/${id}`, { headers })
       .pipe(catchError(this.handleError));
   }
 
   // Update lease
   updateLease(lease: Lease): Observable<Lease> {
     const headers = this.getHeaders();
-    return this.http.put<Lease>(`${this.baseUrl}/leases/${lease.id}/`, lease, { headers })
+    return this.http.put<Lease>(`${this.baseUrl}/${lease.id}/`, lease, { headers })
       .pipe(catchError(this.handleError));
   }
 
   // Add new lease
   addLease(lease: Lease): Observable<Lease> {
     const headers = this.getHeaders();
-    return this.http.post<Lease>(`${this.baseUrl}/leases/`, lease, { headers })
+
+    // Log the lease object to the console
+    console.log('Adding lease:', lease);
+
+    return this.http.post<Lease>(`${this.baseUrl}/create` + '/', lease, { headers })
       .pipe(catchError(this.handleError));
   }
+
 
   // Delete lease
   deleteLease(id: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.delete(`${this.baseUrl}/leases/${id}/`, { headers })
+    return this.http.delete(`${this.baseUrl}/delete/${id}/`, { headers })
       .pipe(catchError(this.handleError));
   }
 

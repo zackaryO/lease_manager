@@ -65,6 +65,28 @@ class LeaseSerializer(serializers.ModelSerializer):
         return instance
 
 
+class LeaseCreateSerializer(serializers.ModelSerializer):
+    lot = serializers.PrimaryKeyRelatedField(queryset=Lot.objects.all())
+    lease_holder = serializers.PrimaryKeyRelatedField(queryset=LeaseHolder.objects.all())
+    lease_agreement_path = serializers.FileField(max_length=None, use_url=True, required=False)
+    lot_image_path = serializers.FileField(max_length=None, use_url=True, required=False)
+
+    class Meta:
+        model = Lease
+        fields = [
+            'lot', 'lease_holder', 'monthly_rental_amount', 'due_date', 'grace_period',
+            'lease_agreement_path', 'lot_image_path', 'payment_status'
+        ]
+        extra_kwargs = {
+            'due_date': {'default': 1},
+            'grace_period': {'default': 5}
+        }
+
+    def create(self, validated_data):
+        # Handle creation logic, including file saving if necessary
+        return super().create(validated_data)
+
+
 class PaymentSerializer(serializers.ModelSerializer):
     # If you want a readable representation for the payment method instead of just the code (e.g., 'Cash' instead of 'CASH')
     payment_method_display = serializers.CharField(source='get_payment_method_display', read_only=True)

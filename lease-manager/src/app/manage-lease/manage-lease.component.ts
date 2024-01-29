@@ -26,16 +26,18 @@ export class ManageLeaseComponent implements OnInit {
   constructor(private rentalService: RentalService) {
     this.leaseForm = new FormGroup({
       lot: new FormControl('', Validators.required),
-      leaseHolder: new FormControl('', Validators.required),
-      monthlyRentalAmount: new FormControl(0, [Validators.required, Validators.min(0)]),
-      dueDate: new FormControl('', Validators.required),
-      gracePeriod: new FormControl(0, [Validators.required, Validators.min(0)]),
-      paymentStatus: new FormControl('', Validators.required)
+      lease_holder: new FormControl('', Validators.required),
+      monthly_rental_amount: new FormControl(0, [Validators.required, Validators.min(0)]),
+      due_date: new FormControl(1, Validators.required),
+      grace_period: new FormControl(5, [Validators.required, Validators.min(0)]),
+      lease_agreement_path: new FormControl(null),
+      lot_image_path: new FormControl(null),
+      payment_status: new FormControl('up-to-date', Validators.required)
     });
     this.leaseHolderForm = new FormGroup({
       lot_number: new FormControl('', Validators.required),
       lot_address: new FormControl('', Validators.required),
-      occupied: new FormControl(false, Validators.required)
+      // occupied: new FormControl(false, Validators.required)
       // Add other fields as necessary
     });
     this.lotForm = new FormGroup({
@@ -52,18 +54,28 @@ export class ManageLeaseComponent implements OnInit {
     this.loadLeases();
     this.loadLots(); // Make sure this method exists and is correctly implemented
     this.loadLeaseHolders(); // Make sure this method exists and is correctly implemented
+    this.loadUnoccupiedLots();
   }
 
   private loadLeases() {
     this.isDataLoading = true;
-    this.rentalService.fetchLeases().subscribe(data => {
-      this.leases = data;
-      this.isDataLoading = false;
-    }, error => {
-      // Handle error
-      this.isDataLoading = false;
+
+    this.rentalService.fetchLeases().subscribe({
+      next: (data) => {
+        console.log('Leases data:', data); // Log the received data
+        this.leases = data;
+        this.isDataLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching leases:', error); // Log any error
+        this.isDataLoading = false;
+      },
+      complete: () => {
+        // Optional: Code to run on completion, if needed
+      }
     });
   }
+
   private loadLots() {
     this.rentalService.getLots().subscribe(data => {
       this.lots = data;
@@ -153,6 +165,7 @@ export class ManageLeaseComponent implements OnInit {
   deleteLeaseHolder(leaseHolder: LeaseHolder) {
     this.rentalService.deleteLeaseHolder(leaseHolder.id).subscribe(() => {
       this.loadLeaseHolders();
+      this.loadUnoccupiedLots();
     });
   }
 
@@ -160,37 +173,65 @@ export class ManageLeaseComponent implements OnInit {
     this.selectedLease = lease;
     this.leaseForm.patchValue({
       ...lease,
-      lot: lease.lot.id,
-      leaseHolder: lease.lease_holder.id
+
     });
   }
 
+  onFileSelected(event: Event, field: string) {
+    const element = event.currentTarget as HTMLInputElement;
+    let file = element.files?.[0];
+    if (file) {
+      this.leaseForm.patchValue({ [field]: file });
+    }
+  }
+
+  preventDefault(event: Event) {
+    event.preventDefault();
+  }
+
+  onFileDrop(event: DragEvent, field: string) {
+    event.preventDefault();
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.leaseForm.patchValue({ [field]: files[0] });
+    }
+  }
+
+
   submitForm() {
     if (this.leaseForm.valid) {
+      const formData = new FormData();
+      Object.keys(this.leaseForm.value).forEach(key => {
+        if (key === 'lease_agreement_path' || key === 'lot_image_path') {
+          if (this.leaseForm.get(key)?.value) {
+            formData.append(key, this.leaseForm.get(key)?.value);
+          }
+        } else {
+          formData.append(key, this.leaseForm.get(key)?.value.toString());
+        }
+      });
+
       if (this.selectedLease) {
-        // Update the lease
-        const updatedLease = { ...this.selectedLease, ...this.leaseForm.value };
-        this.rentalService.updateLease(updatedLease).subscribe(() => {
-          this.loadLeases();
-          this.selectedLease = null;
-        });
+        console.log('Updating lease with values:', formData);
+        // Call the update method in the service
       } else {
-        // Create a new lease
-        this.rentalService.addLease(this.leaseForm.value).subscribe(() => {
+        console.log('Creating new lease with values:', formData);
+        this.rentalService.addNewLease(formData).subscribe(() => {
           this.loadLeases();
+          this.leaseForm.reset();
         });
       }
     }
   }
 
-  createLease() {
-    if (this.unoccupiedLots.length > 0 && this.leaseHolders.length > 0) {
-      this.selectedLease = null;
-      this.leaseForm.reset();
-    } else {
-      // Handle case where either unoccupied lots or leaseholders are not available
-    }
-  }
+  // createLease() {
+  //   if (this.unoccupiedLots.length > 0 && this.leaseHolders.length > 0) {
+  //     this.selectedLease = null;
+  //     this.leaseForm.reset();
+  //   } else {
+  //     // Handle case where either unoccupied lots or leaseholders are not available
+  //   }
+  // }
 
   deleteLease(lease: Lease) {
     this.rentalService.deleteLease(lease.id).subscribe(() => {

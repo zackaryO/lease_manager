@@ -9,7 +9,8 @@ class User(AbstractUser):
         (2, 'customer'),
     )
 
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, help_text="The type of user (staff or customer)")
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES,
+                                                 help_text="The type of user (staff or customer)")
 
 
 class Lot(models.Model):
@@ -44,13 +45,19 @@ class Lease(models.Model):
     ]
 
     lot = models.ForeignKey(Lot, on_delete=models.CASCADE, help_text="The lot associated with the lease")
-    lease_holder = models.ForeignKey(LeaseHolder, on_delete=models.PROTECT, help_text="The lease holder associated with this lease")
+    lease_holder = models.ForeignKey(LeaseHolder, on_delete=models.PROTECT,
+                                     help_text="The lease holder associated with this lease")
     last_payment_date = models.DateField(null=True, blank=True, help_text="Date of the most recent payment")
-    last_payment_date_id = models.ForeignKey('Payment', on_delete=models.SET_NULL, null=True, blank=True, related_name='last_payment_for_lease', help_text="ID of the most recent payment")
+    last_payment_date_id = models.ForeignKey('Payment', on_delete=models.SET_NULL, null=True, blank=True,
+                                             related_name='last_payment_for_lease',
+                                             help_text="ID of the most recent payment")
     monthly_rental_amount = models.IntegerField(help_text="Monthly rental amount for the lease")
-    due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)], help_text="Due date for monthly payments")
-    grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)], help_text="Grace period allowed after the due date")
-    lease_agreement_path = models.FileField(upload_to='lease_agreements/', help_text="File path to the lease agreement document")
+    due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)],
+                                                help_text="Due date for monthly payments")
+    grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)],
+                                                    help_text="Grace period allowed after the due date")
+    lease_agreement_path = models.FileField(upload_to='lease_agreements/',
+                                            help_text="File path to the lease agreement document")
     lot_image_path = models.FileField(upload_to='images/', help_text="File path to the image of the lot")
     payment_status = models.CharField(
         max_length=20,
@@ -63,6 +70,7 @@ class Lease(models.Model):
         return (f"{self.lease_holder}\n"
                 f"{self.monthly_rental_amount} : {self.due_date}\n"
                 f"{self.grace_period} : {self.payment_status}\n")  # add later?
+
 
 class Payment(models.Model):
     # Choices for Payment Method
@@ -82,10 +90,12 @@ class Payment(models.Model):
     payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD_CHOICES, help_text="Method of payment")
     transaction_id = models.CharField(max_length=200, blank=True, null=True, help_text="Transaction ID if available")
     notes = models.TextField(blank=True, null=True, help_text="Any additional notes or information about the payment")
-    receipt = models.FileField(upload_to='payment_receipts/', blank=True, null=True, help_text="Scanned image or PDF of the payment receipt")
+    receipt = models.FileField(upload_to='payment_receipts/', blank=True, null=True,
+                               help_text="Scanned image or PDF of the payment receipt")
     created_at = models.DateTimeField(auto_now_add=True, help_text="When the payment record was created")
     updated_at = models.DateTimeField(auto_now=True, help_text="When the payment record was last updated")
-    is_deleted = models.BooleanField(default=False, help_text="Soft delete flag to mark record as deleted without actually removing it")
+    is_deleted = models.BooleanField(default=False,
+                                     help_text="Soft delete flag to mark record as deleted without actually removing it")
 
     class Meta:
         indexes = [
@@ -111,5 +121,7 @@ class Payment(models.Model):
 
 
 class GlobalSettings(models.Model):
-    due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)], help_text="Global due date for all leases")
-    grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)], help_text="Global grace period for all leases")
+    due_date = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)],
+                                                help_text="Global due date for all leases")
+    grace_period = models.PositiveSmallIntegerField(validators=[MaxValueValidator(30)],
+                                                    help_text="Global grace period for all leases")
