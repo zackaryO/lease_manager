@@ -1,6 +1,8 @@
 from django.core.validators import MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 
 class User(AbstractUser):
@@ -66,10 +68,33 @@ class Lease(models.Model):
         help_text="Current payment status of the lease"
     )
 
+    def save(self, *args, **kwargs):
+        # If this is a new record or the lot is being changed
+        if self._state.adding or self.lot_id != self.__class__.objects.get(id=self.id).lot_id:
+            # If this is not a new lease and the lot is being changed
+            if not self._state.adding:
+                # Set old lot's occupied field to false
+                old_lot = self.__class__.objects.get(id=self.id).lot
+                old_lot.occupied = False
+                old_lot.save()
+
+            # Set new lot's occupied field to true
+            self.lot.occupied = True
+            self.lot.save()
+
+        super(Lease, self).save(*args, **kwargs)
+
     def __str__(self):
         return (f"{self.lease_holder}\n"
                 f"{self.monthly_rental_amount} : {self.due_date}\n"
                 f"{self.grace_period} : {self.payment_status}\n")  # add later?
+
+
+@receiver(pre_delete, sender=Lease)
+def update_lot_status_on_delete(sender, instance, **kwargs):
+    if instance.lot:
+        instance.lot.occupied = False
+        instance.lot.save()
 
 
 class Payment(models.Model):

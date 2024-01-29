@@ -57,6 +57,15 @@ export class ManageLeaseComponent implements OnInit {
     this.loadUnoccupiedLots();
   }
 
+  // private Reload() {
+  //   setTimeout(() => {
+  //     this.loadLeases();
+  //     this.loadLots(); // Make sure this method exists and is correctly implemented
+  //     this.loadLeaseHolders(); // Make sure this method exists and is correctly implemented
+  //     this.loadUnoccupiedLots();
+  //   }, 3000);
+  // }
+
   private loadLeases() {
     this.isDataLoading = true;
 
@@ -108,7 +117,7 @@ export class ManageLeaseComponent implements OnInit {
     if (this.selectedLot && this.lotForm.valid) {
       const updatedLot = { ...this.selectedLot, ...this.lotForm.value };
       this.rentalService.updateLot(updatedLot).subscribe(() => {
-        this.loadLots();
+        this.loadUnoccupiedLots();
         this.selectedLot = null;
         this.lotForm.reset();
       });
@@ -117,7 +126,7 @@ export class ManageLeaseComponent implements OnInit {
 
   deleteLot(lot: Lot) {
     this.rentalService.deleteLot(lot.id).subscribe(() => {
-      this.loadLots();
+      this.loadUnoccupiedLots();
     });
   }
 
@@ -155,7 +164,8 @@ export class ManageLeaseComponent implements OnInit {
     if (this.selectedLeaseHolder && this.leaseHolderForm.valid) {
       const updatedLeaseHolder = { ...this.selectedLeaseHolder, ...this.leaseHolderForm.value };
       this.rentalService.updateLeaseHolder(updatedLeaseHolder).subscribe(() => {
-        this.loadLeaseHolders();
+        this.loadUnoccupiedLots();
+        this.loadLeases();
         this.selectedLeaseHolder = null;
         this.leaseHolderForm.reset();
       });
@@ -164,8 +174,7 @@ export class ManageLeaseComponent implements OnInit {
 
   deleteLeaseHolder(leaseHolder: LeaseHolder) {
     this.rentalService.deleteLeaseHolder(leaseHolder.id).subscribe(() => {
-      this.loadLeaseHolders();
-      this.loadUnoccupiedLots();
+      this.loadLeases();
     });
   }
 
@@ -218,6 +227,7 @@ export class ManageLeaseComponent implements OnInit {
         console.log('Creating new lease with values:', formData);
         this.rentalService.addNewLease(formData).subscribe(() => {
           this.loadLeases();
+          this.loadUnoccupiedLots();
           this.leaseForm.reset();
         });
       }
@@ -236,6 +246,7 @@ export class ManageLeaseComponent implements OnInit {
   deleteLease(lease: Lease) {
     this.rentalService.deleteLease(lease.id).subscribe(() => {
       this.loadLeases(); // Reload leases to update the list
+      this.loadUnoccupiedLots();
     });
   }
 

@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-os.environ['DJANGO_SETTINGS_MODULE'] = 'your_project.settings'
+# os.environ['DJANGO_SETTINGS_MODULE'] = 'your_project.settings'
 STATIC_URL = '/static/'
 
 # Default primary key field type
