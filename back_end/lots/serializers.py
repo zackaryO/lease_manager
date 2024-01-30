@@ -100,9 +100,30 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class LotSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Lot model.
+    Inherits from serializers.ModelSerializer.
+    """
+
     class Meta:
         model = Lot
         fields = '__all__'
+
+        # extra_kwargs allows you to specify additional details for each field
+        # Here, 'required': False is set for the fields that should be optional in a partial update
+        extra_kwargs = {
+            'lot_number': {'required': False},
+            'lot_address': {'required': False},
+            # Add similar lines for other fields that should be optional
+        }
+
+    # If you need custom validation for certain fields, define them here
+    # For example:
+    # def validate_lot_number(self, value):
+    #     # Custom validation logic for lot_number
+    #     return value
+
+# Rest of your view...
 
 
 class LeaseHolderSerializer(serializers.ModelSerializer):

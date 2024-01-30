@@ -1,16 +1,32 @@
-<h2 mat-dialog-title>{{ data ? "Edit" : "Add" }} Lease Holder</h2>
+<h2 mat-dialog-title>{{ data ? "Edit" : "Add" }} Lot:</h2>
+
 <mat-dialog-content>
+  <h3>
+    <div *ngIf="data">
+      Current Lot Number: <b>{{ data.lot_number }}</b>
+    </div>
+  </h3>
   <form [formGroup]="lotForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label>Lot Number</mat-label>
       <input matInput formControlName="lot_number" aria-label="Lot Number" />
     </mat-form-field>
 
+    <h3>
+      <div *ngIf="data">
+        Current Lot Address:<br /><b>{{ data.lot_address }}</b>
+      </div>
+    </h3>
     <mat-form-field>
       <mat-label>Lot Address</mat-label>
       <input matInput formControlName="lot_address" aria-label="Lot Address" />
     </mat-form-field>
 
+    <h3>
+      <div *ngIf="data">
+        Occupied: <b>{{ data.occupied }}</b>
+      </div>
+    </h3>
     <!-- <mat-form-field>
       <mat-label>occupied</mat-label>
       <input

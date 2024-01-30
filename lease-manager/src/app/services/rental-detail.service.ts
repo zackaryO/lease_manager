@@ -66,7 +66,8 @@ export class RentalService {
   // Error handling method
   private handleError(error: HttpErrorResponse) {
     console.error('Server error:', error);
-    return throwError(() => new Error('A server error occurred'));
+    // Rethrow the original HttpErrorResponse using a factory function
+    return throwError(() => error);
   }
 
   fetchLeases(): Observable<Lease[]> {
@@ -85,7 +86,7 @@ export class RentalService {
   // Update lease
   updateLease(lease: Lease): Observable<Lease> {
     const headers = this.getHeaders();
-    return this.http.put<Lease>(`${this.baseUrl}/${lease.id}/`, lease, { headers })
+    return this.http.patch<Lease>(`${this.baseUrl}/${lease.id}/`, lease, { headers })
       .pipe(catchError(this.handleError));
   }
 

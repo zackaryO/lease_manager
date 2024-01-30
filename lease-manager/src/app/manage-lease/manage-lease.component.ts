@@ -1,4 +1,5 @@
 // manage-lease.component.ts
+import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RentalService } from '../services/rental-detail.service';
@@ -6,8 +7,9 @@ import { Lot } from '../models/lot.model';
 import { Lease } from '../models/lease.model';
 import { LeaseHolder } from '../models/lease-holder.model';
 import { MatDialog } from '@angular/material/dialog';
-import { LotFormModalComponent } from '../lot-form-modal/lot-form-modal.component'; // Update the path as necessary
-import { LeaseHolderFormModalComponent } from '../lease-holder-form-modal/lease-holder-form-modal.component'; // Update the path as necessary
+import { LotFormModalComponent } from '../lot-form-modal/lot-form-modal.component';
+import { LeaseHolderFormModalComponent } from '../lease-holder-form-modal/lease-holder-form-modal.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-manage-lease',
@@ -73,6 +75,7 @@ export class ManageLeaseComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching leases:', error); // Log any error
+        this.showErrorDialog(error);
         this.isDataLoading = false;
       },
       complete: () => {
@@ -82,14 +85,16 @@ export class ManageLeaseComponent implements OnInit {
   }
 
   private loadLots() {
-    this.rentalService.getLots().subscribe(data => {
-      this.lots = data;
+    this.rentalService.getLots().subscribe({
+      next: (data) => this.lots = data,
+      error: (error) => this.showErrorDialog(error)
     });
   }
 
   private loadUnoccupiedLots() {
-    this.rentalService.getUnoccupiedLots().subscribe(data => {
-      this.unoccupiedLots = data;
+    this.rentalService.getUnoccupiedLots().subscribe({
+      next: (data) => this.unoccupiedLots = data,
+      error: (error) => this.showErrorDialog(error)
     });
   }
 
@@ -100,46 +105,25 @@ export class ManageLeaseComponent implements OnInit {
   }
 
   createLot(lotData: Lot) {
-    this.rentalService.addLot(lotData).subscribe(() => {
-      this.loadLots();
-      this.loadUnoccupiedLots();
-      this.loadLeases();
+    this.rentalService.addLot(lotData).subscribe({
+      next: () => {
+        this.loadLots();
+        this.loadUnoccupiedLots();
+        this.loadLeases();
+      },
+      error: (error) => this.showErrorDialog(error)
     });
   }
-
-  // createLot() {
-  //   if (this.lotForm.valid) {
-  //     this.rentalService.addLot(this.lotForm.value).subscribe(() => {
-  //       this.loadLots();
-  //       this.selectedLot = null;
-  //       this.lotForm.reset();
-  //     });
-  //   }
-  // }
-
   updateLot(lotData: Lot) {
-    this.rentalService.updateLot(lotData).subscribe(() => {
-      this.loadUnoccupiedLots();
+    this.rentalService.updateLot(lotData).subscribe({
+      next: () => {
+        this.loadLots();
+        this.loadUnoccupiedLots();
+        this.loadLeases();
+      },
+      error: (error) => this.showErrorDialog(error)
     });
   }
-
-  // updateLot() {
-  //   if (this.selectedLot && this.lotForm.valid) {
-  //     const updatedLot = { ...this.selectedLot, ...this.lotForm.value };
-  //     this.rentalService.updateLot(updatedLot).subscribe(() => {
-  //       this.loadUnoccupiedLots();
-  //       this.selectedLot = null;
-  //       this.lotForm.reset();
-  //     });
-  //   }
-  // }
-
-  // deleteLot(lot: Lot) {
-  //   this.rentalService.deleteLot(lot.id).subscribe(() => {
-  //     this.loadUnoccupiedLots();
-  //     this.loadLots();
-  //   });
-  // }
 
   // Add a method to check if a lot is unoccupied
   isLotUnoccupied(lotId: number): boolean {
@@ -149,14 +133,14 @@ export class ManageLeaseComponent implements OnInit {
   // Modify the deleteLot method
   deleteLot(lot: Lot) {
     if (this.isLotUnoccupied(lot.id)) {
-      // Proceed with deletion as the lot is unoccupied
-      this.rentalService.deleteLot(lot.id).subscribe(() => {
-        this.loadUnoccupiedLots();
-        this.loadLots();
-        // Optionally, show a success message
+      this.rentalService.deleteLot(lot.id).subscribe({
+        next: () => {
+          this.loadUnoccupiedLots();
+          this.loadLots();
+        },
+        error: (error) => this.showErrorDialog(error)
       });
     } else {
-      // Show a warning message as the lot is occupied
       alert('Cannot delete this lot as it is currently occupied. Please delete or modify the associated lease first.');
     }
   }
@@ -185,36 +169,12 @@ export class ManageLeaseComponent implements OnInit {
     });
   }
 
-  // createLeaseHolder() {
-  //   if (this.leaseHolderForm.valid) {
-  //     this.rentalService.addLeaseHolder(this.leaseHolderForm.value).subscribe(() => {
-  //       this.loadLeaseHolders();
-  //       this.selectedLeaseHolder = null;
-  //       this.leaseHolderForm.reset();
-  //     });
-  //   }
-  // }
-
-  // updateLeaseHolder() {
-  //   if (this.selectedLeaseHolder && this.leaseHolderForm.valid) {
-  //     const updatedLeaseHolder = { ...this.selectedLeaseHolder, ...this.leaseHolderForm.value };
-  //     this.rentalService.updateLeaseHolder(updatedLeaseHolder).subscribe(() => {
-  //       this.loadUnoccupiedLots();
-  //       this.loadLeases();
-  //       this.selectedLeaseHolder = null;
-  //       this.leaseHolderForm.reset();
-  //     });
-  //   }
-  // }
-
   updateLeaseHolder(leaseHolderData: LeaseHolder) {
     this.rentalService.updateLeaseHolder(leaseHolderData).subscribe(() => {
       this.loadUnoccupiedLots();
       this.loadLeases();
     });
   }
-
-
 
 
 
@@ -271,22 +231,28 @@ export class ManageLeaseComponent implements OnInit {
         // Call the update method in the service
       } else {
         console.log('Creating new lease with values:', formData);
-        this.rentalService.addNewLease(formData).subscribe(() => {
-          this.loadLeases();
-          this.loadUnoccupiedLots();
-          this.loadLots();
-          this.leaseForm.reset();
+        this.rentalService.addNewLease(formData).subscribe({
+          next: () => {
+            this.loadLeases();
+            this.loadUnoccupiedLots();
+            this.loadLots();
+            this.leaseForm.reset();
+          },
+          error: (error) => this.showErrorDialog(error)
         });
       }
     }
   }
 
   deleteLease(lease: Lease) {
-    this.rentalService.deleteLease(lease.id).subscribe(() => {
-      this.loadUnoccupiedLots();
-      this.loadLeases();
-      this.loadLots();
-      this.leaseForm.reset();
+    this.rentalService.deleteLease(lease.id).subscribe({
+      next: () => {
+        this.loadUnoccupiedLots();
+        this.loadLeases();
+        this.loadLots();
+        this.leaseForm.reset();
+      },
+      error: (error) => this.showErrorDialog(error)
     });
   }
 
@@ -332,11 +298,52 @@ export class ManageLeaseComponent implements OnInit {
     });
   }
 
-  // Refactor CRUD methods to accept parameter from modal result
+  // General method to show error dialog
+  private showErrorDialog(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred';
 
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = this.getServerErrorMessage(error);
+    }
 
+    this.dialog.open(ErrorDialogComponent, {
+      width: '300px',
+      data: { message: errorMessage }
+    });
+  }
 
+  private getServerErrorMessage(error: HttpErrorResponse): string {
+    // Check if the error response has a status code and error object
+    if (error.status && error.error && typeof error.error === 'object') {
+      // Initialize an array to hold individual error messages
+      const errorMessages = [];
 
+      // Loop through the keys of the error object
+      for (const key in error.error) {
+        if (error.error.hasOwnProperty(key)) {
+          // Extract the error message for each key
+          const message = error.error[key];
+          if (Array.isArray(message)) {
+            // If the message is an array, join its elements into a single string
+            errorMessages.push(`${key}: ${message.join(', ')}`);
+          } else {
+            // If the message is a string, add it as is
+            errorMessages.push(`${key}: ${message}`);
+          }
+        }
+      }
+
+      // Join all error messages and prepend with the status text
+      return `Error ${error.status} ${error.statusText}: ${errorMessages.join('; ')}`;
+    } else {
+      // Fallback for other types of errors
+      return `Error ${error.status}: ${error.statusText}`;
+    }
+  }
 
 
 

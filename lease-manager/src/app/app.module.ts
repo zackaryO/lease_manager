@@ -25,6 +25,7 @@ import { ManageLeaseComponent } from './manage-lease/manage-lease.component';
 import { GlobalSettingsModalComponent } from './global-settings-modal/global-settings-modal.component';
 import { LotFormModalComponent } from './lot-form-modal/lot-form-modal.component';
 import { LeaseHolderFormModalComponent } from './lease-holder-form-modal/lease-holder-form-modal.component';
+import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { LeaseHolderFormModalComponent } from './lease-holder-form-modal/lease-h
     ManageLeaseComponent,
     GlobalSettingsModalComponent,
     LotFormModalComponent,
-    LeaseHolderFormModalComponent
+    LeaseHolderFormModalComponent,
+    ErrorDialogComponent
   ],
   imports: [
     BrowserModule,

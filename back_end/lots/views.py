@@ -248,7 +248,10 @@ class LotRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]  # or [IsStaffUser]
 
-    # You can override methods like perform_update() if you need custom logic
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = kwargs.get('partial', request.method == 'PATCH')
+        return super().update(request, *args, **kwargs)
+
 
 class UnoccupiedLotListView(generics.ListAPIView):
     """
