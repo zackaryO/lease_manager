@@ -1,0 +1,21 @@
+.mat-form-field {
+    display: flex;
+    flex-direction: column;
+    /* Stack fields vertically */
+    margin-bottom: 10px;
+    /* Spacing between fields */
+}
+
+.scrollable-dialog-content {
+    overflow-y: auto;
+    max-height: 400px;
+    /* Adjust as necessary */
+}
+
+@media (max-width: 600px) {
+    .mat-dialog-container {
+        width: 95vw;
+        /* Full width on smaller screens */
+        max-height: 95vh;
+    }
+}

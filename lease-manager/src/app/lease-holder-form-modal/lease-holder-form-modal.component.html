@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>{{ data ? "Edit" : "Add" }} Lease Holder</h2>
-<mat-dialog-content>
+<mat-dialog-content class="scrollable-dialog-content">
   <form [formGroup]="leaseHolderForm" (ngSubmit)="onSubmit()">
     <h3>
       <div *ngIf="data">
