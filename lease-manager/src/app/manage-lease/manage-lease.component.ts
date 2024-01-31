@@ -176,12 +176,27 @@ export class ManageLeaseComponent implements OnInit {
     });
   }
 
+  LeaseHolderActive(LHId: number): boolean {
+    console.log('LeaseHolder ID:', LHId);
+    return this.leases.some(lease => {
+      console.log('Lease holder in lease:', lease.lease_holder);
+      return lease.lease_holder === LHId;
+    });
+  }
 
 
   deleteLeaseHolder(leaseHolder: LeaseHolder) {
-    this.rentalService.deleteLeaseHolder(leaseHolder.id).subscribe(() => {
-      this.loadLeases();
-    });
+    if (!this.LeaseHolderActive(leaseHolder.id)) {
+      this.rentalService.deleteLeaseHolder(leaseHolder.id).subscribe({
+        next: () => {
+          this.loadLeases();
+          this.loadLeaseHolders();
+        },
+        error: (error) => this.showErrorDialog(error)
+      });
+    } else {
+      alert('Cannot delete this lease holder is currently associated with a lease. Please delete or modify the associated lease first.');
+    }
   }
 
   selectLease(lease: Lease) {

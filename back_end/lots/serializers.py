@@ -31,7 +31,7 @@ class LeaseSerializer(serializers.ModelSerializer):
         fields = [
             'id',  # Add 'id' field here
             'lot_number', 'lot_address', 'lease_holder_first_name', 'lease_holder_last_name',
-            'lease_holder_address', 'email', 'phone',
+            'lease_holder_address', 'lease_holder', 'email', 'phone',
             'monthly_rental_amount', 'due_date', 'grace_period',
             'lease_agreement_path', 'lot_image_path',
             'payment_status', 'last_payment_date'
@@ -123,14 +123,27 @@ class LotSerializer(serializers.ModelSerializer):
     #     # Custom validation logic for lot_number
     #     return value
 
-# Rest of your view...
-
 
 class LeaseHolderSerializer(serializers.ModelSerializer):
     class Meta:
         model = LeaseHolder
         fields = '__all__'
+        # extra_kwargs allows you to specify additional details for each field
+        # Here, 'required': False is set for the fields that should be optional in a partial update
+        extra_kwargs = {
+            'lease_holder_first_name': {'required': False},
+            'lease_holder_last_name': {'required': False},
+            'lease_holder_address': {'required': False},
+            'email': {'required': False},
+            'phone': {'required': False},
+            # Add similar lines for other fields that should be optional
+        }
 
+    # If you need custom validation for certain fields, define them here
+    # For example:
+    # def validate_lot_number(self, value):
+    #     # Custom validation logic for lot_number
+    #     return value
 
 class GlobalSettingsSerializer(serializers.ModelSerializer):
     class Meta:

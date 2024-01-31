@@ -1,6 +1,11 @@
 <h2 mat-dialog-title>{{ data ? "Edit" : "Add" }} Lease Holder</h2>
 <mat-dialog-content>
   <form [formGroup]="leaseHolderForm" (ngSubmit)="onSubmit()">
+    <h3>
+      <div *ngIf="data">
+        Current First Name: <b>{{ data.lease_holder_first_name }}</b>
+      </div>
+    </h3>
     <mat-form-field>
       <mat-label>First Name</mat-label>
       <input
@@ -10,6 +15,11 @@
       />
     </mat-form-field>
 
+    <h3>
+      <div *ngIf="data">
+        Current Last Name: <b>{{ data.lease_holder_last_name }}</b>
+      </div>
+    </h3>
     <mat-form-field>
       <mat-label>Last Name</mat-label>
       <input
@@ -19,6 +29,11 @@
       />
     </mat-form-field>
 
+    <h3>
+      <div *ngIf="data">
+        Current Address: <br /><b>{{ data.lease_holder_address }}</b>
+      </div>
+    </h3>
     <mat-form-field>
       <mat-label>Address</mat-label>
       <input
@@ -28,11 +43,21 @@
       />
     </mat-form-field>
 
+    <h3>
+      <div *ngIf="data">
+        Current Email: <b>{{ data.email }}</b>
+      </div>
+    </h3>
     <mat-form-field>
       <mat-label>Email</mat-label>
       <input matInput formControlName="email" aria-label="Email" />
     </mat-form-field>
 
+    <h3>
+      <div *ngIf="data">
+        Current Phone: <b>{{ data.phone }}</b>
+      </div>
+    </h3>
     <mat-form-field>
       <mat-label>Phone</mat-label>
       <input matInput formControlName="phone" aria-label="Phone Number" />

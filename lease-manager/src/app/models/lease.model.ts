@@ -6,6 +6,7 @@ export class Lease {
         public id: number,
         public lot_number: string,
         public lot_address: string,
+        public lease_holder: number,
         public lease_holder_first_name: string,
         public lease_holder_last_name: string,
         public email: string,

@@ -76,21 +76,6 @@ export class LotFormModalComponent {
 
 
 
-
-
-  // onSubmit(): void {
-  //   console.log('Attempting to submit form');
-
-  //   // Check if the form is valid
-  //   if (this.lotForm.valid) {
-  //     console.log('Form is valid, submitting:', this.lotForm.value);
-  //     this.dialogRef.close(this.lotForm.value);
-  //   } else {
-  //     // Log the error if the form is not valid
-  //     console.error('Form is invalid:', this.lotForm.errors);
-  //   }
-  // }
-
   onCancel(): void {
     console.log('Form cancelled');
     this.dialogRef.close();

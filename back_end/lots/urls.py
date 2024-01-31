@@ -4,26 +4,28 @@ from .views import LeaseListView, LeaseDetailUpdateView, PaymentListCreateView, 
     UserListView, UserUpdateView, UserDeleteView, lease_holder_detail, edit_lease_holder, delete_lease_holder, \
     lease_create, lease_back_detail, lease_back_list, delete_lease_back, lease_update, lot_list, lot_create, lot_update, \
     lot_delete, CustomLoginView, LeaseHolderView, GlobalSettingsView, LeaseDeleteView, LotListCreateView, \
-    LotRetrieveUpdateDestroyView
+    LotRetrieveUpdateDestroyView, LHolderRetUpDestView, LHCreateView
 
 urlpatterns = [
     # API urls for client side page interaction start
     path('leases/', LeaseListView.as_view(), name='lease-list'),  # for listing leases
     path('leases/delete/<int:id>/', LeaseDeleteView.as_view(), name='lease-delete'),  # for listing leases
     path('leases/<int:id>/', LeaseDetailUpdateView.as_view(), name='lease-detail-update'),  # for retrieving, updating
+
     path('payments/', PaymentListCreateView.as_view(), name='payment-list-create'),
     path('payments/delete/', PaymentBulkDeleteView.as_view(), name='payment-bulk-delete'),
+
     path('leases/lots/', LotListCreateView.as_view(), name='lot-list'),
     path('leases/lots/mod/<int:pk>/', LotRetrieveUpdateDestroyView.as_view(), name='lot-mod'),
     path('leases/lots/unoccupied/', UnoccupiedLotListView.as_view(), name='unoccupied-lot-list'),
     path('leases/create/', LeaseCreateView.as_view(), name='lease-create'),  # Endpoint for creating a new lease
+
     path('register/', UserRegistrationAPIView.as_view(), name='register'),
-    path('add_lease_holder/', add_lease_holder, name='add_lease_holder'),
+
+    path('leases/lease_holder/new/', LHCreateView.as_view(), name='lease_holder-new'),
+    path('leases/lease_holder/mod/<int:pk>/', LHolderRetUpDestView.as_view(), name='lease_holder-mod'),
     path('leases/lease_holder/', LeaseHolderView.as_view(), name='lease_holder'),  # For API (frontend)
-    path('lease_holders/', LeaseHolderListView.as_view(), name='lease_holder_list'),
-    path('lease_holders/<int:lease_holder_id>/', lease_holder_detail, name='lease_holder_detail'),
-    path('lease_holders/edit/<int:lease_holder_id>/', edit_lease_holder, name='edit_lease_holder'),
-    path('lease_holders/delete/<int:lease_holder_id>/', delete_lease_holder, name='delete_lease_holder'),
+
     path('global/', GlobalSettingsView.as_view(), name='global'),
     # API urls for client side page interaction start
 
@@ -44,5 +46,11 @@ urlpatterns = [
     path('lots/create/', lot_create, name='lot_create'),
     path('lots/<int:pk>/edit/', lot_update, name='lot_update'),
     path('lots/<int:pk>/delete/', lot_delete, name='lot_delete'),
+
+    path('lease_holders/<int:lease_holder_id>/', lease_holder_detail, name='lease_holder_detail'),
+    path('lease_holders/edit/<int:lease_holder_id>/', edit_lease_holder, name='edit_lease_holder'),
+    path('lease_holders/delete/<int:lease_holder_id>/', delete_lease_holder, name='delete_lease_holder'),
+    path('add_lease_holder/', add_lease_holder, name='add_lease_holder'),
+    path('lease_holders/', LeaseHolderListView.as_view(), name='lease_holder_list'),
     # Server Side Rendered templates (pages) end
 ]

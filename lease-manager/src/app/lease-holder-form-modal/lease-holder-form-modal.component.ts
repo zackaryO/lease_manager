@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LeaseHolder } from '../models/lease-holder.model'; // Update path as necessary
 
@@ -10,24 +10,65 @@ import { LeaseHolder } from '../models/lease-holder.model'; // Update path as ne
 })
 export class LeaseHolderFormModalComponent {
   leaseHolderForm: FormGroup;
+  isEditing: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<LeaseHolderFormModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: LeaseHolder
   ) {
+
+    this.isEditing = !!data;
+    console.log('Is Editing Mode:', this.isEditing);
     this.leaseHolderForm = new FormGroup({
-      lease_holder_first_name: new FormControl(data?.lease_holder_first_name || '', Validators.required),
-      lease_holder_last_name: new FormControl(data?.lease_holder_last_name || '', Validators.required),
-      lease_holder_address: new FormControl(data?.lease_holder_address || '', Validators.required),
-      email: new FormControl(data?.email || '', [Validators.required, Validators.email]),
-      phone: new FormControl(data?.phone || '', Validators.required)
-      // Add other fields as necessary
-    });
+      id: new FormControl(this.isEditing ? data.id : ''),
+      lease_holder_first_name: new FormControl('', this.isEditing ? [] : Validators.required),
+      lease_holder_last_name: new FormControl('', this.isEditing ? [] : Validators.required),
+      lease_holder_address: new FormControl('', this.isEditing ? [] : Validators.required),
+      email: new FormControl('', this.isEditing ? [] : Validators.required),
+      phone: new FormControl('', this.isEditing ? [] : Validators.required),
+
+    }, { validators: this.isEditing ? this.atLeastOneRequired('lease_holder_first_name', 'lease_holder_last_name', 'lease_holder_address', 'email', 'phone') : [] });
+  }
+
+  // Custom validator to check that at least one of the specified fields is filled
+  atLeastOneRequired(...fields: string[]): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const formGroup = control as FormGroup;
+      let isAtLeastOneFilled = fields.some(fieldName => {
+        const field = formGroup.get(fieldName);
+        return field && field.value;
+      });
+
+      // Return null if validation passes, otherwise return an error object
+      return isAtLeastOneFilled ? null : { 'atLeastOneRequired': true };
+    };
   }
 
   onSubmit(): void {
+    console.log('Attempting to submit form');
+
     if (this.leaseHolderForm.valid) {
-      this.dialogRef.close(this.leaseHolderForm.value);
+      let formData = this.leaseHolderForm.value;
+
+      // If editing, construct the lot object with only modified fields
+      if (this.isEditing) {
+        let lotToUpdate: Partial<LeaseHolder> = { id: this.data.id };
+
+        Object.keys(formData).forEach(key => {
+          if (formData[key] !== '' && key in this.data) {
+            // Use type assertion to satisfy TypeScript's type checking
+            (lotToUpdate as any)[key] = formData[key];
+          }
+        });
+
+        console.log('Updating lot with only modified fields:', lotToUpdate);
+        this.dialogRef.close(lotToUpdate);
+      } else {
+        console.log('Creating new lot:', formData);
+        this.dialogRef.close(formData);
+      }
+    } else {
+      console.error('Form is invalid:', this.leaseHolderForm.errors);
     }
   }
 

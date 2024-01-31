@@ -151,14 +151,11 @@ export class RentalService {
   addNewLease(leaseData: FormData): Observable<any> {
     const transformedLeaseData = new FormData();
     leaseData.forEach((value, key) => {
-      // Here, transform the value if necessary. 
-      // For example, if the 'monthly_rental_amount' needs to be converted to a string:
       if (key === 'monthly_rental_amount') {
         transformedLeaseData.append(key, value.toString());
       } else {
         transformedLeaseData.append(key, value);
       }
-      // Add similar conditions for other fields that need transformation
     });
 
     const headers = this.getHeaders().delete('Content-Type');
@@ -212,27 +209,27 @@ export class RentalService {
       .pipe(catchError(this.handleError));
   }
 
-  // API not built
+  // API built used
   getLeaseHolderById(id: number): Observable<LeaseHolder> {
-    return this.http.get<LeaseHolder>(`${this.baseUrl}/leaseholders/${id}`, { headers: this.getHeaders() })
+    return this.http.get<LeaseHolder>(`${this.baseUrl}/lease_holder/mod/${id}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   // API not built
   addLeaseHolder(leaseHolder: LeaseHolder): Observable<LeaseHolder> {
-    return this.http.post<LeaseHolder>(`${this.baseUrl}/leaseholders/`, leaseHolder, { headers: this.getHeaders() })
+    return this.http.post<LeaseHolder>(`${this.baseUrl}/lease_holder/new/`, leaseHolder, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   // API not built
   updateLeaseHolder(leaseHolder: LeaseHolder): Observable<LeaseHolder> {
-    return this.http.put<LeaseHolder>(`${this.baseUrl}/leaseholders/${leaseHolder.id}/`, leaseHolder, { headers: this.getHeaders() })
+    return this.http.patch<LeaseHolder>(`${this.baseUrl}/lease_holder/mod/${leaseHolder.id}/`, leaseHolder, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   // API not built
   deleteLeaseHolder(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/leaseholders/${id}/`, { headers: this.getHeaders() })
+    return this.http.delete(`${this.baseUrl}/lease_holder/mod/${id}/`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 

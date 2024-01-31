@@ -165,6 +165,29 @@ class LeaseHolderView(generics.ListAPIView):
     permission_classes = [IsStaffUser]
 
 
+class LHCreateView(generics.CreateAPIView):
+    queryset = LeaseHolder.objects.all()
+    serializer_class = LeaseHolderSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+
+class LHolderRetUpDestView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view to retrieve, update, or delete a lease holder instance.
+    Inherits from generics.RetrieveUpdateDestroyAPIView.
+    """
+    queryset = LeaseHolder.objects.all()  # Use LeaseHolder model
+    serializer_class = LeaseHolderSerializer  # Use LeaseHolder serializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = kwargs.get('partial', request.method == 'PATCH')
+        return super().update(request, *args, **kwargs)
+
+
+
 class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
     """
     API view for retrieving and updating a specific lease instance.
@@ -211,18 +234,7 @@ class PaymentBulkDeleteView(APIView):
         return Response({'status': 'payments successfully deleted'}, status=status.HTTP_200_OK)
 
 
-# class LotListView(generics.ListAPIView):
-#     """
-#     API view to list all lots.
-#     (generics.ListAPIView) Provides a read-only list of all lot instances.
-#     Accessible to staff users authenticated with JWT.
-#     Inherits from generics.ListAPIView.
-#     """
-#     queryset = Lot.objects.all()
-#     serializer_class = LotSerializer
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsStaffUser]
-
+# Should change as this view is only being utilized to list all lot, and is not used for creation
 class LotListCreateView(generics.ListCreateAPIView):
     """
     API view to list all lots and create a new lot.
