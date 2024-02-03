@@ -18,7 +18,22 @@ add email client that sends a missing payment notication / payment reminder with
 
 I need to implement a certificate so I can utilize https:
 
-I plan to put this entire package into a common virtual enviroment using Docker.
+I plan to put this entire package into a common virtual enviroment using Docker. Mostly done
+# To launch Docker
+## Django
+1. navigate to the root of the Django app ..\lease_manager\back_end>. 
+2. Launch Docker Desktop (must be running)
+3. Build the docker by running command "docker build -t django-app .". (Don't forget the . at the end of the command)
+4. run the Docker container by running command "docker run -d -p 8000:8000 django-app"
+## Angular
+1. navigate to the root of the Angular app ..\lease_manager\lease-manager>. 
+2. Launch Docker Desktop (must be running)
+3. Build the docker by running command "docker build -t angular-app .". (Don't forget the . at the end of the command)
+4. run the Docker container by running command "docker run -d -p 80:80 angular-app"
+5. Navigate to the localhost, in the browser
+
+
+
 
 # done
 
