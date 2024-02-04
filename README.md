@@ -25,12 +25,17 @@ I plan to put this entire package into a common virtual enviroment using Docker.
 2. Launch Docker Desktop (must be running)
 3. Build the docker by running command "docker build -t django-app .". (Don't forget the . at the end of the command)
 4. run the Docker container by running command "docker run -d -p 8000:8000 django-app"
+ or maybe docker run --name django-app-container -d -p 8000:8000 -v ${PWD}/db.sqlite3:/app/db.sqlite3 django-app
+
 ## Angular
 1. navigate to the root of the Angular app ..\lease_manager\lease-manager>. 
 2. Launch Docker Desktop (must be running)
 3. Build the docker by running command "docker build -t angular-app .". (Don't forget the . at the end of the command)
-4. run the Docker container by running command "docker run -d -p 80:80 angular-app"
+4. run the Docker container by running command "docker run -d -p 4200:80 angular-app"
 5. Navigate to the localhost, in the browser
+
+## better yet, just run the docker compose from the project root
+docker-compose up --build
 
 
 

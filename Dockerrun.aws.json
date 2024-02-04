@@ -1,0 +1,55 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "django",
+      "image": "zotterstrom/django-image:first",
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 8000,
+          "containerPort": 8000
+        }
+      ]
+    },
+    {
+      "name": "angular",
+      "image": "zotterstrom/angular-image:first",
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ]
+    },
+    {
+      "name": "nginx",
+      "image": "nginx:alpine",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "nginx-conf",
+          "containerPath": "/etc/nginx/conf.d"
+        }
+      ]
+    }
+  ],
+  "volumes": [
+    {
+      "name": "nginx-conf",
+      "host": {
+        "sourcePath": "/var/app/current/nginx"
+      }
+    }
+  ]
+}
