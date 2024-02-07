@@ -23,9 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ajg7^o4&y3v7k5bvi$^8_!o&#wb)7%gosw&4#b49iy5)vd&3wa'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']  # for local development
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'Lease-back-env.us-east-2.elasticbeanstalk.com']  # for local development
+
+# settings.py
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Application definition
