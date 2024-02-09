@@ -8,7 +8,6 @@
       "memory": 256,
       "portMappings": [
         {
-          "hostPort": 8000,
           "containerPort": 8000
         }
       ]
@@ -20,7 +19,6 @@
       "memory": 256,
       "portMappings": [
         {
-          "hostPort": 80,
           "containerPort": 80
         }
       ]
@@ -36,6 +34,7 @@
           "containerPort": 80
         }
       ],
+      "links": ["django", "angular"],
       "mountPoints": [
         {
           "sourceVolume": "nginx-conf",
@@ -48,7 +47,7 @@
     {
       "name": "nginx-conf",
       "host": {
-        "sourcePath": "/var/app/current/nginx"
+        "sourcePath": "/var/app/current/lease_manager/nginx"
       }
     }
   ]
