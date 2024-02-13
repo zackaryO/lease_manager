@@ -1,26 +1,29 @@
-version: '3.8'
+version: "3.8"
 
 services:
   django:
     image: zotterstrom/django-image:first
-    volumes:
-      - ./back_end:/back_end # Map your Django project into the container
-      - ./back_end/db.sqlite3:/app/db.sqlite3 # Ensure SQLite database file is persisted
-      - static_volume:/app/static # Persist Django static files
-      - media_volume:/app/media # Persist Django media files
-    ports:
-      - "8000:8000"
-    environment:
-      - DEBUG=1 # Set to 0 in production
     command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DEBUG=0 # Set appropriate environment variables for production
+    # Removed volumes for SQLite and local paths - consider using a managed database like RDS
 
   angular:
     image: zotterstrom/angular-image:first
+    # Angular build files are served by Nginx, so this service doesn't need to expose ports directly to the host
+
+  nginx:
+    image: nginx:alpine
     ports:
-      - "4200:80"
+      - "80:80" # Expose Nginx on port 80 of the host
+    volumes:
+      - ./nginx:/etc/nginx/conf.d # Map your Nginx configuration directory into the container
+      - static_volume:/app/static # Static files volume
+      - media_volume:/app/media # Media files volume
+    depends_on:
+      - django
+      - angular
 
 volumes:
   static_volume:
   media_volume:
-
-
