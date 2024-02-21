@@ -13,7 +13,9 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class RentalService {
-  private baseUrl: string = 'http://127.0.0.1:8000/leases';
+  private baseUrl: string = 'http://localhost/api/leases';
+
+  // private baseUrl: string = 'http://127.0.0.1:8000/leases';
   private rentals = new BehaviorSubject<RentalDetail[]>([]);
   rentals$ = this.rentals.asObservable();
 
