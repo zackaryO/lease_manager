@@ -9,7 +9,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class
   GlobalDefaultService {
-  private globalSettingsUrl = 'http://127.0.0.1:8000/global/'; // URL to your Django global settings endpoint
+  private globalSettingsUrl = 'http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com/api/global/'; // URL to your Django global settings endpoint
 
   constructor(private http: HttpClient) { }
 

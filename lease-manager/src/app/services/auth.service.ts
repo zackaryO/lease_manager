@@ -8,8 +8,9 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private authUrl = 'http://localhost/api/token/'; // URL to your Django auth endpoint
-  private logoutUrl = 'http://localhost/api/logout/'; // URL for the logout endpoint
+  private authUrl = 'http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com/api/token/'; // URL to your Django auth endpoint
+  private logoutUrl = 'http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com/api/logout/'; // URL for the logout endpoint
+
 
   // private logoutUrl = 'http://127.0.0.1:8000/api/logout/'; // URL for the logout endpoint
 
