@@ -2,14 +2,14 @@ version: "3.8"
 
 services:
   django:
-    image: zotterstrom/django-image:first
+    image: zotterstrom/django-image:third
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       - DEBUG=0 # Set appropriate environment variables for production
     # Removed volumes for SQLite and local paths - consider using a managed database like RDS
 
   angular:
-    image: zotterstrom/angular-image:first
+    image: zotterstrom/angular-image:third
     # Angular build files are served by Nginx, so this service doesn't need to expose ports directly to the host
 
   nginx:
@@ -23,7 +23,6 @@ services:
     depends_on:
       - django
       - angular
-
 
 volumes:
   static_volume:
