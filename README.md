@@ -98,6 +98,12 @@ delete this code in thw login component`    // Note: Logging credentials is a se
 
 the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.
 
+fix s3 storage for lease and reciepts (image or pdf)
+
+update lease holder doesn't work
+
+can't seem to add more than one lease without having to leave and renavigate to the page
+
 # UML sequnce diagrams (more coming soon!)
 
 Authentication UML
