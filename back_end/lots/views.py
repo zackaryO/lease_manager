@@ -16,7 +16,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from django.core.files.storage import default_storage
 from .forms import LeaseHolderForm, CustomUserCreationForm, LeaseForm, LotForm
 from .permissions import IsAdminUser, IsStaffUser
 from .models import Lease, Payment, Lot, User, LeaseHolder, GlobalSettings
@@ -59,16 +59,41 @@ class LeaseCreateView(generics.CreateAPIView):
 
         if lease_agreement_file:
             lease_agreement_path = default_storage.save(
-                f'images/lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
-            serializer.validated_data['lease_agreement_path'] = f'http://127.0.0.1:8000/{lease_agreement_path}'
+                f'lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
+            # Use default_storage.url() to get the correct file URL
+            serializer.validated_data['lease_agreement_path'] = default_storage.url(lease_agreement_path)
 
         if lot_image_file:
             lot_image_path = default_storage.save(
-                f'images/lot_images/{lot_image_file.name}', lot_image_file)
-            serializer.validated_data['lot_image_path'] = f'http://127.0.0.1:8000/{lot_image_path}'
+                f'lot_images/{lot_image_file.name}', lot_image_file)
+            # Use default_storage.url() to get the correct file URL
+            serializer.validated_data['lot_image_path'] = default_storage.url(lot_image_path)
 
         serializer.save()
-        # After successfully creating a lease, update the occupied field in the Lot table
+
+
+# class LeaseCreateView(generics.CreateAPIView):
+#     queryset = Lease.objects.all()
+#     serializer_class = LeaseCreateSerializer
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAdminUser]
+#
+#     def perform_create(self, serializer):
+#         lease_agreement_file = self.request.FILES.get('lease_agreement_path')
+#         lot_image_file = self.request.FILES.get('lot_image_path')
+#
+#         if lease_agreement_file:
+#             lease_agreement_path = default_storage.save(
+#                 f'images/lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
+#             serializer.validated_data['lease_agreement_path'] = f'http://127.0.0.1:8000/{lease_agreement_path}'
+#
+#         if lot_image_file:
+#             lot_image_path = default_storage.save(
+#                 f'images/lot_images/{lot_image_file.name}', lot_image_file)
+#             serializer.validated_data['lot_image_path'] = f'http://127.0.0.1:8000/{lot_image_path}'
+#
+#         serializer.save()
+#         # After successfully creating a lease, update the occupied field in the Lot table
 
 
 class LeaseDeleteView(generics.DestroyAPIView):
@@ -185,7 +210,6 @@ class LHolderRetUpDestView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         kwargs['partial'] = kwargs.get('partial', request.method == 'PATCH')
         return super().update(request, *args, **kwargs)
-
 
 
 class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
