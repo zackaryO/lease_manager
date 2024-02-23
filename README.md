@@ -19,26 +19,50 @@ add email client that sends a missing payment notication / payment reminder with
 I need to implement a certificate so I can utilize https:
 
 I plan to put this entire package into a common virtual enviroment using Docker. Mostly done
+
 # To launch Docker
+
 ## Django
-1. navigate to the root of the Django app ..\lease_manager\back_end>. 
+
+1. navigate to the root of the Django app ..\lease_manager\back_end>.
 2. Launch Docker Desktop (must be running)
 3. Build the docker by running command "docker build -t django-app .". (Don't forget the . at the end of the command)
 4. run the Docker container by running command "docker run -d -p 8000:8000 django-app"
- or maybe docker run --name django-app-container -d -p 8000:8000 -v ${PWD}/db.sqlite3:/app/db.sqlite3 django-app
+   or maybe docker run --name django-app-container -d -p 8000:8000 -v ${PWD}/db.sqlite3:/app/db.sqlite3 django-app
+
+### Django packages.
+
+asgiref==3.7.2
+boto3==1.34.48
+botocore==1.34.48
+Django==4.2.6
+django-cors-headers==4.3.1
+django-environ==0.11.2
+django-storages==1.14.2
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
+jmespath==1.0.1
+PyJWT==2.8.0
+python-dateutil==2.8.2
+pytz==2023.3.post1
+s3transfer==0.10.0
+six==1.16.0
+sqlparse==0.4.4
+typing_extensions==4.9.0
+tzdata==2024.1
+urllib3==2.0.7
 
 ## Angular
-1. navigate to the root of the Angular app ..\lease_manager\lease-manager>. 
+
+1. navigate to the root of the Angular app ..\lease_manager\lease-manager>.
 2. Launch Docker Desktop (must be running)
 3. Build the docker by running command "docker build -t angular-app .". (Don't forget the . at the end of the command)
 4. run the Docker container by running command "docker run -d -p 4200:80 angular-app"
 5. Navigate to the localhost, in the browser
 
 ## better yet, just run the docker compose from the project root
+
 docker-compose up --build
-
-
-
 
 # done
 

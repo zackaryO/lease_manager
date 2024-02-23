@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   django:
-    image: zotterstrom/django-image:third
+    image: zotterstrom/django-image:10
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       - DEBUG=0 # Set appropriate environment variables for production
