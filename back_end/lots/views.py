@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
-from django.core.files.storage import default_storage
 from django.db.models import F
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404, resolve_url
@@ -56,44 +55,39 @@ class LeaseCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         lease_agreement_file = self.request.FILES.get('lease_agreement_path')
-        lot_image_file = self.request.FILES.get('lot_image_path')
+        lot_image_url = self.request.data.get('lot_image_path')  # Assuming this is now directly a URL string
 
         if lease_agreement_file:
-            lease_agreement_path = default_storage.save(
-                f'lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
-            # Use default_storage.url() to get the correct file URL
-            serializer.validated_data['lease_agreement_path'] = unquote(default_storage.url(lease_agreement_path))
+            lease_agreement_path = default_storage.save(f'lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
+            print("Before processing lease agreement path:", lease_agreement_path)
+            processed_url = default_storage.url(lease_agreement_path)
+            print("After processing lease agreement URL:", processed_url)
+            serializer.validated_data['lease_agreement_path'] = processed_url
 
-        if lot_image_file:
-            lot_image_path = default_storage.save(
-                f'lot_images/{lot_image_file.name}', lot_image_file)
-            # Use default_storage.url() to get the correct file URL
-            serializer.validated_data['lot_image_path'] = unquote(default_storage.url(lot_image_path))
+        if lot_image_url:
+            # Assuming lot_image_url is already a valid URL, directly assign it
+            print("Using provided lot image URL:", lot_image_url)
+            serializer.validated_data['lot_image_path'] = lot_image_url
 
         serializer.save()
-# class LeaseCreateView(generics.CreateAPIView):
-#     queryset = Lease.objects.all()
-#     serializer_class = LeaseCreateSerializer
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsAdminUser]
-#
-#     def perform_create(self, serializer):
-#         lease_agreement_file = self.request.FILES.get('lease_agreement_path')
-#         lot_image_file = self.request.FILES.get('lot_image_path')
-#
-#         if lease_agreement_file:
-#             lease_agreement_path = default_storage.save(
-#                 f'lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
-#             # Use default_storage.url() to get the correct file URL
-#             serializer.validated_data['lease_agreement_path'] = default_storage.url(lease_agreement_path)
-#
-#         if lot_image_file:
-#             lot_image_path = default_storage.save(
-#                 f'lot_images/{lot_image_file.name}', lot_image_file)
-#             # Use default_storage.url() to get the correct file URL
-#             serializer.validated_data['lot_image_path'] = default_storage.url(lot_image_path)
-#
-#         serializer.save()
+
+    # def perform_create(self, serializer):
+    #     lease_agreement_file = self.request.FILES.get('lease_agreement_path')
+    #     lot_image_file = self.request.FILES.get('lot_image_path')
+    #
+    #     if lease_agreement_file:
+    #         lease_agreement_path = default_storage.save(
+    #             f'lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
+    #         # Use default_storage.url() to get the correct file URL
+    #         serializer.validated_data['lease_agreement_path'] = default_storage.url(lease_agreement_path)
+    #
+    #     if lot_image_file:
+    #         lot_image_path = default_storage.save(
+    #             f'lot_images/{lot_image_file.name}', lot_image_file)
+    #         # Use default_storage.url() to get the correct file URL
+    #         serializer.validated_data['lot_image_path'] = default_storage.url(lot_image_path)
+    #
+    #     serializer.save()
 
 
 # class LeaseCreateView(generics.CreateAPIView):
