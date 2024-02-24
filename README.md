@@ -106,6 +106,10 @@ can't seem to add more than one lease without having to leave and renavigate to 
 
 if the page is refreshed, it attempts to reload at that route, it should be redirected to the index
 
+need to add lease holder fields to the reports to identify the lease holder who made the payment.
+
+the dialogs to manage datails are too small
+
 # UML sequnce diagrams (more coming soon!)
 
 Authentication UML

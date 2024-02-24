@@ -18,9 +18,13 @@
   <tbody>
     <tr *ngFor="let payment of payments">
       <td>
-        <input type="checkbox" [(ngModel)]="payment.selected" (change)="toggleSelection(payment)" />
+        <input
+          type="checkbox"
+          [(ngModel)]="payment.selected"
+          (change)="toggleSelection(payment)"
+        />
       </td>
-      <td>{{ payment.lease.lease_holder_first_name }}</td>
+      <td>{{ payment.lease_holder_info.lease_holder_first_name }}</td>
       <td>{{ payment.payment_date }}</td>
       <td>{{ payment.payment_amount }}</td>
       <td>{{ payment.payment_method_display }}</td>
@@ -29,7 +33,9 @@
       <td>{{ payment.notes }}</td>
       <td>
         <!-- New column data for Receipt -->
-        <a *ngIf="payment.receipt" [href]="payment.receipt" target="_blank">View Receipt</a>
+        <a *ngIf="payment.receipt" [href]="payment.receipt" target="_blank"
+          >View Receipt</a
+        >
       </td>
     </tr>
   </tbody>
