@@ -23,8 +23,7 @@ export class LoginComponent implements OnInit {
   // onSubmit is a method typically triggered when a form is submitted.
   onSubmit() {
     // This log statement is for debugging purposes. It logs the username and password.
-    // Note: Logging credentials is a security risk and should be avoided in production.
-    console.log('Logging in with:', this.username, this.password);
+    console.log('Logging in with:', this.username);
 
     // isLoading is a boolean flag used to indicate that an asynchronous operation (like a login) is in progress.
     // Setting this to true can be used to show a loading indicator in the UI.

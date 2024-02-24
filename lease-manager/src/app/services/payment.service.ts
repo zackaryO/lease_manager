@@ -83,7 +83,11 @@ export class PaymentService {
 
   getPayments(): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get(this.baseUrl, { headers });
+    return this.http.get(this.baseUrl, { headers })
+      .pipe(
+        tap((response: any) => console.log('Data response:', response))
+
+      );
   }
 
   deletePayments(ids: number[]): Observable<any> {
