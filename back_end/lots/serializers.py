@@ -88,15 +88,26 @@ class LeaseCreateSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    # If you want a readable representation for the payment method instead of just the code (e.g., 'Cash' instead of 'CASH')
     payment_method_display = serializers.CharField(source='get_payment_method_display', read_only=True)
+    lease_holder_info = serializers.SerializerMethodField()
 
     class Meta:
         model = Payment
         fields = [
             'id', 'lease', 'payment_date', 'payment_amount', 'payment_method', 'payment_method_display',
-            'transaction_id', 'notes', 'receipt', 'created_at', 'updated_at', 'is_deleted'
+            'transaction_id', 'notes', 'receipt', 'created_at', 'updated_at', 'is_deleted',
+            'lease_holder_info',  # Add this line to include the new field in the serialized output
         ]
+
+    def get_lease_holder_info(self, obj):
+        # Assuming lease_holder is related to Lease via a foreign key
+        lease_holder = obj.lease.lease_holder
+        # Utilize a hypothetical simple serializer or just return the required information directly
+        lease_holder_data = {
+            "lease_holder_first_name": lease_holder.lease_holder_first_name,
+            "lease_holder_last_name": lease_holder.lease_holder_last_name
+        }
+        return lease_holder_data
 
 
 class LotSerializer(serializers.ModelSerializer):
@@ -117,12 +128,6 @@ class LotSerializer(serializers.ModelSerializer):
             # Add similar lines for other fields that should be optional
         }
 
-    # If you need custom validation for certain fields, define them here
-    # For example:
-    # def validate_lot_number(self, value):
-    #     # Custom validation logic for lot_number
-    #     return value
-
 
 class LeaseHolderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -139,11 +144,6 @@ class LeaseHolderSerializer(serializers.ModelSerializer):
             # Add similar lines for other fields that should be optional
         }
 
-    # If you need custom validation for certain fields, define them here
-    # For example:
-    # def validate_lot_number(self, value):
-    #     # Custom validation logic for lot_number
-    #     return value
 
 class GlobalSettingsSerializer(serializers.ModelSerializer):
     class Meta:

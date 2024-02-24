@@ -158,6 +158,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [
     "http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com",
+    "http://localhost:8000",
     
 ]
 

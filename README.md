@@ -104,6 +104,8 @@ update lease holder doesn't work
 
 can't seem to add more than one lease without having to leave and renavigate to the page
 
+if the page is refreshed, it attempts to reload at that route, it should be redirected to the index
+
 # UML sequnce diagrams (more coming soon!)
 
 Authentication UML
