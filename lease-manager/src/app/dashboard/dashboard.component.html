@@ -1,14 +1,14 @@
 <!-- dashboard.component.html -->
-<div class="container">
-  <!-- List rentals horizontally -->
+<div class="dashboard-container">
   <div class="rentals-container">
+    <!-- Display rental items horizontally -->
     <div
       *ngFor="let rental of rentals"
       (click)="viewDetails(rental)"
-      class="card"
+      class="rental-card"
     >
       <div class="rental-info">
-        <p><strong>Lease Id: </strong>{{ rental.id }}</p>
+        <p><strong>Lease Id:</strong> {{ rental.id }}</p>
         <p><strong>Lot Number:</strong> {{ rental.lotNumber }}</p>
         <p>
           <strong>Lease Holder:</strong> {{ rental.leaseHolderFirstName }}
@@ -23,20 +23,16 @@
         }"
         class="status-box"
       >
-        <!-- Display based on paymentStatus -->
         <ng-container
           *ngIf="rental.paymentStatus === 'up-to-date'; else notUpToDate"
+          >Up to Date</ng-container
         >
-          Up to Date
-        </ng-container>
         <ng-template #notUpToDate>
-          <ng-container
-            *ngIf="rental.paymentStatus === 'late'; else delinquent"
+          <ng-container *ngIf="rental.paymentStatus === 'late'; else delinquent"
+            >Late</ng-container
           >
-            Late
-          </ng-container>
         </ng-template>
-        <ng-template #delinquent> delinquent </ng-template>
+        <ng-template #delinquent>Delinquent</ng-template>
       </div>
       <button
         mat-raised-button
@@ -47,9 +43,8 @@
       </button>
     </div>
   </div>
-
-  <!-- Container for details component -->
   <div class="details-container">
-    <app-details *ngIf="selectedRental" [rental]="selectedRental"></app-details>
+    <!-- Load details component here -->
+    <app-details></app-details>
   </div>
 </div>

@@ -14,13 +14,18 @@ import { ManageLeaseComponent } from './manage-lease/manage-lease.component';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: 'details/:id', component: DetailsComponent, canActivate: [AuthGuard] },
-  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
-  { path: 'manage', component: ManageLeaseComponent, canActivate: [AuthGuard] },
-
-  // This wildcard route should be last in the list. It ensures that any unmatched path will be redirected to the login
-  { path: '**', redirectTo: 'login' }
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'details', pathMatch: 'full' }, // Redirect to details by default
+      { path: 'details', component: DetailsComponent }, // Nested route for details
+      { path: 'reports', component: ReportsComponent },
+      { path: 'manage', component: ManageLeaseComponent },
+    ],
+  },
+  { path: '**', redirectTo: 'login' }, // Wildcard route
 ];
 
 @NgModule({
