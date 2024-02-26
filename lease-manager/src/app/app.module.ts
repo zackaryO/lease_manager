@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ReportsModule } from './reports/reports.module';
-import { DetailsModule } from './details/details.module';
+// import { DetailsModule } from './details/details.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { HttpClientModule } from '@angular/common/http';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -46,7 +46,7 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
     BrowserAnimationsModule,
     DashboardModule,
     ReportsModule,
-    DetailsModule,
+    // DetailsModule,
     AuthenticationModule,
     HttpClientModule,
     FormsModule,  // Add FormsModule here
