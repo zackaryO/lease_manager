@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit {
 
   viewDetails(rental: RentalDetail): void {
     console.log('Navigating to details for lot number:', rental.id);
-    this.router.navigate(['/details', rental.id]);
+    this.router.navigate(['/dashboard/details', rental.id]);
   }
 
   makePayment(event: Event, rental: RentalDetail): void {
