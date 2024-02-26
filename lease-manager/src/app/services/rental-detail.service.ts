@@ -13,9 +13,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class RentalService {
-
-  private baseUrl: string = 'http://127.0.0.1:8000/api/leases';
-  // private baseUrl: string = 'http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com/api/leases';
+  private baseUrl: string = 'http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com/api/leases';
 
   // private baseUrl: string = 'http://127.0.0.1:8000/leases';
   private rentals = new BehaviorSubject<RentalDetail[]>([]);
