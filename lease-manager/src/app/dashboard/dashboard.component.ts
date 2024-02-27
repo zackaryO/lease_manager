@@ -9,6 +9,7 @@ import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.compone
 import { GlobalDefaultService } from '../services/global-default.service';
 import { StatusService } from '../services/status.service';
 
+
 // this Interface is duplicated in the deatils.component.ts file!
 interface GlobalSettings {
   due_date: number;
@@ -23,6 +24,8 @@ interface GlobalSettings {
 export class DashboardComponent implements OnInit {
   rentals: RentalDetail[] = [];
   globalSettings: GlobalSettings = { due_date: 0, grace_period: 0 };
+  selectedRentalId: number | null | undefined = null; // Adjust the type to include undefined
+
 
   constructor(
     private rentalService: RentalService,
@@ -60,9 +63,13 @@ export class DashboardComponent implements OnInit {
   }
 
   viewDetails(rental: RentalDetail): void {
-    console.log('Navigating to details for lot number:', rental.id);
-    this.router.navigate(['/details', rental.id]);
+    this.selectedRentalId = rental.id ?? null; // Provide a fallback to null if undefined
   }
+
+  // viewDetails(rental: RentalDetail): void {
+  //   console.log('Navigating to details for lot number:', rental.id);
+  //   this.router.navigate(['/details', rental.id]);
+  // }
 
   makePayment(event: Event, rental: RentalDetail): void {
     event.stopPropagation();

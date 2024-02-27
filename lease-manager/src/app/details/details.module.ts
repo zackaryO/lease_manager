@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetailsComponent } from './details.component';
+// import { DetailsComponent } from './details.component';
 import { SharedModule } from '../shared/shared.module';  // Import SharedModule
 import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
@@ -13,7 +13,7 @@ import { DatePipe } from '@angular/common';
     DatePipe
   ],
   declarations: [
-    DetailsComponent
+    // DetailsComponent
   ],
   imports: [
     CommonModule,

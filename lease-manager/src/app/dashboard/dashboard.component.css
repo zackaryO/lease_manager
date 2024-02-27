@@ -1,16 +1,43 @@
 /* dashboard.component.css */
+.dashboard-layout {
+    display: flex;
+    flex-direction: row;
+    /* Ensure horizontal layout */
+    justify-content: space-between;
+    width: 100%;
+    /* Use the full width */
+}
 
 .card {
+    display: flex;
+    flex-direction: column;
+    /* Adjusted for vertical layout inside card */
+    margin-bottom: 10px;
     border: 1px solid #e0e0e0;
     padding: 10px;
     margin: 5px;
     border-radius: 4px;
-    display: flex;
-    flex-direction: row;
+    flex-basis: calc(50% - 10px);
+    /* Example for 2 cards per row, adjust as needed */
     align-items: flex-start;
     justify-content: center;
     /* Centers children horizontally */
     flex-wrap: wrap;
+}
+
+.rentals-list {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    /* Adjust this value as needed */
+    overflow-y: auto;
+    /* Add scroll for many items */
+}
+
+.rental-details {
+    width: 50%;
+    /* Adjust this value as needed */
+    /* Ensure it takes the remaining space */
 }
 
 .rental-image {
