@@ -13,13 +13,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class LeaseSerializer(serializers.ModelSerializer):
-    lot_number = serializers.CharField(source='lot.lot_number', read_only=True)
-    lot_address = serializers.CharField(source='lot.lot_address', read_only=True)
-    lease_holder_first_name = serializers.CharField(source='lease_holder.lease_holder_first_name', read_only=True)
-    lease_holder_last_name = serializers.CharField(source='lease_holder.lease_holder_last_name', read_only=True)
-    lease_holder_address = serializers.CharField(source='lease_holder.lease_holder_address', read_only=True)
-    email = serializers.EmailField(source='lease_holder.email', read_only=True)
-    phone = serializers.CharField(source='lease_holder.phone', read_only=True)
+    lot_number = serializers.CharField(source='lot.lot_number')
+    lot_address = serializers.CharField(source='lot.lot_address')
+    lease_holder_first_name = serializers.CharField(source='lease_holder.lease_holder_first_name')
+    lease_holder_last_name = serializers.CharField(source='lease_holder.lease_holder_last_name')
+    lease_holder_address = serializers.CharField(source='lease_holder.lease_holder_address')
+    email = serializers.EmailField(source='lease_holder.email', )
+    phone = serializers.CharField(source='lease_holder.phone')
 
     # Explicitly define the file fields to ensure they're serialized correctly.
     lease_agreement_path = serializers.FileField(max_length=None, use_url=True, required=False)
@@ -28,15 +28,8 @@ class LeaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lease
-        fields = [
-            'id',  # Add 'id' field here
-            'lot_number', 'lot_address', 'lease_holder_first_name', 'lease_holder_last_name',
-            'lease_holder_address', 'lease_holder', 'email', 'phone',
-            'monthly_rental_amount', 'due_date', 'grace_period',
-            'lease_agreement_path', 'lot_image_path',
-            'payment_status', 'last_payment_date'
-        ]
-        # read_only_fields = ['payment_status']  # if 'payment_status' is not supposed to be updated directly
+        fields = '__all__'  # Include all fields for updating
+        read_only_fields = ['id', 'payment_status']  # Add any fields you want to keep read-only
 
     def update(self, instance, validated_data):
         # Custom update logic if needed
@@ -45,8 +38,12 @@ class LeaseSerializer(serializers.ModelSerializer):
         lease_holder_data = validated_data.pop('lease_holder', None)
         lot_data = validated_data.pop('lot', None)
 
-        # Normal DRF update on the main object
-        super().update(instance, validated_data)
+        # Update the instance fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        # Save the instance
+        instance.save()
 
         # If related lease_holder data was sent in the request, update the LeaseHolder object
         if lease_holder_data:
@@ -63,6 +60,7 @@ class LeaseSerializer(serializers.ModelSerializer):
             lot.save()
 
         return instance
+
 
 
 class LeaseCreateSerializer(serializers.ModelSerializer):

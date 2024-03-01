@@ -13,9 +13,9 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class RentalService {
-  // private baseUrl: string = 'http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com/api/leases';
+  private baseUrl: string = 'http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com/api/leases';
 
-  private baseUrl: string = 'http://127.0.0.1:8000/api/leases';
+  // private baseUrl: string = 'http://127.0.0.1:8000/api/leases';
   private rentals = new BehaviorSubject<RentalDetail[]>([]);
   rentals$ = this.rentals.asObservable();
 
@@ -132,9 +132,18 @@ export class RentalService {
   updateRentalDetail(rental: RentalDetail): Observable<RentalDetail> {
     const headers = this.getHeaders();
     const requestBody = this.transformModelToRequest(rental);
+
+    // Log the request body before sending the request
+    console.log('Request Body:', requestBody);
+
     return this.http.patch<any>(`${this.baseUrl}/${rental.id}/`, requestBody, { headers })
       .pipe(
-        map(item => this.transformResponseToModel(item))
+        tap(response => console.log('Response:', response)), // Log the response
+        map(item => this.transformResponseToModel(item)),
+        catchError(error => {
+          console.error('Error updating rental:', error);
+          throw error; // Rethrow the error to be handled by the caller
+        })
       );
   }
 

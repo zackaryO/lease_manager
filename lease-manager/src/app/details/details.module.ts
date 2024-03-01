@@ -19,7 +19,7 @@ import { DatePipe } from '@angular/common';
     CommonModule,
     SharedModule,
     MatListModule,
-    FormsModule  // Add SharedModule to the imports array
+    FormsModule
   ]
 })
 export class DetailsModule { }

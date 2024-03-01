@@ -24,7 +24,7 @@ interface GlobalSettings {
 export class DashboardComponent implements OnInit {
   rentals: RentalDetail[] = [];
   globalSettings: GlobalSettings = { due_date: 0, grace_period: 0 };
-  selectedRentalId: number | null | undefined = null; // Adjust the type to include undefined
+  selectedRentalId: number | null = null;
 
 
   constructor(
@@ -37,18 +37,25 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    let initialized = false; // Flag to track initialization
+
     this.rentalService.fetchRentals().subscribe({
       next: rentals => {
         console.log('Rentals fetched:', rentals);
         // Checking if 'rentals' is an array and handling it accordingly
         if (rentals && Array.isArray(rentals)) {
-          this.rentals = rentals.map(rental => ({
-            ...rental,
-            // Converting 'lastPaymentDate' to a Date object, if it exists
-            lastPaymentDate: rental.lastPaymentDate ? new Date(rental.lastPaymentDate) : undefined
-          }));
-          // Evaluate and update payment status for each rental
-          this.rentals.forEach(rental => this.evaluateAndUpdatePaymentStatus(rental));
+          // If not initialized yet, update the rentals without calling updateRental
+          if (!initialized) {
+            this.rentals = rentals.map(rental => ({
+              ...rental,
+              // Converting 'lastPaymentDate' to a Date object, if it exists
+              lastPaymentDate: rental.lastPaymentDate ? new Date(rental.lastPaymentDate) : undefined
+            }));
+            initialized = true; // Set initialized flag to true after the first fetch
+          } else {
+            // Evaluate and update payment status for each rental
+            rentals.forEach(rental => this.evaluateAndUpdatePaymentStatus(rental));
+          }
         }
       },
       error: error => {
@@ -61,6 +68,7 @@ export class DashboardComponent implements OnInit {
 
     this.fetchSettings();
   }
+
 
   viewDetails(rental: RentalDetail): void {
     this.selectedRentalId = rental.id ?? null; // Provide a fallback to null if undefined

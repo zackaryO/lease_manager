@@ -1,6 +1,5 @@
 // details.component.ts
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
 import { Subscription } from 'rxjs';
@@ -12,58 +11,46 @@ import { StatusService } from '../services/status.service';
   templateUrl: './details.component.html', // Path to the HTML template
   styleUrls: ['./details.component.css'] // Path to the CSS for this component
 })
-export class DetailsComponent implements OnInit {
-  // Properties
-  rentalDetail!: RentalDetail; // Stores the details of a rental. '!' indicates that it will be initialized later.
-  originalRentalDetail!: RentalDetail; // Stores the original rental details for comparison or rollback.
-  private subscriptions = new Subscription(); // A collection to hold all subscriptions to observables.
+export class DetailsComponent implements OnChanges {
+  @Input() rentalId: number | null = null;
+  rentalDetail!: RentalDetail;
+  originalRentalDetail!: RentalDetail;
+  private subscriptions = new Subscription();
 
   // Constructor: Dependency injection of services and modules
   constructor(
     private rentalService: RentalService, // Injects the RentalService to interact with rental data.
     private statusService: StatusService,
-    private route: ActivatedRoute // Injects the ActivatedRoute to access route parameters.
+    // private route: ActivatedRoute // Injects the ActivatedRoute to access route parameters.
   ) { }
 
-  // ngOnInit Lifecycle Hook: Called after Angular has initialized all data-bound properties.
-  ngOnInit(): void {
-    // Retrieves the 'id' parameter from the current route.
-    const id = this.route.snapshot.paramMap.get('id');
-
-    // Check if the 'id' is provided, log an error and return if not.
-    if (id === null) {
-      console.error('No id provided');
-      return;
+  ngOnChanges(changes: SimpleChanges): void {
+    // React to changes in input properties
+    if (changes['rentalId'] && this.rentalId !== null) {
+      // If rentalId changes and is not null, load the relevant rental details
+      this.loadRentalDetail(this.rentalId);
     }
+  }
 
-    // Subscribes to the rentals observable from the service and processes the data received.
+  loadRentalDetail(id: number): void {
+    // Fetch rental details based on id
     this.subscriptions.add(
       this.rentalService.rentals$.subscribe(rentals => {
-        // Find the rental with the matching 'id'.
-        const foundRental = rentals.find(rental => rental.id !== undefined && rental.id.toString() === id);
+        // Subscribe to the observable of rentals
+        const foundRental = rentals.find(rental => rental.id === id);
         if (foundRental) {
-          // If found, copy its data to the local properties for rendering and backup.
+          // If the rental is found, set it as the current and original detail
           this.rentalDetail = { ...foundRental };
           this.originalRentalDetail = { ...foundRental };
-          console.log('Found Rental:', this.rentalDetail);
         } else {
-          console.log('Rental not found for id:', id);
+          console.error('Rental not found for id:', id);
         }
       })
     );
-
-    // Triggers a fetch for the rentals from the server.
-    this.rentalService.fetchRentals().subscribe({
-      error: err => {
-        console.error('Error fetching rentals:', err);
-      }
-    });
-
   }
 
-  // ngOnDestroy Lifecycle Hook: Called just before the component is destroyed.
   ngOnDestroy(): void {
-    // Unsubscribes from all subscriptions to prevent memory leaks.
+    // Clean up by unsubscribing to prevent memory leaks
     this.subscriptions.unsubscribe();
   }
 
@@ -86,16 +73,13 @@ export class DetailsComponent implements OnInit {
   // Saves changes made to the rental detail.
   saveChanges(): void {
     if (window.confirm('Are you sure you want to make this change?')) {
-      // Creates an object to track changes.
       const updatedFields: Partial<RentalDetail> = {};
-      // Compares each field of the rentalDetail with the original to detect changes.
       Object.keys(this.rentalDetail).forEach(key => {
         if (JSON.stringify(this.rentalDetail[key]) !== JSON.stringify(this.originalRentalDetail[key])) {
           updatedFields[key] = this.rentalDetail[key];
         }
       });
 
-      // If there are changes, sends an update request.
       if (Object.keys(updatedFields).length > 0) {
         if (this.rentalDetail.id === undefined) {
           console.error('Rental ID is undefined');
@@ -103,8 +87,10 @@ export class DetailsComponent implements OnInit {
         }
         this.rentalService.updateRentalDetail(this.rentalDetail).subscribe(response => {
           console.log('Update successful', response);
-          // Updates the original data with the new changes.
-          this.originalRentalDetail = JSON.parse(JSON.stringify(this.rentalDetail));
+          // Check if rentalDetail.id is defined before calling loadRentalDetail
+          if (this.rentalDetail.id !== undefined) {
+            this.loadRentalDetail(this.rentalDetail.id);
+          }
         }, error => {
           console.error('Update failed:', error);
         });
@@ -113,6 +99,8 @@ export class DetailsComponent implements OnInit {
       }
     }
   }
+
+
 
   // Undoes changes by resetting rentalDetail to the original state.
   undoChanges(): void {
