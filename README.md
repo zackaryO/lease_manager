@@ -90,6 +90,8 @@ delete this code in thw login component`    // Note: Logging credentials is a se
 
 # known bugs
 
+The color codeded payment status in the dashboard component is not accurately displaying the status, the issue appears to be on the back-end not getting updated
+
 the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.
 
 fix s3 storage for lease and reciepts (image or pdf)
