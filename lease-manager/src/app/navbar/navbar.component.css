@@ -69,6 +69,8 @@
     }
 
     .navbar-menu {
+        display: none;
+        /* Initially hide the menu */
         flex-direction: column;
         gap: 10px;
     }
