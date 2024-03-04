@@ -103,7 +103,7 @@ app-details {
     background-color: #FF5722;
 }
 
-@media (max-width: 1600px) {
+@media (max-width: 768px) {
 
     /* Adjust layout for smaller screens */
     .dashboard-layout {
@@ -118,7 +118,8 @@ app-details {
         /* Reset the margin as they're now stacked */
     }
 
-    .card {
+    .card,
+    .rentals-list {
         flex-direction: column;
         /* Stack elements vertically on smaller screens */
     }

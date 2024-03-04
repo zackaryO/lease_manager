@@ -9,7 +9,7 @@ services:
     # Removed volumes for SQLite and local paths - consider using a managed database like RDS
 
   angular:
-    image: zotterstrom/angular-image:12
+    image: zotterstrom/angular-image:15
     # Angular build files are served by Nginx, so this service doesn't need to expose ports directly to the host
 
   nginx:
