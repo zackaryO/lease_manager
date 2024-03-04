@@ -8,8 +8,6 @@ The Angular client side is secured using Authgaurd that is currently working wit
 
 ## Work in progress
 
-update lease function insnt setup
-
 see what is wrong with due date in detail page
 
 add a feild in leaseholder table to see if customer wants payment reminder (bool)
@@ -17,8 +15,6 @@ add a feild in leaseholder table to see if customer wants payment reminder (bool
 add email client that sends a missing payment notication / payment reminder with default message(s), pulls leaseholders name, email, days/weeks/months late to build the body
 
 I need to implement a certificate so I can utilize https:
-
-I plan to put this entire package into a common virtual enviroment using Docker. Mostly done
 
 # To launch Docker
 
@@ -66,8 +62,6 @@ docker-compose up --build
 
 # done
 
-modify up-to-date, 'late' logic to implement GlobalSettings table to see if todays date is later than due date, but less than grace period (late) or if after the due date AND greater than the grace_period (delenquent). if delenquent, add the days since last_payment_date subtracting the days between last_payment_date and first missed payment (1 month)
-
 in the future I'd like to account for changes in due dates, like if the person changes the due date to two weeks later, it won't show as late or delinquent when the new due date hasn't yet occurred.
 
 ### To launch Back end server (virtaul enviroment)
@@ -100,13 +94,7 @@ the details component will only displays "Days Past Due", if indeed the payment 
 
 fix s3 storage for lease and reciepts (image or pdf)
 
-update lease holder doesn't work
-
-can't seem to add more than one lease without having to leave and renavigate to the page
-
-if the page is refreshed, it attempts to reload at that route, it should be redirected to the index
-
-need to add lease holder fields to the reports to identify the lease holder who made the payment.
+can't seem to add more than one lease without having to leave and renavigate to or refresh the the page
 
 the dialogs to manage datails are too small
 

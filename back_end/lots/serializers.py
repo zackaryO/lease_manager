@@ -62,7 +62,6 @@ class LeaseSerializer(serializers.ModelSerializer):
         return instance
 
 
-
 class LeaseCreateSerializer(serializers.ModelSerializer):
     lot = serializers.PrimaryKeyRelatedField(queryset=Lot.objects.all())
     lease_holder = serializers.PrimaryKeyRelatedField(queryset=LeaseHolder.objects.all())

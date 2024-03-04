@@ -103,7 +103,7 @@ app-details {
     background-color: #FF5722;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1600px) {
 
     /* Adjust layout for smaller screens */
     .dashboard-layout {
