@@ -14,14 +14,12 @@ from pathlib import Path
 import os
 import environ
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize django-environ
 env = environ.Env()
 env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -39,7 +37,16 @@ AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazo
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DB_NAME'),  # Name of your PostgreSQL database
+        'USER': env('DB_USER'),  # Your PostgreSQL user
+        'PASSWORD': env('DB_PASSWORD'),  # Your PostgreSQL password
+        'HOST': env('DB_HOST', default='localhost'),  # Your PostgreSQL host
+        'PORT': env('DB_PORT', default='5432'),  # Your PostgreSQL port
+    }
+}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
@@ -49,7 +56,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]',
 
 # settings.py
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 
 # Application definition
 
@@ -101,12 +107,12 @@ WSGI_APPLICATION = 'back_end.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -127,7 +133,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'lots.User'
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -160,7 +165,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com",
     "http://localhost:8000",
     "http://localhost:4200",
-    
+
 ]
 
 MEDIA_URL = '/images/'
