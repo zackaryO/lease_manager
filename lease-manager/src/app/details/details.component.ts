@@ -1,5 +1,5 @@
 // details.component.ts
-import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { StatusService } from '../services/status.service';
 })
 export class DetailsComponent implements OnChanges {
   @Input() rentalId: number | null = null;
+  @Output() updateEvent = new EventEmitter<boolean>();
   rentalDetail!: RentalDetail;
   originalRentalDetail!: RentalDetail;
   private subscriptions = new Subscription();
@@ -87,6 +88,7 @@ export class DetailsComponent implements OnChanges {
         }
         this.rentalService.updateRentalDetail(this.rentalDetail).subscribe(response => {
           console.log('Update successful', response);
+          this.updateEvent.emit(true);
           // Check if rentalDetail.id is defined before calling loadRentalDetail
           if (this.rentalDetail.id !== undefined) {
             this.loadRentalDetail(this.rentalDetail.id);

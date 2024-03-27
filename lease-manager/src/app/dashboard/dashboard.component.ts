@@ -1,5 +1,5 @@
 // dashboard.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
 import { PaymentService } from '../services/payment.service';
@@ -23,6 +23,7 @@ interface GlobalSettings {
 })
 export class DashboardComponent implements OnInit {
   rentals: RentalDetail[] = [];
+  private initialized = false;
   globalSettings: GlobalSettings = { due_date: 0, grace_period: 0 };
   selectedRentalId: number | null = null;
 
@@ -32,41 +33,32 @@ export class DashboardComponent implements OnInit {
     private paymentService: PaymentService,
     private globalDefaultService: GlobalDefaultService,
     private statusService: StatusService,
-    private router: Router,
+    private cdr: ChangeDetectorRef,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    let initialized = false; // Flag to track initialization
+    this.fetchRentals();
+    this.fetchSettings(); // Assuming this is another method for fetching initial settings
+  }
 
+  fetchRentals(): void {
     this.rentalService.fetchRentals().subscribe({
       next: rentals => {
-        console.log('Rentals fetched:', rentals);
-        // Checking if 'rentals' is an array and handling it accordingly
-        if (rentals && Array.isArray(rentals)) {
-          // If not initialized yet, update the rentals without calling updateRental
-          if (!initialized) {
-            this.rentals = rentals.map(rental => ({
-              ...rental,
-              // Converting 'lastPaymentDate' to a Date object, if it exists
-              lastPaymentDate: rental.lastPaymentDate ? new Date(rental.lastPaymentDate) : undefined
-            }));
-            initialized = true; // Set initialized flag to true after the first fetch
-          } else {
-            // Evaluate and update payment status for each rental
-            rentals.forEach(rental => this.evaluateAndUpdatePaymentStatus(rental));
-          }
-        }
+        this.rentals = rentals.map(rental => ({
+          ...rental,
+          lastPaymentDate: rental.lastPaymentDate ? new Date(rental.lastPaymentDate) : undefined
+        }));
+        this.initialized = true;
+        this.cdr.detectChanges(); // Try moving detectChanges here if needed
       },
-      error: error => {
-        // Error handling for the fetchRentals Observable
-        console.error('Error fetching rentals:', error);
-      }
-      // Note: The 'complete' handler is not used here as it is not necessary for this case.
-      // 'complete' would be used if you need to perform actions after the Observable has completed emitting.
+      error: error => console.error('Error fetching rentals:', error),
     });
+  }
 
-    this.fetchSettings();
+  refreshData(): void {
+    this.fetchRentals(); // Now you can call fetchRentals both on init and when you need to refresh the data
+    this.cdr.detectChanges();
   }
 
 

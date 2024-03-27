@@ -69,6 +69,18 @@ app-details {
     /* Use ellipsis for overflow */
 }
 
+.rental-info .data-item {
+    margin-bottom: 5px;
+    /* Adds spacing between each data item */
+}
+
+.rental-info .data-item p {
+    margin: 0;
+    /* Removes default paragraph margins for a tighter layout */
+    padding: 2px;
+    /* Adds a little padding for better readability */
+}
+
 .rental-image {
     width: auto;
     max-width: 100%;
@@ -107,7 +119,14 @@ app-details {
 
     /* Adjust layout for smaller screens */
     .dashboard-layout {
+        display: flex;
         flex-direction: column;
+        align-items: center;
+        /* Center children horizontally */
+        justify-content: center;
+        /* Center children vertically if there's enough space */
+        width: 100%;
+        /* Ensure the layout takes the full width */
     }
 
     .rentals-list,
