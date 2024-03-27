@@ -98,8 +98,6 @@ The color codeded payment status in the dashboard component is not accurately di
 
 the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.
 
-fix s3 storage for lease and reciepts (image or pdf), mirror configuration for storing the lot images
-
 can't seem to add more than one lease without having to leave and renavigate to or refresh the the page
 
 the dialogs to manage datails are too small
