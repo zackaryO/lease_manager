@@ -54,15 +54,13 @@ class LeaseCreateView(generics.CreateAPIView):
     permission_classes = [IsAdminUser]
 
     def perform_create(self, serializer):
-        lease_agreement_file = self.request.FILES.get('lease_agreement_path')
+        lease_agreement_url = self.request.data.get('lease_agreement_path')
         lot_image_url = self.request.data.get('lot_image_path')  # Assuming this is now directly a URL string
 
-        if lease_agreement_file:
-            lease_agreement_path = default_storage.save(f'lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
-            print("Before processing lease agreement path:", lease_agreement_path)
-            processed_url = default_storage.url(lease_agreement_path)
-            print("After processing lease agreement URL:", processed_url)
-            serializer.validated_data['lease_agreement_path'] = processed_url
+        if lease_agreement_url:
+            # lease_agreement_path = default_storage.save(f'lease_agreements/{lease_agreement_file.name}', lease_agreement_file)
+            print("Before processing lease agreement path:", lease_agreement_url)
+            serializer.validated_data['lease_agreement_path'] = lease_agreement_url
 
         if lot_image_url:
             # Assuming lot_image_url is already a valid URL, directly assign it

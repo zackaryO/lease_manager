@@ -8,12 +8,12 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private authUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/token/'; // URL to your Django auth endpoint
-  private logoutUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/logout/'; // URL for the logout endpoint
+  // private authUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/token/'; // URL to your Django auth endpoint
+  // private logoutUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/logout/'; // URL for the logout endpoint
 
 
-  // private logoutUrl = 'http://127.0.0.1:8000/api/logout/'; // URL for the logout endpoint
-  // private authUrl = 'http://127.0.0.1:8000/api/token/'; // URL to your Django auth endpoint
+  private logoutUrl = 'http://127.0.0.1:8000/api/logout/'; // URL for the logout endpoint
+  private authUrl = 'http://127.0.0.1:8000/api/token/'; // URL to your Django auth endpoint
 
   // Constructor initializes the service.
   // The HttpClient is injected to make HTTP requests.

@@ -2,19 +2,22 @@ version: "3.8"
 
 services:
   django:
-    image: zotterstrom/django-image:30
+    image: zotterstrom/django-image:32
     command: python manage.py runserver 0.0.0.0:8000
     environment:
-      - DEBUG=0 # Set appropriate environment variables for production
-      - DB_NAME=lease
-      - DB_USER=zotterstrom
-      - DB_PASSWORD=1722N2700w
-      - DB_HOST=lease.cfi0kew06w11.us-east-1.rds.amazonaws.com
-      - DB_PORT=5432
+      DEBUG: 0 # Set appropriate environment variables for production
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     # Removed volumes for SQLite and local paths - consider using a managed database like RDS
 
   angular:
-    image: zotterstrom/angular-image:21
+    image: zotterstrom/angular-image:23
     # Angular build files are served by Nginx, so this service doesn't need to expose ports directly to the host
 
   nginx:
@@ -32,3 +35,38 @@ services:
 volumes:
   static_volume:
   media_volume:
+
+    # version: "3.8"
+
+    # services:
+    #   django:
+    #     image: zotterstrom/django-image:32
+    #     command: python manage.py runserver 0.0.0.0:8000
+    #     environment:
+    #       - DEBUG=0 # Set appropriate environment variables for production
+    #       - DB_NAME=lease
+    #       - DB_USER=zotterstrom
+    #       - DB_PASSWORD=1722N2700w
+    #       - DB_HOST=lease.cfi0kew06w11.us-east-1.rds.amazonaws.com
+    #       - DB_PORT=5432
+    #     # Removed volumes for SQLite and local paths - consider using a managed database like RDS
+
+    #   angular:
+    #     image: zotterstrom/angular-image:23
+    #     # Angular build files are served by Nginx, so this service doesn't need to expose ports directly to the host
+
+    #   nginx:
+    #     image: nginx:alpine
+    #     ports:
+    #       - "80:80" # Expose Nginx on port 80 of the host
+    #     volumes:
+    #       - ./nginx/nginx.conf:/etc/nginx/nginx.conf # Map your Nginx configuration file into the container
+    #       - static_volume:/app/static # Static files volume
+    #       - media_volume:/app/media # Media files volume
+    #     depends_on:
+    #       - django
+    #       - angular
+
+    # volumes:
+    #   static_volume:
+    #   media_volume:
