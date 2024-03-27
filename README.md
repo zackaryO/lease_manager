@@ -38,8 +38,11 @@ django-storages==1.14.2
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 jmespath==1.0.1
+psycopg2==2.9.9
+psycopg2-binary==2.9.9
 PyJWT==2.8.0
 python-dateutil==2.8.2
+python-dotenv==1.0.1
 pytz==2023.3.post1
 s3transfer==0.10.0
 six==1.16.0
@@ -47,6 +50,7 @@ sqlparse==0.4.4
 typing_extensions==4.9.0
 tzdata==2024.1
 urllib3==2.0.7
+
 
 ## Angular
 
@@ -94,7 +98,7 @@ The color codeded payment status in the dashboard component is not accurately di
 
 the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.
 
-fix s3 storage for lease and reciepts (image or pdf)
+fix s3 storage for lease and reciepts (image or pdf), mirror configuration for storing the lot images
 
 can't seem to add more than one lease without having to leave and renavigate to or refresh the the page
 

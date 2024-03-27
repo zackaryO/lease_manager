@@ -10,8 +10,8 @@ import { AuthService } from './auth.service';
 })
 export class PaymentService {
 
-  // private baseUrl = 'http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com/api/payments/';  // replace with your API endpoint
-  private baseUrl = 'http://127.0.0.1:8000/api/payments/';  // replace with your API endpoint
+  private baseUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/payments/';  // replace with your API endpoint
+  // private baseUrl = 'http://127.0.0.1:8000/api/payments/';  // replace with your API endpoint
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

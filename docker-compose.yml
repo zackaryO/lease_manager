@@ -2,14 +2,19 @@ version: "3.8"
 
 services:
   django:
-    image: zotterstrom/django-image:22
+    image: zotterstrom/django-image:30
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       - DEBUG=0 # Set appropriate environment variables for production
+      - DB_NAME=lease
+      - DB_USER=zotterstrom
+      - DB_PASSWORD=1722N2700w
+      - DB_HOST=lease.cfi0kew06w11.us-east-1.rds.amazonaws.com
+      - DB_PORT=5432
     # Removed volumes for SQLite and local paths - consider using a managed database like RDS
 
   angular:
-    image: zotterstrom/angular-image:15
+    image: zotterstrom/angular-image:21
     # Angular build files are served by Nginx, so this service doesn't need to expose ports directly to the host
 
   nginx:

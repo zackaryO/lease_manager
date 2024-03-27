@@ -25,7 +25,7 @@ env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('DJANGO_SECRET_KEY', default='django-insecure-ajg7^o4&y3v7k5bvi$^8_!o&#wb)7%gosw&4#b49iy5)vd&3wa')
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # AWS configurations
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default='')
@@ -43,7 +43,7 @@ DATABASES = {
         'NAME': env('DB_NAME'),  # Name of your PostgreSQL database
         'USER': env('DB_USER'),  # Your PostgreSQL user
         'PASSWORD': env('DB_PASSWORD'),  # Your PostgreSQL password
-        'HOST': env('DB_HOST', default='localhost'),  # Your PostgreSQL host
+        'HOST': env('DB_HOST'),  # Your PostgreSQL host
         'PORT': env('DB_PORT', default='5432'),  # Your PostgreSQL port
     }
 }
@@ -52,7 +52,7 @@ DATABASES = {
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]',
-                 'leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com']  # for local development
+                 'LeaseManager-env.us-east-1.elasticbeanstalk.com']  # for local development
 
 # settings.py
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -162,7 +162,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [
-    "http://leasemanage-env.eba-kc4p6z6r.us-east-2.elasticbeanstalk.com",
+    "http://LeaseManager-env.us-east-1.elasticbeanstalk.com",
     "http://localhost:8000",
     "http://localhost:4200",
 
