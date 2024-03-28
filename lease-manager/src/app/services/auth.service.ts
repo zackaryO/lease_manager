@@ -8,12 +8,12 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  // private authUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/token/'; // URL to your Django auth endpoint
-  // private logoutUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/logout/'; // URL for the logout endpoint
+  private authUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/token/'; // URL to your Django auth endpoint
+  private logoutUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/logout/'; // URL for the logout endpoint
 
 
-  private logoutUrl = 'http://127.0.0.1:8000/api/logout/'; // URL for the logout endpoint
-  private authUrl = 'http://127.0.0.1:8000/api/token/'; // URL to your Django auth endpoint
+  // private logoutUrl = 'http://127.0.0.1:8000/api/logout/'; // URL for the logout endpoint
+  // private authUrl = 'http://127.0.0.1:8000/api/token/'; // URL to your Django auth endpoint
 
   // Constructor initializes the service.
   // The HttpClient is injected to make HTTP requests.
@@ -91,8 +91,8 @@ export class AuthService {
     const currentTime = new Date().getTime(); // Current time.
     // Calculate the elapsed time since login.
     const timeElapsed = currentTime - parseInt(loginTime);
-    const thirtyMinutes = 30 * 60 * 1000; // 30 minutes in milliseconds.
-    // Check if more than 30 minutes have passed.
-    return timeElapsed > thirtyMinutes;
+    const sixtyMinutes = 60 * 60 * 1000; // 60 minutes in milliseconds.
+    // Check if more than 60 minutes have passed.
+    return timeElapsed > sixtyMinutes;
   }
 }

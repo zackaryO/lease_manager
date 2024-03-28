@@ -8,7 +8,7 @@ The Angular client side is secured using Authgaurd that is currently working wit
 
 ## Work in progress
 
-see what is wrong with due date in detail page
+completely revamp payment service, dialog and table. I need to include logic and fields that assign a payment to a month, this will likely also require me to record the lease effective date so it can track and assign payments by for each month, so if the person pays in advance or falls behind the data is more accurate.
 
 add a feild in leaseholder table to see if customer wants payment reminder (bool)
 
@@ -51,7 +51,6 @@ typing_extensions==4.9.0
 tzdata==2024.1
 urllib3==2.0.7
 
-
 ## Angular
 
 1. navigate to the root of the Angular app ..\lease_manager\lease-manager>.
@@ -93,10 +92,6 @@ delete this code in thw login component`    // Note: Logging credentials is a se
     console.log('Logging in with:', this.username, this.password);`
 
 # known bugs
-
-The color codeded payment status in the dashboard component is not accurately displaying the status, the issue appears to be on the back-end not getting updated
-
-the details component will only displays "Days Past Due", if indeed the payment is past due using ngif, which appears to be working correctly (need to validate!). The value is incorrect, on the surface appears to be either two days off or is not using the correct values. the logic needs to be re-evauluated.
 
 can't seem to add more than one lease without having to leave and renavigate to or refresh the the page
 
