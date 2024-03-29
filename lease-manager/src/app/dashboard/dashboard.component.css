@@ -9,12 +9,33 @@
     /* Full width */
 }
 
+.top-row {
+    display: flex;
+    flex-direction: row;
+    /* Aligns data items horizontally */
+    justify-content: space-between;
+    /* Distributes space between items */
+    flex-wrap: wrap;
+    /* Allows items to wrap if necessary */
+    width: 100%;
+    /* Full width of the card */
+}
+
+.data-item {
+    flex: 1;
+    /* Ensures data items take equal space, adjust as needed */
+    min-width: 150px;
+    /* Prevents items from becoming too narrow, adjust based on content */
+    /* padding: 5px; */
+    /* Adds some padding around each data item */
+}
+
 .rentals-list {
     flex: 1;
     /* Take necessary space, but allow flexibility */
     overflow-y: auto;
     /* Scroll if content is too tall */
-    margin-right: 5px;
+    /* margin-right: 50px; */
     /* Space between list and details */
 }
 
@@ -24,36 +45,26 @@ app-details {
     /* Ensure it's directly targeted, assuming 'app-details' is your component selector */
 }
 
-.rental-details {
-    width: 50%;
-    /* Half of the container width for the details */
-}
-
 .card {
     display: flex;
-    flex-direction: row;
-    /* Display content inside card horizontally */
-    align-items: center;
-    /* Center items vertically */
+    flex-direction: column;
+    /* Ensures vertical stacking of top and bottom rows */
     border: 1px solid #e0e0e0;
-    padding: 1px;
-    margin-bottom: 10px;
-    /* Space between cards */
+    padding: 10px;
+    margin-bottom: 5px;
     border-radius: 4px;
 }
 
 .rental-info {
     display: flex;
-    flex-direction: row;
-    /* Align children horizontally */
-    justify-content: space-between;
-    /* Space out the child elements evenly */
-    align-items: center;
-    /* Align items vertically in the center */
+    flex-direction: column;
+    /* Change to column to stack vertically */
+    align-items: flex-start;
+    /* Align items to the start of the flex container */
     width: 100%;
     /* Full width of its container */
-    gap: 10px;
-    /* Add space between items, adjust as needed */
+    /* gap: 10px; */
+    /* Keep your gap for spacing */
 }
 
 .rental-info p {
@@ -81,14 +92,13 @@ app-details {
     /* Adds a little padding for better readability */
 }
 
-.rental-image {
+/* .rental-image {
     width: auto;
     max-width: 100%;
     max-height: 200px;
     margin-right: 10px;
-    /* Space next to the text */
     border-radius: 4px;
-}
+} */
 
 .status-box {
     display: flex;
@@ -96,11 +106,25 @@ app-details {
     justify-content: center;
     width: 100px;
     /* Fixed width for the status box */
-    height: 40px;
+    height: 35px;
     border-radius: 4px;
     font-size: 14px;
-    margin-left: 10px;
+    margin-left: 5px;
     /* Space from the last element */
+}
+
+.action-container {
+    display: flex;
+    justify-content: center;
+    /* Center contents horizontally */
+    align-items: center;
+    /* Center contents vertically */
+    width: 100%;
+    /* Full width of the card */
+    margin-top: 10px;
+    /* Adds space between the top row and this row */
+    gap: 10px;
+    /* Space between status box and button */
 }
 
 .green {

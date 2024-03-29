@@ -1,0 +1,34 @@
+/* email-dialog.component.css */
+mat-form-field {
+    width: 100%;
+    /* Make form fields use full width */
+}
+
+textarea[matInput] {
+    min-height: 150px;
+    /* Increase height of the textarea */
+}
+
+mat-dialog-actions {
+    justify-content: flex-end;
+    /* Align action buttons to the right */
+    margin-top: 20px;
+    /* Add some space above the action buttons */
+}
+
+button[mat-button] {
+    margin-right: 8px;
+    /* Add spacing between buttons */
+}
+
+/* Optionally, add specific styles for the send button to make it stand out */
+.send-btn {
+    min-width: 100px;
+    /* Ensure a minimum width for better visual */
+}
+
+.cancel-btn {
+    /* Style for cancel button if needed, for example, making it less prominent */
+}
+
+/* If you're using Angular Material themes, you might not need much more styling for a modern look */

@@ -27,6 +27,7 @@ import { GlobalSettingsModalComponent } from './global-settings-modal/global-set
 import { LotFormModalComponent } from './lot-form-modal/lot-form-modal.component';
 import { LeaseHolderFormModalComponent } from './lease-holder-form-modal/lease-holder-form-modal.component';
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
+import { EmailDialogComponent } from './email-dialog/email-dialog.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
     GlobalSettingsModalComponent,
     LotFormModalComponent,
     LeaseHolderFormModalComponent,
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    EmailDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,79 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* Space between cards */
+}
+
+.content-card {
+    margin: 15px;
+    padding: 20px;
+}
+
+.lease-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.lease-form mat-form-field {
+    width: 100%;
+    /* Full width form fields */
+}
+
+.file-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.file-drop-zone {
+    border: 2px dashed #ccc;
+    /* Dashed border for drag and drop area */
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.file-name-display,
+.file-drop-instruction {
+    margin: 0;
+    /* Remove margin for file name and instruction texts */
+}
+
+/* Style adjustments for buttons */
+button.mat-raised-button {
+    margin: 0 auto;
+    /* Center the button */
+    display: block;
+    /* Force the button to be block-level for width control */
+    width: auto;
+    /* Auto width based on content */
+    max-width: 200px;
+    /* Maximum width of the button */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #f0f0f0;
+}
+
+tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+}

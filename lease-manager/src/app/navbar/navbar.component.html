@@ -1,6 +1,8 @@
 <!-- navbar.component.html -->
 <nav class="navbar">
-  <div class="navbar-brand">Lease Manager</div>
+  <a routerLink="/dashboard">
+    <div class="navbar-brand">Lease Manager</div>
+  </a>
 
   <!-- Hamburger menu button -->
   <button (click)="toggleMenu()" class="hamburger-btn">
@@ -9,12 +11,12 @@
   </button>
 
   <div class="navbar-menu" [ngClass]="{ active: menuActive }">
-    <a routerLink="/dashboard" class="navbar-item">Dashboard</a>
-    <a routerLink="/reports" class="navbar-item">Reports</a>
-    <a routerLink="/manage" class="navbar-item">Manage Details</a>
-    <a href="http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/admin/" target="_blank"
-      class="navbar-item">Database</a>
-    <button (click)="openGlobalSettingsModal()">Global Settings</button>
-    <button (click)="logout()">Logout</button>
+    <a routerLink="/dashboard" class="navbar-item"><i class="material-icons">home</i> Dashboard</a>
+    <a routerLink="/reports" class="navbar-item"><i class="material-icons">assessment</i> Reports</a>
+    <a routerLink="/manage" class="navbar-item"><i class="material-icons">settings</i> Manage Details</a>
+    <a href="http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/admin/" target="_blank" class="navbar-item"><i
+        class="material-icons">storage</i> Database</a>
+    <button (click)="openGlobalSettingsModal()"><i class="material-icons">build</i> Global Settings</button>
+    <button (click)="logout()"><i class="material-icons">logout</i> Logout</button>
   </div>
 </nav>

@@ -3,11 +3,12 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RentalDetail } from '../models/rental-detail.model';
 import { RentalService } from '../services/rental-detail.service';
 import { PaymentService } from '../services/payment.service';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.component';
 import { GlobalDefaultService } from '../services/global-default.service';
 import { StatusService } from '../services/status.service';
+import { EmailDialogComponent } from '../email-dialog/email-dialog.component';
 
 
 // this Interface is duplicated in the deatils.component.ts file!
@@ -66,10 +67,17 @@ export class DashboardComponent implements OnInit {
     this.selectedRentalId = rental.id ?? null; // Provide a fallback to null if undefined
   }
 
-  // viewDetails(rental: RentalDetail): void {
-  //   console.log('Navigating to details for lot number:', rental.id);
-  //   this.router.navigate(['/details', rental.id]);
-  // }
+  openEmailDialog(event: Event, rental: RentalDetail): void {
+    event.stopPropagation();
+    console.log('Sending Email to:', rental);
+    const dialogRef = this.dialog.open(EmailDialogComponent, {
+      data: rental
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // handle result
+    });
+  }
 
   makePayment(event: Event, rental: RentalDetail): void {
     event.stopPropagation();

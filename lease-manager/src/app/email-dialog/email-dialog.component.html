@@ -1,0 +1,24 @@
+<!-- email-dialog.component.html -->
+<h2 mat-dialog-title>Send Email</h2>
+<div mat-dialog-content>
+    <form [formGroup]="emailForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+            <mat-label>To</mat-label>
+            <input matInput formControlName="to">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="subject">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Message</mat-label>
+            <textarea matInput formControlName="message"></textarea>
+        </mat-form-field>
+        <div mat-dialog-actions>
+            <!-- Add type="button" to the cancel button to prevent it from submitting the form -->
+            <button mat-button (click)="onCancel()" type="button">Cancel</button>
+            <button mat-button color="primary" [disabled]="!emailForm.valid" type="submit">Send</button>
+
+        </div>
+    </form>
+</div>
