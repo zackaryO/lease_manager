@@ -11,6 +11,8 @@ export class AuthService {
   private authUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/token/'; // URL to your Django auth endpoint
   private logoutUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/logout/'; // URL for the logout endpoint
 
+  // private authUrl = 'https://d3ax4y87c24u41.cloudfront.net/api/token/'; // URL to your Django auth endpoint
+  // private logoutUrl = 'https://d3ax4y87c24u41.cloudfront.net/api/logout/'; // URL for the logout endpoint
 
   // private logoutUrl = 'http://127.0.0.1:8000/api/logout/'; // URL for the logout endpoint
   // private authUrl = 'http://127.0.0.1:8000/api/token/'; // URL to your Django auth endpoint

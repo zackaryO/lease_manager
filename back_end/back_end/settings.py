@@ -24,6 +24,19 @@ env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+# Security settings
+# SECURE_SSL_REDIRECT = True  # Redirect all non-HTTPS requests to HTTPS
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Trust the X-Forwarded-Proto header
+# SESSION_COOKIE_SECURE = True  # Only send session cookies over HTTPS
+# CSRF_COOKIE_SECURE = True  # Only send CSRF cookies over HTTPS
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOWED_ORIGINS = [
+    "http://LeaseManager-env.us-east-1.elasticbeanstalk.com",
+    "http://localhost:8000",
+    "http://localhost:4200",
+    # "https://d3ax4y87c24u41.cloudfront.net",
+]
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
@@ -160,13 +173,6 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOWED_ORIGINS = [
-    "http://LeaseManager-env.us-east-1.elasticbeanstalk.com",
-    "http://localhost:8000",
-    "http://localhost:4200",
-
-]
 
 MEDIA_URL = '/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'images')

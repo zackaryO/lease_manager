@@ -12,6 +12,7 @@ export class PaymentService {
 
   private baseUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/payments/';  // replace with your API endpoint
   // private baseUrl = 'http://127.0.0.1:8000/api/payments/';  // replace with your API endpoint
+  // private baseUrl = 'https://d3ax4y87c24u41.cloudfront.net/api/payments/';  // replace with your API endpoint
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
