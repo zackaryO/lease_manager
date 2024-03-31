@@ -73,33 +73,33 @@ export class DetailsComponent implements OnChanges {
 
   // Saves changes made to the rental detail.
   saveChanges(): void {
-    if (window.confirm('Are you sure you want to make this change?')) {
-      const updatedFields: Partial<RentalDetail> = {};
-      Object.keys(this.rentalDetail).forEach(key => {
-        if (JSON.stringify(this.rentalDetail[key]) !== JSON.stringify(this.originalRentalDetail[key])) {
-          updatedFields[key] = this.rentalDetail[key];
-        }
-      });
+    // if (window.confirm('Are you sure you want to make this change?')) {
+    //   const updatedFields: Partial<RentalDetail> = {};
+    //   Object.keys(this.rentalDetail).forEach(key => {
+    //     if (JSON.stringify(this.rentalDetail[key]) !== JSON.stringify(this.originalRentalDetail[key])) {
+    //       updatedFields[key] = this.rentalDetail[key];
+    //     }
+    //   });
 
-      if (Object.keys(updatedFields).length > 0) {
-        if (this.rentalDetail.id === undefined) {
-          console.error('Rental ID is undefined');
-          return;
-        }
-        this.rentalService.updateRentalDetail(this.rentalDetail).subscribe(response => {
-          console.log('Update successful', response);
-          this.updateEvent.emit(true);
-          // Check if rentalDetail.id is defined before calling loadRentalDetail
-          if (this.rentalDetail.id !== undefined) {
-            this.loadRentalDetail(this.rentalDetail.id);
-          }
-        }, error => {
-          console.error('Update failed:', error);
-        });
-      } else {
-        console.log('No changes were made.');
-      }
-    }
+    //   if (Object.keys(updatedFields).length > 0) {
+    //     if (this.rentalDetail.id === undefined) {
+    //       console.error('Rental ID is undefined');
+    //       return;
+    //     }
+    //     this.rentalService.updateRentalDetail(this.rentalDetail).subscribe(response => {
+    //       console.log('Update successful', response);
+    //       this.updateEvent.emit(true);
+    //       // Check if rentalDetail.id is defined before calling loadRentalDetail
+    //       if (this.rentalDetail.id !== undefined) {
+    //         this.loadRentalDetail(this.rentalDetail.id);
+    //       }
+    //     }, error => {
+    //       console.error('Update failed:', error);
+    //     });
+    //   } else {
+    //     console.log('No changes were made.');
+    //   }
+    // }
   }
 
 

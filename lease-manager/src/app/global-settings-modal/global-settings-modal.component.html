@@ -9,12 +9,12 @@
     <div class="modal-body">
         <form (ngSubmit)="updateSettings()">
             <div class="form-group">
-                <label for="dueDate">Due Date</label>
+                <label for="dueDate">Specify monthly due date (1-30)</label>
                 <input type="number" class="form-control" id="dueDate" [(ngModel)]="globalSettings.due_date"
                     name="dueDate" max="30" required>
             </div>
             <div class="form-group">
-                <label for="gracePeriod">Grace Period</label>
+                <label for="gracePeriod">Grace Period Days (1-30)</label>
                 <input type="number" class="form-control" id="gracePeriod" [(ngModel)]="globalSettings.grace_period"
                     name="gracePeriod" max="30" required>
             </div>

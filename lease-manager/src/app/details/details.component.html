@@ -4,87 +4,62 @@
 <mat-card class="rental-detail-card" *ngIf="rentalDetail; else loadingContent">
   <!-- The header of the card -->
   <mat-card-header>
-    <mat-card-title
-      >Details for Lot #{{ rentalDetail.lotNumber }}</mat-card-title
-    >
+    <mat-card-title>Details for Lot #{{ rentalDetail.lotNumber }}</mat-card-title>
   </mat-card-header>
 
   <!-- Card content -->
   <mat-card-content>
+    <mat-card-content>
+      <img [src]="rentalDetail['lotImagePath']" alt="Rental Image" class="rental-image" />
+    </mat-card-content>
     <!-- Displaying various details of the rental -->
-    <mat-list-item
-      ><strong>Lot Address:</strong>
-      {{ rentalDetail.lotAddress }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Lease Holder Name:</strong>
+    <mat-list-item><strong>Lot Address:</strong>
+      {{ rentalDetail.lotAddress }}</mat-list-item>
+    <mat-list-item><strong>Lease Holder Name:</strong>
       {{ rentalDetail.leaseHolderFirstName }}
-      {{ rentalDetail.leaseHolderLastName }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Lease Holder Address:</strong>
-      {{ rentalDetail.leaseHolderAddress }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Email:</strong> {{ rentalDetail.email }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Phone:</strong> {{ rentalDetail.phone }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Monthly Rental Amount:</strong>
-      {{ rentalDetail.monthlyRentalAmount | currency }}</mat-list-item
-    >
-    <mat-list-item
-      ><strong>Last Payment Date:</strong>
-      {{ rentalDetail.lastPaymentDate | date }}</mat-list-item
-    >
+      {{ rentalDetail.leaseHolderLastName }}</mat-list-item>
+    <mat-list-item><strong>Lease Holder Address:</strong>
+      {{ rentalDetail.leaseHolderAddress }}</mat-list-item>
+    <mat-list-item><strong>Email:</strong> {{ rentalDetail.email }}</mat-list-item>
+    <mat-list-item><strong>Phone:</strong> {{ rentalDetail.phone }}</mat-list-item>
+    <mat-list-item><strong>Monthly Rental Amount:</strong>
+      {{ rentalDetail.monthlyRentalAmount | currency }}</mat-list-item>
+    <mat-list-item><strong>Last Payment Date:</strong>
+      {{ rentalDetail.lastPaymentDate | date }}</mat-list-item>
 
     <!-- Modified Due Date display logic -->
-    <mat-list-item
-      ><strong>Due Date:</strong>
-      {{ getFormattedDueDate(rentalDetail.dueDate) }}</mat-list-item
-    >
+    <mat-list-item><strong>Due Date:</strong>
+      {{ getFormattedDueDate(rentalDetail.dueDate) }}</mat-list-item>
 
     <!-- Logic to display "days past due" if applicable -->
     <!-- Check if lastPaymentDate is defined before using it in getDaysPastDue -->
-    <mat-list-item
-      *ngIf="
+    <mat-list-item *ngIf="
         rentalDetail.lastPaymentDate &&
         getDaysPastDue(rentalDetail.lastPaymentDate)
-      "
-    >
+      ">
       <span class="days-past-due">
         <strong>Days Past Due:</strong>
         {{ getDaysPastDue(rentalDetail.lastPaymentDate) }}
       </span>
     </mat-list-item>
 
-    <mat-list-item
-      ><strong>Grace Period:</strong>
-      {{ rentalDetail.gracePeriod }} days</mat-list-item
-    >
+    <mat-list-item><strong>Grace Period:</strong>
+      {{ rentalDetail.gracePeriod }} days</mat-list-item>
 
     <!-- Lease Agreement Link -->
     <div class="lease-agreement">
       <strong>Lease Agreement:</strong>
-      <a [href]="rentalDetail.leaseAgreementPath" target="_blank"
-        >View Lease Agreement</a
-      >
+      <a [href]="rentalDetail.leaseAgreementPath" target="_blank">View Lease Agreement</a>
     </div>
   </mat-card-content>
 </mat-card>
 
 <!-- Placeholder for lot image -->
-<mat-card class="lot-image-card" *ngIf="rentalDetail?.lotImagePath">
+<!-- <mat-card class="lot-image-card" *ngIf="rentalDetail?.lotImagePath">
   <mat-card-content>
-    <img
-      [src]="rentalDetail['lotImagePath']"
-      alt="Rental Image"
-      class="rental-image"
-    />
+    <img [src]="rentalDetail['lotImagePath']" alt="Rental Image" class="rental-image" />
   </mat-card-content>
-</mat-card>
+</mat-card> -->
 
 <!-- Placeholder for payment entry component -->
 <!-- <mat-card class="payment-entry-card">
@@ -96,74 +71,3 @@
 <ng-template #loadingContent>
   <div>Click a lease to view details...</div>
 </ng-template>
-
-<!-- Edit Details form -->
-<div class="card" *ngIf="rentalDetail">
-  <h2>
-    Edit Details: {{ rentalDetail.leaseHolderFirstName }}
-    {{ rentalDetail.leaseHolderLastName }}
-  </h2>
-  <form>
-    <!-- Lease Holder Address -->
-    <div class="form-group">
-      <label for="leaseHolderAddress">Lease Holder Address:</label>
-      <input
-        id="leaseHolderAddress"
-        type="text"
-        [(ngModel)]="rentalDetail.leaseHolderAddress"
-        name="leaseHolderAddress"
-        class="form-control"
-        placeholder="Enter lease holder's address"
-      />
-    </div>
-
-    <!-- Monthly Rental Amount -->
-    <div class="form-group">
-      <label for="monthlyRentalAmount">Monthly Rent (no $ sign):</label>
-      <input
-        id="monthlyRentalAmount"
-        type="number"
-        [(ngModel)]="rentalDetail.monthlyRentalAmount"
-        name="monthlyRentalAmount"
-        class="form-control"
-        placeholder="Enter monthly rental amount"
-      />
-    </div>
-
-    <!-- Email -->
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input
-        id="email"
-        type="email"
-        [(ngModel)]="rentalDetail.email"
-        name="email"
-        class="form-control"
-        placeholder="Enter email"
-      />
-    </div>
-
-    <!-- Phone -->
-    <div class="form-group">
-      <label for="phone">Phone:</label>
-      <input
-        id="phone"
-        type="text"
-        [(ngModel)]="rentalDetail.phone"
-        name="phone"
-        class="form-control"
-        placeholder="Enter phone number"
-      />
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="form-actions">
-      <button type="button" (click)="saveChanges()" class="btn btn-primary">
-        Save
-      </button>
-      <button type="button" (click)="undoChanges()" class="btn btn-secondary">
-        Undo
-      </button>
-    </div>
-  </form>
-</div>

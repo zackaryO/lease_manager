@@ -14,6 +14,7 @@
             <th>Lot Number</th>
             <th>Lease Holder Name</th>
             <th>Amount</th>
+            <th>Actions</th>
             <!-- Add other fields as needed -->
           </tr>
         </thead>
@@ -25,7 +26,7 @@
             <td>${{ lease.monthly_rental_amount }}</td>
             <!-- Add other values as needed -->
             <td>
-              <button mat-button color="primary" (click)="selectLease(lease)">
+              <button mat-button color="primary" (click)="editLeaseDialog($event, lease)">
                 <mat-icon>edit</mat-icon> Edit
               </button>
               <button mat-button color="warn" (click)="deleteLease(lease)">
@@ -40,7 +41,7 @@
 
   <!-- Lease Form -->
   <mat-card *ngIf="selectedLease || (unoccupiedLots.length > 0 && leaseHolders.length > 0)" class="content-card">
-    <mat-card-title>{{ selectedLease ? "Edit Lease" : "Create Lease" }}</mat-card-title>
+    <mat-card-title>Create Lease</mat-card-title>
     <mat-card-content>
       <form [formGroup]="leaseForm" (ngSubmit)="submitForm()">
         <!-- Form fields with Material components -->
@@ -120,13 +121,16 @@
       <table>
         <thead>
           <tr>
+            <th>Lot Id</th>
             <th>Lot Number</th>
             <th>Lot Location</th>
             <th>Occupied</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let lot of lots">
+            <td>{{ lot.id }}</td>
             <td>{{ lot.lot_number }}</td>
             <td>{{ lot.lot_address }} </td>
             <td>{{ lot.occupied ? "Yes" : "No" }}</td>
@@ -157,6 +161,7 @@
             <th>Address</th>
             <th>Email</th>
             <th>Phone</th>
+            <th> Actions</th>
           </tr>
         </thead>
         <tbody>

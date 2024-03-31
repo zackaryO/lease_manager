@@ -1,0 +1,130 @@
+.mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+mat-form-field {
+    width: 100%;
+    /* Ensure form fields use the available width */
+}
+
+.details-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    /* Adjust the space between items */
+    align-items: flex-start;
+    /* Align items to the start of the flex container */
+    margin-bottom: 10px;
+    /* Space before the file-sections-container */
+}
+
+.detail-item {
+    flex: 1;
+    /* Each item takes up equal space */
+    min-width: 250px;
+    /* Minimum width before wrapping */
+}
+
+.file-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center content */
+    gap: 10px;
+}
+
+.form-actions {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* Center content */
+    gap: 20px;
+}
+
+.file-drop-zone {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.file-name-display,
+.file-drop-instruction {
+    margin: 0;
+}
+
+button.mat-raised-button {
+    margin-top: 10px;
+    /* Ensure there's space between buttons and other elements */
+    width: fit-content;
+    /* Let the button width fit its content */
+}
+
+.file-sections-container {
+    display: flex;
+    justify-content: space-between;
+    /* Separates the two boxes */
+    gap: 20px;
+    /* Adjust the space between the sections if needed */
+}
+
+.file-input-container {
+    flex: 1;
+    /* Allows boxes to grow and take up equal space */
+    padding: 10px;
+    /* Padding inside the boxes */
+    border: 1px solid #ccc;
+    /* Border for the boxes */
+    border-radius: 8px;
+    /* Optional: Rounds the corners of the boxes */
+    background-color: #f9f9f9;
+    /* Background color for the boxes */
+}
+
+.lease-agreement-box,
+.lot-image-box {
+    /* If you need specific styles for each box, add them here */
+    min-width: 250px;
+    /* Ensures boxes have a minimum width */
+    max-width: 50%;
+    /* Ensures boxes don't grow too large on wider screens */
+}
+
+/* Adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+
+    .mat-dialog-content,
+    .form-actions {
+        padding: 0 15px;
+        /* Reduce padding on smaller screens */
+    }
+
+    mat-form-field,
+    .file-drop-zone,
+    button.mat-raised-button {
+        width: 100%;
+        /* Ensure elements take full width on smaller screens */
+    }
+
+    .file-sections-container {
+        flex-direction: column;
+        /* Stacks the boxes vertically on smaller screens */
+    }
+
+    .lease-agreement-box,
+    .lot-image-box {
+        max-width: 100%;
+        /* Allows boxes to take full width on smaller screens */
+    }
+}
+
+/* Error message styling */
+.error-message {
+    color: #D32F2F;
+    /* Red color for error messages */
+    margin-bottom: 15px;
+    /* Space below the error message */
+}

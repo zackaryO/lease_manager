@@ -1,7 +1,9 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from .models import Lease, Payment, Lot, LeaseHolder, User, GlobalSettings
+import logging
 
+logger = logging.getLogger(__name__)  # Add logging
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,52 +15,62 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class LeaseSerializer(serializers.ModelSerializer):
-    lot_number = serializers.CharField(source='lot.lot_number')
-    lot_address = serializers.CharField(source='lot.lot_address')
-    lease_holder_first_name = serializers.CharField(source='lease_holder.lease_holder_first_name')
-    lease_holder_last_name = serializers.CharField(source='lease_holder.lease_holder_last_name')
-    lease_holder_address = serializers.CharField(source='lease_holder.lease_holder_address')
-    email = serializers.EmailField(source='lease_holder.email', )
-    phone = serializers.CharField(source='lease_holder.phone')
+    # Read-only fields to display nested object information without updating it
+    # These fields extract information from related objects (Lot and LeaseHolder) for display purposes
+    lot_number = serializers.CharField(source='lot.lot_number', read_only=True)
+    lot_address = serializers.CharField(source='lot.lot_address', read_only=True)
+    lease_holder_first_name = serializers.CharField(source='lease_holder.lease_holder_first_name', read_only=True)
+    lease_holder_last_name = serializers.CharField(source='lease_holder.lease_holder_last_name', read_only=True)
+    lease_holder_address = serializers.CharField(source='lease_holder.lease_holder_address', read_only=True)
+    email = serializers.EmailField(source='lease_holder.email', read_only=True)
+    phone = serializers.CharField(source='lease_holder.phone', read_only=True)
 
-    # Explicitly define the file fields to ensure they're serialized correctly.
-    lease_agreement_path = serializers.FileField(max_length=None, use_url=True, required=False)
-    lot_image_path = serializers.FileField(max_length=None, use_url=True, required=False)
-    last_payment_date = serializers.DateField(read_only=True)
+    # PrimaryKeyRelatedField used for updating foreign key references by ID
+    # Allows updating of `lot` and `lease_holder` by providing their IDs
+    lot = serializers.PrimaryKeyRelatedField(queryset=Lot.objects.all())
+    lease_holder = serializers.PrimaryKeyRelatedField(queryset=LeaseHolder.objects.all())
+
+    # FileField for handling file uploads; allow_null=True lets the field be optional
+    lease_agreement_path = serializers.FileField(max_length=None, use_url=True, required=False, allow_null=True)
+    lot_image_path = serializers.FileField(max_length=None, use_url=True, required=False, allow_null=True)
 
     class Meta:
-        model = Lease
-        fields = '__all__'  # Include all fields for updating
-        read_only_fields = ['id', 'payment_status']  # Add any fields you want to keep read-only
+        # Meta class defines serializer behavior
+        model = Lease  # The model associated with this serializer
+        fields = '__all__'  # Include all fields from the model in the serializer
+        read_only_fields = ['id', 'payment_status', 'last_payment_date']  # Fields that cannot be updated via the serializer
 
     def update(self, instance, validated_data):
-        # Custom update logic if needed
-        # For example, you can handle nested objects or other complex behaviors
+        # Custom update method to handle special cases like file fields
+        print("Validated data:", validated_data)  # Logging for debugging
 
-        lease_holder_data = validated_data.pop('lease_holder', None)
-        lot_data = validated_data.pop('lot', None)
+        # Pop file objects from validated_data if they exist; otherwise, get None
+        lease_agreement_file = validated_data.pop('lease_agreement_path', None)
+        lot_image_file = validated_data.pop('lot_image_path', None)
 
-        # Update the instance fields
+        # Update instance attributes with the rest of validated_data
+        '''
+        for attr, value in validated_data.items(): - This line starts a loop over the validated_data dictionary. 
+        validated_data.items() returns an iterable of the dictionary's key-value pairs, where attr is the key (name of 
+        the attribute or field on the model instance that needs to be updated), and value is the corresponding value for 
+        that field.
+
+        setattr(instance, attr, value) - This is a Python built-in function that sets the value of a specified attribute 
+        on an object. In this context, instance refers to the model instance being updated (e.g., a specific lease), 
+        attr is the name of the attribute to be updated (e.g., 'monthly_rental_amount'), and value is the new value for 
+        that attribute. This line effectively updates the instance object with the new data provided by the client.
+        '''
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
-        # Save the instance
-        instance.save()
+        # If file fields were included, save them separately
+        if lease_agreement_file is not None:
+            instance.lease_agreement_path.save(lease_agreement_file.name, lease_agreement_file, save=False)
+        if lot_image_file is not None:
+            instance.lot_image_path.save(lot_image_file.name, lot_image_file, save=False)
 
-        # If related lease_holder data was sent in the request, update the LeaseHolder object
-        if lease_holder_data:
-            lease_holder = instance.lease_holder
-            for attr, value in lease_holder_data.items():
-                setattr(lease_holder, attr, value)
-            lease_holder.save()
-
-        # If related lot data was sent in the request, update the Lot object
-        if lot_data:
-            lot = instance.lot
-            for attr, value in lot_data.items():
-                setattr(lot, attr, value)
-            lot.save()
-
+        instance.save()  # Save changes to the database
+        logger.debug(f"Updated lease {instance.id}")  # Log the update action for debugging
         return instance
 
 

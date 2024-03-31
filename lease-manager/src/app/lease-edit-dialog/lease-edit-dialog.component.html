@@ -1,0 +1,106 @@
+<h2 mat-dialog-title>Edit Lease</h2>
+
+<div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+</div>
+
+<mat-dialog-content>
+    <form [formGroup]="leaseEditForm" (ngSubmit)="onSubmit()">
+        <div class="details-container">
+            <div class="detail-item">
+                <div>Select Available Lot:</div>
+                <div>Current:<strong> {{ data.lease.lot_number }}</strong></div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Select Available Lot</mat-label>
+                    <mat-select formControlName="lot"> <!-- Changed to 'lot' to reflect the actual data model -->
+                        <mat-option *ngFor="let lot of data.unoccupiedLots" [value]="lot.id">
+                            {{ lot.lot_number }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+
+
+            <div class="detail-item">
+                <div>Select Leasholder:</div>
+                <div>Current: <strong> {{ data.lease.lease_holder_first_name }} {{
+                        data.lease.lease_holder_last_name
+                        }}</strong>
+                </div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Select Leasholder:</mat-label>
+                    <mat-select formControlName="lease_holder">
+                        <mat-option *ngFor="let holder of data.leaseHolders" [value]="holder.id">
+                            {{ holder.lease_holder_first_name }} {{ holder.lease_holder_last_name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+            <div class="detail-item">
+                <div>Set Monthy Payment Amount:</div>
+                <div>Current: <strong> ${{ data.lease.monthly_rental_amount }}</strong></div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Monthly Rental Amount</mat-label>
+                    <input matInput type="number" formControlName="monthly_rental_amount">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="file-sections-container">
+
+            <!-- File Input for Lease Agreement -->
+            <div class="file-input-container lease-agreement-box">
+                <a [href]="data.lease.lease_agreement_path" target="_blank">View Lease Agreement</a>
+                <!-- <label>Upload Lease Agreement</label> -->
+                <input type="file" (change)="onFileSelected($event, 'lease_agreement_path')" style="display: none"
+                    #leaseAgreementInput />
+                <button mat-raised-button color="primary" type="button" (click)="leaseAgreementInput.click()">
+                    <mat-icon>attach_file</mat-icon> Choose File
+                </button>
+                <div class="file-drop-zone" (dragover)="preventDefault($event)"
+                    (drop)="onFileDrop($event, 'lease_agreement_path')">
+                    <div *ngIf="!leaseEditForm.get('lease_agreement_path')?.value" class="file-drop-instruction">
+                        Drag & Drop your file here
+                    </div>
+                    <div *ngIf="leaseEditForm.get('lease_agreement_path')?.value" class="file-name-display">
+                        {{ leaseEditForm.get("lease_agreement_path")?.value?.name }}
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- File Input for Lot Image -->
+            <div class="file-input-container lot-image-box">
+                <a [href]="data.lease.lot_image_path" target="_blank">View Current Lot Image</a>
+                <!-- <label>Upload Lot Image</label> -->
+                <input type="file" (change)="onFileSelected($event, 'lot_image_path')" style="display: none"
+                    #lotImageInput />
+                <button mat-raised-button color="primary" type="button" (click)="lotImageInput.click()">
+                    <mat-icon>attach_file</mat-icon> Choose File
+                </button>
+                <div class="file-drop-zone" (dragover)="preventDefault($event)"
+                    (drop)="onFileDrop($event, 'lot_image_path')">
+                    <div *ngIf="!leaseEditForm.get('lot_image_path')?.value" class="file-drop-instruction">
+                        Drag & Drop your file here
+                    </div>
+                    <div *ngIf="leaseEditForm.get('lot_image_path')?.value" class="file-name-display">
+                        {{ leaseEditForm.get("lot_image_path")?.value?.name }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit and Cancel Buttons with Material Design -->
+        <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit">
+                <mat-icon>save</mat-icon> Update
+            </button>
+            <button mat-raised-button color="accent" type="button" (click)="onCancel()">
+                <mat-icon>cancel</mat-icon> Cancel
+            </button>
+        </div>
+    </form>
+</mat-dialog-content>

@@ -6,10 +6,11 @@ import { RentalService } from '../services/rental-detail.service';
 import { Lot } from '../models/lot.model';
 import { Lease } from '../models/lease.model';
 import { LeaseHolder } from '../models/lease-holder.model';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LotFormModalComponent } from '../lot-form-modal/lot-form-modal.component';
 import { LeaseHolderFormModalComponent } from '../lease-holder-form-modal/lease-holder-form-modal.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LeaseEditDialogComponent } from '../lease-edit-dialog/lease-edit-dialog.component';
 
 @Component({
   selector: 'app-manage-lease',
@@ -58,10 +59,19 @@ export class ManageLeaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.loadLeases();
+    // this.loadLots();
+    // this.loadLeaseHolders();
+    // this.loadUnoccupiedLots();
+    this.refreshAllData();
+  }
+
+  refreshAllData(): void {
     this.loadLeases();
     this.loadLots();
     this.loadLeaseHolders();
     this.loadUnoccupiedLots();
+    // Any other data refresh operations you need
   }
 
   private loadLeases() {
@@ -82,6 +92,31 @@ export class ManageLeaseComponent implements OnInit {
         // Optional: Code to run on completion, if needed
       }
     });
+  }
+
+  editLeaseDialog(event: Event, lease: Lease): void {
+    event.stopPropagation();
+    console.log("Editing lease:", lease);
+    const dialogRef = this.dialog.open(LeaseEditDialogComponent, {
+      // width: '1000%', // Use a percentage to be responsive
+      height: '800',
+      // maxWidth: '2000px', // Maximum width to avoid overly wide dialogs on large screens
+      autoFocus: false,
+      data: {
+        lease: lease,
+        unoccupiedLots: this.unoccupiedLots,
+        leaseHolders: this.leaseHolders,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) { // Assuming `true` indicates a successful update
+        // Reset the form and refresh all relevant data
+        this.leaseForm.reset();
+        this.refreshAllData(); // Assuming this method exists and does the refresh
+      }
+    });
+
   }
 
   private loadLots() {
@@ -114,6 +149,7 @@ export class ManageLeaseComponent implements OnInit {
       error: (error) => this.showErrorDialog(error)
     });
   }
+
   updateLot(lotData: Lot) {
     this.rentalService.updateLot(lotData).subscribe({
       next: () => {
@@ -248,10 +284,8 @@ export class ManageLeaseComponent implements OnInit {
         console.log('Creating new lease with values:', formData);
         this.rentalService.addNewLease(formData).subscribe({
           next: () => {
-            this.loadLeases();
-            this.loadUnoccupiedLots();
-            this.loadLots();
             this.leaseForm.reset();
+            this.refreshAllData();
           },
           error: (error) => this.showErrorDialog(error)
         });

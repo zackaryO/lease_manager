@@ -176,14 +176,14 @@ export class DashboardComponent implements OnInit {
 
 
   updateRental(rental: RentalDetail): void {
-    this.rentalService.updateRentalDetail(rental).subscribe({
-      next: updatedRental => {
-        console.log(`Rental ${updatedRental.id} updated successfully`);
-      },
-      error: error => {
-        console.error(`Error updating rental ${rental.id}:`, error);
-      }
-    });
+    // this.rentalService.updateRentalDetail(rental).subscribe({
+    //   next: updatedRental => {
+    //     console.log(`Rental ${updatedRental.id} updated successfully`);
+    //   },
+    //   error: error => {
+    //     console.error(`Error updating rental ${rental.id}:`, error);
+    //   }
+    // });
   }
 
   getDaysPastDue(date: string | Date): number {

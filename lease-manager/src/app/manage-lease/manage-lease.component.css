@@ -77,3 +77,16 @@ mat-card-actions {
     display: flex;
     justify-content: flex-end;
 }
+
+/* Make table scrollable on smaller screens */
+@media screen and (max-width: 768px) {
+    .mat-card-content {
+        overflow-x: auto;
+        /* Allows horizontal scrolling */
+    }
+
+    table {
+        width: auto;
+        /* Ensures table can expand as needed */
+    }
+}

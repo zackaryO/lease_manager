@@ -21,7 +21,9 @@ export class AuthService {
   // The HttpClient is injected to make HTTP requests.
   constructor(private http: HttpClient) {
     // When the service is instantiated, it checks if the token is expired.
-    this.checkTokenExpiration();
+
+
+    // this.checkTokenExpiration();
   }
 
   // Login function: Takes username and password, returns an Observable.

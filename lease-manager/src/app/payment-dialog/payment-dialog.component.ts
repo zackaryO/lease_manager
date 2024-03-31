@@ -58,7 +58,6 @@ export class PaymentDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('Payment submitted.');
     if (this.paymentForm.valid) {
       const payment: any = { ...this.paymentForm.value };
 
@@ -72,7 +71,6 @@ export class PaymentDialogComponent implements OnInit {
       }
 
       this.paymentService.submitPayment(payment).subscribe(response => {
-        console.log('submitPayment');
         console.log('Payment submitted successfully.', response);
         this.dialogRef.close(payment);
       }, error => {

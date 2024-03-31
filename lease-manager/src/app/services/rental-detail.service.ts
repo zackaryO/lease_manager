@@ -59,7 +59,7 @@ export class RentalService {
       lease_holder_address: rental.leaseHolderAddress,
       email: rental.email,
       phone: rental.phone,
-      monthly_rental_amount: rental.monthlyRentalAmount.toString(),
+      monthly_rental_amount: rental.monthlyRentalAmount,
       due_date: rental.dueDate,
       grace_period: rental.gracePeriod,
       payment_status: rental.paymentStatus
@@ -86,23 +86,16 @@ export class RentalService {
       .pipe(catchError(this.handleError));
   }
 
-  // Update lease
-  updateLease(lease: Lease): Observable<Lease> {
-    const headers = this.getHeaders();
-    return this.http.patch<Lease>(`${this.baseUrl}/${lease.id}/`, lease, { headers })
-      .pipe(catchError(this.handleError));
-  }
+  // Add new lease not in use
+  // addLease(lease: Lease): Observable<Lease> {
+  //   const headers = this.getHeaders();
 
-  // Add new lease
-  addLease(lease: Lease): Observable<Lease> {
-    const headers = this.getHeaders();
+  //   // Log the lease object to the console
+  //   console.log('Adding lease:', lease);
 
-    // Log the lease object to the console
-    console.log('Adding lease:', lease);
-
-    return this.http.post<Lease>(`${this.baseUrl}/create` + '/', lease, { headers })
-      .pipe(catchError(this.handleError));
-  }
+  //   return this.http.post<Lease>(`${this.baseUrl}/create` + '/', lease, { headers })
+  //     .pipe(catchError(this.handleError));
+  // }
 
 
   // Delete lease
@@ -130,14 +123,15 @@ export class RentalService {
       );
   }
 
-  updateRentalDetail(rental: RentalDetail): Observable<RentalDetail> {
+  updateRentalDetail(data: FormData, leaseId: number): Observable<any> {
     const headers = this.getHeaders();
-    const requestBody = this.transformModelToRequest(rental);
+    console.log('Request before transform:', data);
+    // const requestBody = this.transformModelToRequest(data);
 
     // Log the request body before sending the request
-    console.log('Request Body:', requestBody);
+    // console.log('Request Body:', requestBody);
 
-    return this.http.patch<any>(`${this.baseUrl}/${rental.id}/`, requestBody, { headers })
+    return this.http.patch<any>(`${this.baseUrl}/${leaseId}/`, data, { headers })
       .pipe(
         tap(response => console.log('Response:', response)), // Log the response
         map(item => this.transformResponseToModel(item)),
@@ -146,6 +140,15 @@ export class RentalService {
           throw error; // Rethrow the error to be handled by the caller
         })
       );
+  }
+
+  // Update lease for manage details component
+  updateLease(lease: Lease): Observable<Lease> {
+
+    const headers = this.getHeaders();
+    console.log("data passed to updateLease", lease)
+    return this.http.patch<any>(`${this.baseUrl}/${lease.id}/`, lease, { headers })
+      .pipe(catchError(this.handleError));
   }
 
   undoRentalDetailUpdate(rental: RentalDetail): Observable<RentalDetail> {
@@ -169,7 +172,7 @@ export class RentalService {
         transformedLeaseData.append(key, value);
       }
     });
-
+    console.log("new lease data to server", transformedLeaseData);
     const headers = this.getHeaders().delete('Content-Type');
     return this.http.post<any>(`${this.baseUrl}/create/`, transformedLeaseData, { headers })
       .pipe(

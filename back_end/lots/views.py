@@ -22,6 +22,7 @@ from .permissions import IsAdminUser, IsStaffUser
 from .models import Lease, Payment, Lot, User, LeaseHolder, GlobalSettings
 from .serializers import LeaseSerializer, PaymentSerializer, LotSerializer, UserRegistrationSerializer, \
     LeaseHolderSerializer, GlobalSettingsSerializer, LeaseCreateSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class UserRegistrationAPIView(generics.CreateAPIView):
@@ -229,17 +230,25 @@ class LHolderRetUpDestView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
-    """
-    API view for retrieving and updating a specific lease instance.
-    (generics.RetrieveUpdateAPIView) Handles GET requests for lease details and PUT/PATCH requests for updates.
-    Accessible to staff users authenticated with JWT.
-    Inherits from generics.RetrieveUpdateAPIView.
-    """
     queryset = Lease.objects.all()
     serializer_class = LeaseSerializer
     lookup_field = 'id'
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsStaffUser]
+    parser_classes = (MultiPartParser, FormParser,)
+
+# class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
+#     """
+#     API view for retrieving and updating a specific lease instance.
+#     (generics.RetrieveUpdateAPIView) Handles GET requests for lease details and PUT/PATCH requests for updates.
+#     Accessible to staff users authenticated with JWT.
+#     Inherits from generics.RetrieveUpdateAPIView.
+#     """
+#     queryset = Lease.objects.all()
+#     serializer_class = LeaseSerializer
+#     lookup_field = 'id'
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsStaffUser]
 
 
 class PaymentListCreateView(generics.ListCreateAPIView):

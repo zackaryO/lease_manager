@@ -10,7 +10,7 @@ The Angular client side is secured using Authgaurd that is currently working wit
 
 completely revamp payment service, dialog and table. I need to include logic and fields that assign a payment to a month, this will likely also require me to record the lease effective date so it can track and assign payments by for each month, so if the person pays in advance or falls behind the data is more accurate.
 
-add a feild in leaseholder table to see if customer wants payment reminder (bool)
+add a feild in leaseholder table to see if customer wants payment reminder (bool) (optional)
 
 add email client that sends a missing payment notication / payment reminder with default message(s), pulls leaseholders name, email, days/weeks/months late to build the body
 
