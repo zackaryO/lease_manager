@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import environ
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -59,6 +60,15 @@ DATABASES = {
         'HOST': env('DB_HOST'),  # Your PostgreSQL host
         'PORT': env('DB_PORT', default='5432'),  # Your PostgreSQL port
     }
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=45),  # Adjust to desired lifespan
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Adjust as needed
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    # Other configurations...
 }
 
 # SECURITY WARNING: don't run with debug turned on in production!
