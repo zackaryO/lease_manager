@@ -110,7 +110,9 @@ change this logic so it doesnt make an API call for every record and after the p
         });
     }
 ```
+May add sorting logic
 
+need to build payment report queries 
 
 
 the payment status logic isn't correct for whe its over a month past due
