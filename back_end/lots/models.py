@@ -1,8 +1,10 @@
 from django.core.validators import MaxValueValidator
+from datetime import date, timedelta
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from django.utils.timezone import now
 
 
 class User(AbstractUser):
@@ -64,11 +66,52 @@ class Lease(models.Model):
     payment_status = models.CharField(
         max_length=20,
         choices=PAYMENT_STATUS_CHOICES,
-        default=LATE,
+        default=UP_TO_DATE,
         help_text="Current payment status of the lease"
     )
 
+    def calculate_current_payment_status(self):
+        """Calculate the current payment status without saving it to the database."""
+        today = now().date()
+        if not self.last_payment_date:
+            return self.UP_TO_DATE
+
+        expected_payment_date = date(self.last_payment_date.year, self.last_payment_date.month, self.due_date)
+        expected_payment_date = expected_payment_date.replace(month=(expected_payment_date.month % 12 + 1))
+
+        if today <= expected_payment_date:
+            return self.UP_TO_DATE
+        elif today <= (expected_payment_date + timedelta(days=self.grace_period)):
+            return self.LATE
+        else:
+            return self.DELINQUENT
+
+    def update_payment_status_based_on_date(self, payment_date):
+        if not self.last_payment_date or payment_date > self.last_payment_date:
+            self.last_payment_date = payment_date
+            # Determine if the payment is early, on time, or late
+            today = date.today()
+            expected_payment_date = date(today.year, today.month, self.due_date)
+
+            if payment_date <= expected_payment_date:
+                # Payment is either on time or early for the current month
+                self.payment_status = self.UP_TO_DATE
+            elif payment_date <= (expected_payment_date + timedelta(days=self.grace_period)):
+                # Payment is within the grace period
+                self.payment_status = self.LATE
+            else:
+                # Payment is late beyond the grace period
+                self.payment_status = self.DELINQUENT
+
+            self.save()
+
     def save(self, *args, **kwargs):
+        is_new = self._state.adding  # Check if this is a new record
+
+        # If this is a new record, set last_payment_date to today's date
+        if is_new and not self.last_payment_date:
+            self.last_payment_date = now().date()
+
         # If this is a new record or the lot is being changed
         if self._state.adding or self.lot_id != self.__class__.objects.get(id=self.id).lot_id:
             # If this is not a new lease and the lot is being changed

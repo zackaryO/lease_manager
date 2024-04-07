@@ -57,6 +57,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+
   refreshData(): void {
     this.fetchRentals(); // Now you can call fetchRentals both on init and when you need to refresh the data
     this.cdr.detectChanges();
@@ -65,6 +66,10 @@ export class DashboardComponent implements OnInit {
 
   viewDetails(rental: RentalDetail): void {
     this.selectedRentalId = rental.id ?? null; // Provide a fallback to null if undefined
+    if (this.selectedRentalId) {
+      this.evaluateAndUpdatePaymentStatus(rental)
+    }
+
   }
 
   openEmailDialog(event: Event, rental: RentalDetail): void {
@@ -91,9 +96,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private ensureDate(date: any): Date {
-    return date instanceof Date ? date : new Date(date);
-  }
+  // private ensureDate(date: any): Date {
+  //   return date instanceof Date ? date : new Date(date);
+  // }
 
   isPaymentRecent(date: Date): boolean {
     console.log('Checking if payment is recent for date:', date);
@@ -157,9 +162,10 @@ export class DashboardComponent implements OnInit {
     let dueDate = new Date(rental.lastPaymentDate);
     dueDate.setMonth(dueDate.getMonth() + 1);
 
-    const today = new Date();
-    const daysSinceDueDate = Math.ceil((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
-
+    const dateDue: string | Date = rental.lastPaymentDate;
+    const dateString = dateDue instanceof Date ? dateDue.toISOString().split('T')[0] : dateDue;
+    const daysSinceDueDate = this.statusService.getDaysPastDue(dateString, rental.dueDate, rental.gracePeriod);
+    console.log("days past due", daysSinceDueDate)
     // Compare days since due date with grace period
     if (daysSinceDueDate > 0) {
       if (daysSinceDueDate <= rental.gracePeriod) {
@@ -171,24 +177,23 @@ export class DashboardComponent implements OnInit {
       rental.paymentStatus = 'up-to-date';
     }
 
+    console.log("the new status being sent to updateRental", rental)
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This needs to be replaced with something more efficient 
+    ////////////////////////////////
     this.updateRental(rental);
   }
 
 
   updateRental(rental: RentalDetail): void {
-    // this.rentalService.updateRentalDetail(rental).subscribe({
-    //   next: updatedRental => {
-    //     console.log(`Rental ${updatedRental.id} updated successfully`);
-    //   },
-    //   error: error => {
-    //     console.error(`Error updating rental ${rental.id}:`, error);
-    //   }
-    // });
+    this.rentalService.updateRentalStatus(rental).subscribe({
+      next: updatedRental => {
+        console.log(`Rental ${updatedRental.id} updated successfully`);
+      },
+      error: error => {
+        console.error(`Error updating rental ${rental.id}:`, error);
+      }
+    });
   }
-
-  getDaysPastDue(date: string | Date): number {
-    return this.statusService.getDaysPastDue(date);
-  }
-
 
 }

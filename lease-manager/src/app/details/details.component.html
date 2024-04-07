@@ -35,11 +35,11 @@
     <!-- Check if lastPaymentDate is defined before using it in getDaysPastDue -->
     <mat-list-item *ngIf="
         rentalDetail.lastPaymentDate &&
-        getDaysPastDue(rentalDetail.lastPaymentDate)
+        getDaysPastDue(rentalDetail.lastPaymentDate, rentalDetail.dueDate, rentalDetail.gracePeriod)
       ">
       <span class="days-past-due">
         <strong>Days Past Due:</strong>
-        {{ getDaysPastDue(rentalDetail.lastPaymentDate) }}
+        {{ getDaysPastDue(rentalDetail.lastPaymentDate, rentalDetail.dueDate, rentalDetail.gracePeriod) }}
       </span>
     </mat-list-item>
 

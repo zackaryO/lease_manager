@@ -62,9 +62,13 @@ export class DetailsComponent implements OnChanges {
     return dueDateThisMonth.toDateString();
   }
 
-  getDaysPastDue(date: string | Date): number {
-    return this.statusService.getDaysPastDue(date); // this service does not return an observable and is synchronous, no need to subscribe.
+  getDaysPastDue(date: string | Date, dueDay: number, gracePeriod: number): number {
+    // Ensure the date is in string format
+    const dateString = date instanceof Date ? date.toISOString().split('T')[0] : date;
+    // Pass the dateString to the service method
+    return this.statusService.getDaysPastDue(dateString, dueDay, gracePeriod);
   }
+
 
   // Clears the input field when it loses focus.
   clearInput(event: FocusEvent): void {

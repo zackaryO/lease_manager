@@ -22,7 +22,7 @@ from .permissions import IsAdminUser, IsStaffUser
 from .models import Lease, Payment, Lot, User, LeaseHolder, GlobalSettings
 from .serializers import LeaseSerializer, PaymentSerializer, LotSerializer, UserRegistrationSerializer, \
     LeaseHolderSerializer, GlobalSettingsSerializer, LeaseCreateSerializer
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 
 class UserRegistrationAPIView(generics.CreateAPIView):
@@ -235,7 +235,7 @@ class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
     lookup_field = 'id'
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsStaffUser]
-    parser_classes = (MultiPartParser, FormParser,)
+    parser_classes = (JSONParser, MultiPartParser, FormParser,)
 
 # class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
 #     """

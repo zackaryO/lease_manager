@@ -33,12 +33,21 @@ class LeaseSerializer(serializers.ModelSerializer):
     # FileField for handling file uploads; allow_null=True lets the field be optional
     lease_agreement_path = serializers.FileField(max_length=None, use_url=True, required=False, allow_null=True)
     lot_image_path = serializers.FileField(max_length=None, use_url=True, required=False, allow_null=True)
+    payment_status = serializers.CharField(max_length=20, required=False, allow_null=True)
 
     class Meta:
         # Meta class defines serializer behavior
         model = Lease  # The model associated with this serializer
         fields = '__all__'  # Include all fields from the model in the serializer
         read_only_fields = ['id', 'payment_status', 'last_payment_date']  # Fields that cannot be updated via the serializer
+
+    def to_representation(self, instance):
+        """Modify the representation of the instance to dynamically calculate payment status."""
+        ret = super().to_representation(instance)
+        # Dynamically calculate the payment status
+        current_payment_status = instance.calculate_current_payment_status()
+        ret['payment_status'] = current_payment_status  # Update the payment_status in the response
+        return ret
 
     def update(self, instance, validated_data):
         # Custom update method to handle special cases like file fields

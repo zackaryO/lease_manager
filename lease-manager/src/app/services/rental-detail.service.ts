@@ -142,14 +142,30 @@ export class RentalService {
       );
   }
 
-  // Update lease for manage details component
-  updateLease(lease: Lease): Observable<Lease> {
-
-    const headers = this.getHeaders();
-    console.log("data passed to updateLease", lease)
-    return this.http.patch<any>(`${this.baseUrl}/${lease.id}/`, lease, { headers })
+  updateRentalStatus(rental: RentalDetail): Observable<RentalDetail> {
+    console.log("data recieved in updateRentalStatus", rental);
+    // Only send the payment_status in the patch request
+    const updatePayload = { payment_status: rental.paymentStatus };
+    // const headers = this.getHeaders();
+    const headers = this.getHeaders().append('Content-Type', 'application/json');
+    console.log("updatePayload", updatePayload);
+    return this.http.patch<any>(`${this.baseUrl}/${rental.id}/`, updatePayload, { headers })
       .pipe(catchError(this.handleError));
   }
+
+
+
+
+  // Update lease for manage details component
+  updateLease(lease: Lease): Observable<Lease> {
+    const headers = this.getHeaders().append('Content-Type', 'application/json');
+
+    console.log("data passed to updateLease", lease);
+
+    return this.http.patch<Lease>(`${this.baseUrl}/${lease.id}/`, lease, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
 
   undoRentalDetailUpdate(rental: RentalDetail): Observable<RentalDetail> {
     if (rental.id === undefined) {

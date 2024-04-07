@@ -91,6 +91,24 @@ The tempary admin username: admin, password: admin.
 delete this code in thw login component`    // Note: Logging credentials is a security risk and should be avoided in production.
     console.log('Logging in with:', this.username, this.password);`
 
+
+change this logic so it doesnt make an API call for every record and after the page has already loaded, make sure this is happeneing on the back-end properly first
+    this.updateRental(rental);
+  }
+
+
+  updateRental(rental: RentalDetail): void {
+    this.rentalService.updateRentalStatus(rental).subscribe({
+      next: updatedRental => {
+        console.log(`Rental ${updatedRental.id} updated successfully`);
+      },
+      error: error => {
+        console.error(`Error updating rental ${rental.id}:`, error);
+      }
+    });
+  }
+
+
 # known bugs
 
 can't seem to add more than one lease without having to leave and renavigate to or refresh the the page
