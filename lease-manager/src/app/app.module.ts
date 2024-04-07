@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // import FormsModule
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,7 +11,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { ReportsModule } from './reports/reports.module';
 import { DetailsModule } from './details/details.module';
 import { AuthenticationModule } from './authentication/authentication.module';
-import { HttpClientModule } from '@angular/common/http';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PaymentDialogComponent } from './payment-dialog/payment-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -30,6 +30,7 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { EmailDialogComponent } from './email-dialog/email-dialog.component';
 import { LeaseEditDialogComponent } from './lease-edit-dialog/lease-edit-dialog.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { AuthInterceptor } from './auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     DashboardModule,
@@ -66,7 +68,11 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
     ReactiveFormsModule,
 
   ],
-  providers: [RentalService, { provide: LocationStrategy, useClass: HashLocationStrategy }],
+  providers: [RentalService, { provide: LocationStrategy, useClass: HashLocationStrategy }, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,
+  },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

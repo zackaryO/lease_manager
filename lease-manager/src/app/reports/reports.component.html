@@ -1,5 +1,9 @@
-<button (click)="printReport()">Print</button>
-<button (click)="deleteSelected()">Delete Selected</button>
+<button mat-raised-button color="primary" (click)="printReport()">
+  <mat-icon>print</mat-icon> Print
+</button>
+<button mat-raised-button color="warn" (click)="deleteSelected()">
+  <mat-icon>delete</mat-icon> Delete Selected
+</button>
 
 <div class="table-responsive">
   <table>

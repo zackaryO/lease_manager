@@ -21,3 +21,15 @@ th {
     background-color: #4CAF50;
     color: white;
 }
+
+.actions {
+    margin-bottom: 20px;
+}
+
+button {
+    margin-right: 8px;
+}
+
+.mat-icon {
+    margin-right: 5px;
+}
