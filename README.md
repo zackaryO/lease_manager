@@ -92,28 +92,36 @@ delete this code in thw login component`    // Note: Logging credentials is a se
     console.log('Logging in with:', this.username, this.password);`
 
 
-change this logic so it doesnt make an API call for every record and after the page has already loaded, make sure this is happeneing on the back-end properly first
-    this.updateRental(rental);
-  }
+change this logic so it doesnt make an API call for every record and after the page has already loaded, make sure this is 
+```
+    happeneing on the back-end properly first
+        this.updateRental(rental);
+    }
 
 
-  updateRental(rental: RentalDetail): void {
-    this.rentalService.updateRentalStatus(rental).subscribe({
-      next: updatedRental => {
-        console.log(`Rental ${updatedRental.id} updated successfully`);
-      },
-      error: error => {
-        console.error(`Error updating rental ${rental.id}:`, error);
-      }
-    });
-  }
+    updateRental(rental: RentalDetail): void {
+        this.rentalService.updateRentalStatus(rental).subscribe({
+        next: updatedRental => {
+            console.log(`Rental ${updatedRental.id} updated successfully`);
+        },
+        error: error => {
+            console.error(`Error updating rental ${rental.id}:`, error);
+        }
+        });
+    }
+```
 
+
+
+the payment status logic isn't correct for whe its over a month past due
 
 # known bugs
 
 can't seem to add more than one lease without having to leave and renavigate to or refresh the the page
 
 the dialogs to manage datails are too small
+
+if a lot is edited, it in incorrectly changed to unoccupied
 
 # UML sequnce diagrams (more coming soon!)
 

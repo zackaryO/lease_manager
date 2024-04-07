@@ -29,6 +29,7 @@ import { LeaseHolderFormModalComponent } from './lease-holder-form-modal/lease-h
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { EmailDialogComponent } from './email-dialog/email-dialog.component';
 import { LeaseEditDialogComponent } from './lease-edit-dialog/lease-edit-dialog.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { LeaseEditDialogComponent } from './lease-edit-dialog/lease-edit-dialog.
     LeaseHolderFormModalComponent,
     ErrorDialogComponent,
     EmailDialogComponent,
-    LeaseEditDialogComponent
+    LeaseEditDialogComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,

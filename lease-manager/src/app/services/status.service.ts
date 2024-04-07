@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as moment from 'moment-timezone';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +21,6 @@ export class StatusService {
     return nextDueDate;
   }
 
-  getTodayMountainTime(): Date {
-    // This will create a moment instance in Mountain Time Zone regardless of the user's local time zone.
-    const todayMountainTime = moment().tz('America/Denver').startOf('day');
-    // Convert it back to a JavaScript Date object, if needed for compatibility with other parts of your app.
-    return todayMountainTime.toDate();
-  }
 
   // Calculates the number of days past due from a given date, considering due date and grace period.
   getDaysPastDue(lastPaymentDateString: string, dueDay: number, gracePeriod: number): number {
@@ -37,15 +30,24 @@ export class StatusService {
       return 0;
     }
 
-    const today = this.getTodayMountainTime(); // Use a fixed date for "today's" date for calculation
-    const nextDueDate = this.getNextDueDate(lastPaymentDate, dueDay);
-    if (today <= nextDueDate) {
-      return 0; // Not past due if today is before the next due date
+    // Directly calculate the due date after the last payment date
+    let dueDateAfterLastPayment = new Date(lastPaymentDate.getFullYear(), lastPaymentDate.getMonth() + 1, dueDay);
+
+    // Adjusting dueDateAfterLastPayment if it went over to the next month
+    if (dueDateAfterLastPayment.getDate() !== dueDay) {
+      dueDateAfterLastPayment = new Date(dueDateAfterLastPayment.getFullYear(), dueDateAfterLastPayment.getMonth(), 0);
     }
 
-    const difference = today.getTime() - nextDueDate.getTime();
-    const daysPastDue = Math.ceil(difference / (1000 * 3600 * 24));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize today to start of day for accurate day difference calculation
+
+    // Convert both dates to timestamps for subtraction
+    const difference = today.getTime() - dueDateAfterLastPayment.getTime();
+
+    // Calculate the difference in days
+    const daysPastDue = Math.ceil(difference / (1000 * 60 * 60 * 24));
 
     return daysPastDue;
   }
+
 }

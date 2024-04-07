@@ -11,6 +11,7 @@ import { LotFormModalComponent } from '../lot-form-modal/lot-form-modal.componen
 import { LeaseHolderFormModalComponent } from '../lease-holder-form-modal/lease-holder-form-modal.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LeaseEditDialogComponent } from '../lease-edit-dialog/lease-edit-dialog.component';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-manage-lease',
@@ -293,17 +294,41 @@ export class ManageLeaseComponent implements OnInit {
     }
   }
 
+  // deleteLease(lease: Lease) {
+  //   this.rentalService.deleteLease(lease.id).subscribe({
+  //     next: () => {
+  //       this.loadUnoccupiedLots();
+  //       this.loadLeases();
+  //       this.loadLots();
+  //       this.leaseForm.reset();
+  //     },
+  //     error: (error) => this.showErrorDialog(error)
+  //   });
+  // }
+
   deleteLease(lease: Lease) {
-    this.rentalService.deleteLease(lease.id).subscribe({
-      next: () => {
-        this.loadUnoccupiedLots();
-        this.loadLeases();
-        this.loadLots();
-        this.leaseForm.reset();
-      },
-      error: (error) => this.showErrorDialog(error)
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '300px',
+      data: { message: 'Are you sure you want to delete this lease?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // User clicked 'Delete' in the dialog
+        this.rentalService.deleteLease(lease.id).subscribe({
+          next: () => {
+            this.loadUnoccupiedLots();
+            this.loadLeases();
+            this.loadLots();
+            this.leaseForm.reset();
+          },
+          error: (error) => this.showErrorDialog(error)
+        });
+      }
+      // If result is false, the user clicked 'Cancel' or closed the dialog, do nothing
     });
   }
+
 
   cancelEdit() {
     this.selectedLease = null;
