@@ -12,7 +12,7 @@
         <th>Select</th>
         <th>First Name</th>
         <th>Last Name</th>
-        <th>Date</th>
+        <th>Payment Date</th>
         <th>Amount</th>
         <th>Method</th>
         <th>Transaction ID</th>
@@ -39,3 +39,10 @@
     </tbody>
   </table>
 </div>
+<tfoot>
+  <tr>
+    <td colspan="9"> <!-- Adjust the colspan to match the number of columns in your table -->
+      Total Entries: {{ payments.length }}
+    </td>
+  </tr>
+</tfoot>
