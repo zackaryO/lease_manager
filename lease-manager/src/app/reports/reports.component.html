@@ -1,11 +1,41 @@
-<button mat-raised-button color="primary" (click)="printReport()">
-  <mat-icon>print</mat-icon> Print
-</button>
-<button mat-raised-button color="warn" (click)="deleteSelected()">
-  <mat-icon>delete</mat-icon> Delete Selected
-</button>
+<div class="actions">
+  <div class="button-group">
+    <button mat-raised-button color="primary" (click)="printReport()">
+      <mat-icon>print</mat-icon> Print
+    </button>
+    <button mat-raised-button color="warn" (click)="deleteSelected()">
+      <mat-icon>delete</mat-icon> Delete Selected
+    </button>
+  </div>
+  <!-- Date Range Inputs with Labels -->
+  <div class="date-input-group">
+    <label for="startDate" class="date-label">Start Date:</label>
+    <input type="date" id="startDate" [(ngModel)]="startDate" class="date-input">
+  </div>
+  <div class="date-input-group">
+    <label for="endDate" class="date-label">End Date:</label>
+    <input type="date" id="endDate" [(ngModel)]="endDate" class="date-input">
+  </div>
+  <!-- Leaseholder Dropdown - listing leaseholders from the payments array -->
+  <label for="endDate" class="date-label">Select Lease Holder:</label>
+  <select [(ngModel)]="selectedLeaseholderId" class="leaseholder-select" (ngModelChange)="applyFilters()">
+    <!-- Non-selectable placeholder option always visible -->
+    <option value="" disabled selected>Select lease holder</option>
+    <!-- Option to show all entries -->
+    <option value="">Show All</option>
+    <!-- Dynamically generated options for each unique leaseholder -->
+    <option *ngFor="let leaseholder of getUniqueLeaseholders()"
+      [value]="leaseholder.lease_holder_first_name + ' ' + leaseholder.lease_holder_last_name">
+      {{ leaseholder.lease_holder_first_name }} {{ leaseholder.lease_holder_last_name }}
+    </option>
+  </select>
+  <button mat-raised-button color="accent" (click)="applyFilters()">Apply Filters</button>
+</div>
+
+
 
 <div class="table-responsive">
+  <h1>Report (refresh screen after deleting entries)</h1>
   <table>
     <thead>
       <tr>
@@ -21,7 +51,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let payment of payments">
+      <tr *ngFor="let payment of filteredPayments">
         <td>
           <input type="checkbox" [(ngModel)]="payment.selected" (change)="toggleSelection(payment)" />
         </td>
@@ -38,11 +68,12 @@
       </tr>
     </tbody>
   </table>
+
+  <tfoot>
+    <tr>
+      <td colspan="9">
+        Total Entries: {{ filteredPayments.length }}
+      </td>
+    </tr>
+  </tfoot>
 </div>
-<tfoot>
-  <tr>
-    <td colspan="9"> <!-- Adjust the colspan to match the number of columns in your table -->
-      Total Entries: {{ payments.length }}
-    </td>
-  </tr>
-</tfoot>

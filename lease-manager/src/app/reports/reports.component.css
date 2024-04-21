@@ -23,7 +23,10 @@ th {
 }
 
 .actions {
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
 }
 
 button {
@@ -32,4 +35,106 @@ button {
 
 .mat-icon {
     margin-right: 5px;
+}
+
+.date-input-group {
+    margin-right: 15px;
+}
+
+.date-label {
+    margin-right: 5px;
+}
+
+.leaseholder-select {
+    margin: 0px 10px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: auto;
+    /* Adjust width as needed */
+    background-color: white;
+    color: #666;
+}
+
+.leaseholder-select:hover {
+    border-color: #888;
+    /* Highlight effect on hover to indicate interactiveness */
+}
+
+.button-group {
+    margin-right: 20px;
+    /* Provide space between button group and filters */
+}
+
+button[mat-raised-button] {
+    cursor: pointer;
+    font-size: 14px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    margin-right: 8px;
+}
+
+button[mat-raised-button][color="primary"] {
+    background-color: #007BFF;
+    color: white;
+}
+
+button[mat-raised-button][color="warn"] {
+    background-color: #d32f2f;
+    /* Red color for delete */
+    color: white;
+}
+
+button[mat-raised-button][color="accent"] {
+    background-color: #00BCD4;
+    /* Teal color for apply filters */
+    color: white;
+}
+
+button[mat-raised-button]:hover {
+    opacity: 0.85;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 600px) {
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .button-group,
+    .date-input,
+    .leaseholder-select,
+    button[mat-raised-button] {
+        margin-right: 0;
+        margin-bottom: 10px;
+
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* Print media styles */
+@media print {
+
+    /* Specific targeting to ensure only these elements are affected */
+    app-navbar,
+    .actions {
+        display: none;
+    }
+
+    /* Ensure that all other printing properties for elements remain unchanged */
+    body,
+    body * {
+        visibility: inherit;
+        /* Inherits visibility without forcing 'visible' */
+        color: black;
+        /* Optional: Ensures print is in black for readability */
+    }
 }
