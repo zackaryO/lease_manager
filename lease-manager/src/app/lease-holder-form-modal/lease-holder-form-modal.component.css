@@ -1,21 +1,36 @@
-.mat-form-field {
+.details-container {
     display: flex;
-    flex-direction: column;
-    /* Stack fields vertically */
-    margin-bottom: 10px;
-    /* Spacing between fields */
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+
+.detail-item {
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 10px;
 }
 
 .scrollable-dialog-content {
     overflow-y: auto;
     max-height: 400px;
-    /* Adjust as necessary */
+}
+
+.mat-form-field {
+    width: 100%;
 }
 
 @media (max-width: 600px) {
     .mat-dialog-container {
         width: 95vw;
-        /* Full width on smaller screens */
         max-height: 95vh;
     }
 }

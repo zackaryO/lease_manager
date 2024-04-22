@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // import FormsModule
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -64,6 +64,7 @@ import { AuthInterceptor } from './auth.interceptor';
     MatCardModule,
     MatIconModule,
     MatDialogModule,
+    MatCheckboxModule,
     MatSelectModule,
     ReactiveFormsModule,
 

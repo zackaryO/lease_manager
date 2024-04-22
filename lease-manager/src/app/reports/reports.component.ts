@@ -33,6 +33,14 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  loadRecord(): void {
+    this.paymentService.getPayments().subscribe(data => {
+      this.payments = data;
+      this.filteredPayments = data;
+      this.selectedPayments = []; // Optionally clear selected payments after reload
+      this.getUniqueLeaseholders();
+    });
+  }
 
   toggleSelection(payment: any) {
     const idx = this.selectedPayments.indexOf(payment.id);
@@ -82,9 +90,10 @@ export class ReportsComponent implements OnInit {
         this.paymentService.deletePayments(this.selectedPayments).subscribe({
           next: () => {
             this.payments = this.payments.filter(p => !this.selectedPayments.includes(p.id));
-            this.selectedPayments = [];
+            this.selectedPayments = []; // Clearing selected payments
+            this.loadRecord(); // Reload the data from the server
           },
-          error: (error) => this.showErrorDialog(error) // This assumes you have a showErrorDialog method
+          error: (error) => this.showErrorDialog(error)
         });
       }
       // If result is false, the user clicked 'Cancel' or closed the dialog, do nothing

@@ -25,8 +25,8 @@ export class LotFormModalComponent {
       id: new FormControl(this.isEditing ? data.id : ''),
       lot_number: new FormControl('', this.isEditing ? [] : Validators.required),
       lot_address: new FormControl('', this.isEditing ? [] : Validators.required),
-      occupied: new FormControl(false)
-    }, { validators: this.isEditing ? this.atLeastOneRequired('lot_number', 'lot_address') : [] });
+      occupied: new FormControl(this.isEditing ? data.occupied : false)
+    }, { validators: this.isEditing ? this.atLeastOneRequired('lot_number', 'lot_address', 'occupied') : [] });
 
     // Log the initial state of the form
     console.log('Initial Form State:', this.lotForm.value);
@@ -52,18 +52,16 @@ export class LotFormModalComponent {
     if (this.lotForm.valid) {
       let formData = this.lotForm.value;
 
-      // If editing, construct the lot object with only modified fields
       if (this.isEditing) {
         let lotToUpdate: Partial<Lot> = { id: this.data.id };
 
-        Object.keys(formData).forEach(key => {
-          if (formData[key] !== '' && key in this.data) {
-            // Use type assertion to satisfy TypeScript's type checking
-            (lotToUpdate as any)[key] = formData[key];
+        (Object.keys(formData) as Array<keyof Lot>).forEach(key => {
+          if (formData[key] !== '' && formData[key] !== this.data[key]) {
+            lotToUpdate[key] = formData[key];
           }
         });
 
-        console.log('Updating lot with only modified fields:', lotToUpdate);
+        console.log('Updating lot with modified fields:', lotToUpdate);
         this.dialogRef.close(lotToUpdate);
       } else {
         console.log('Creating new lot:', formData);
@@ -73,7 +71,6 @@ export class LotFormModalComponent {
       console.error('Form is invalid:', this.lotForm.errors);
     }
   }
-
 
 
   onCancel(): void {

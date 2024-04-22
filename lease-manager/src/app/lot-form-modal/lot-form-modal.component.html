@@ -1,46 +1,32 @@
 <h2 mat-dialog-title>{{ data ? "Edit" : "Add" }} Lot:</h2>
 
 <mat-dialog-content>
-  <h3>
-    <div *ngIf="data">
-      Current Lot Number: <b>{{ data.lot_number }}</b>
-    </div>
-  </h3>
   <form [formGroup]="lotForm" (ngSubmit)="onSubmit()">
+    <h3>
+      <div *ngIf="data">
+        Current Lot Number: <b>{{ data.lot_number}}</b>
+      </div>
+    </h3>
     <mat-form-field>
-      <mat-label>Lot Number</mat-label>
+      <mat-label>Create a Lot Number</mat-label>
       <input matInput formControlName="lot_number" aria-label="Lot Number" />
     </mat-form-field>
 
     <h3>
       <div *ngIf="data">
-        Current Lot Address:<br /><b>{{ data.lot_address }}</b>
+        Currect Lot Address: <b>{{data.lot_address}}</b>
       </div>
     </h3>
     <mat-form-field>
-      <mat-label>Lot Address</mat-label>
+      <mat-label>Create a Lot Address</mat-label>
       <input matInput formControlName="lot_address" aria-label="Lot Address" />
     </mat-form-field>
 
-    <h3>
-      <div *ngIf="data">
-        Occupied: <b>{{ data.occupied }}</b>
-      </div>
-    </h3>
-    <!-- <mat-form-field>
-      <mat-label>occupied</mat-label>
-      <input
-        matInput
-        formControlName="occupied"
-        aria-label="occupied"
-      />
-    </mat-form-field> -->
+    <mat-checkbox formControlName="occupied">Occupied</mat-checkbox>
 
-    <!-- Add other fields in a similar way -->
-
-    <div mat-dialog-actions>
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-button color="primary" type="submit">Save</button>
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit">Save</button>
+      <button mat-raised-button color="accent" (click)="onCancel()">Cancel</button>
     </div>
   </form>
 </mat-dialog-content>
