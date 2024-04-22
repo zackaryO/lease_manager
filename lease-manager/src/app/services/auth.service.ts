@@ -8,8 +8,8 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://127.0.0.1:8000/api/'
-  // private baseUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/'
+  // private baseUrl = 'http://127.0.0.1:8000/api/'
+  private baseUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/'
 
   private logoutUrl = `${this.baseUrl}logout/`; // URL for the logout endpoint
   private authUrl = `${this.baseUrl}token/`; // URL to your Django auth endpoint

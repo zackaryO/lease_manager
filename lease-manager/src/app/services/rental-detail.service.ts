@@ -13,9 +13,8 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class RentalService {
-  // private baseUrl: string = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/leases';
-  // private baseUrl: string = 'https://d3ax4y87c24u41.cloudfront.net/api/leases';
-  private baseUrl: string = 'http://127.0.0.1:8000/api/leases';
+  private baseUrl: string = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/leases';
+  // private baseUrl: string = 'http://127.0.0.1:8000/api/leases';
 
   private rentals = new BehaviorSubject<RentalDetail[]>([]);
   rentals$ = this.rentals.asObservable();

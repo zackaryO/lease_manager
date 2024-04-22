@@ -9,8 +9,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class
   GlobalDefaultService {
-  // private globalSettingsUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/global/'; // URL to your Django global settings endpoint
-  private globalSettingsUrl = 'http://127.0.0.1:8000/api/global/'; // URL to your Django gl
+  private globalSettingsUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/global/'; // URL to your Django global settings endpoint
+  // private globalSettingsUrl = 'http://127.0.0.1:8000/api/global/'; // URL to your Django gl
   // private globalSettingsUrl = 'https://d3ax4y87c24u41.cloudfront.net/api/global/'; // URL to your Django gl
 
   constructor(private http: HttpClient) { }
