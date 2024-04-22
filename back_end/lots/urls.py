@@ -4,9 +4,12 @@ from .views import LeaseListView, LeaseDetailUpdateView, PaymentListCreateView, 
     UserListView, UserUpdateView, UserDeleteView, lease_holder_detail, edit_lease_holder, delete_lease_holder, \
     lease_create, lease_back_detail, lease_back_list, delete_lease_back, lease_update, lot_list, lot_create, lot_update, \
     lot_delete, CustomLoginView, LeaseHolderView, GlobalSettingsView, LeaseDeleteView, LotListCreateView, \
-    LotRetrieveUpdateDestroyView, LHolderRetUpDestView, LHCreateView
+    LotRetrieveUpdateDestroyView, LHolderRetUpDestView, LHCreateView, CreateUserView, APIUserListView, DeleteUserView
 
 urlpatterns = [
+    path('users/create/', CreateUserView.as_view(), name='user-create'),
+    path('users/list/', APIUserListView.as_view(), name='user-list'),
+    path('user/<int:pk>/delete/', DeleteUserView.as_view(), name='delete-user'),
     # API urls for client side page interaction start
     path('leases/', LeaseListView.as_view(), name='lease-list'),  # for listing leases
     path('leases/delete/<int:id>/', LeaseDeleteView.as_view(), name='lease-delete'),  # for listing leases

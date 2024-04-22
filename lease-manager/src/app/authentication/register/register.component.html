@@ -1,1 +1,49 @@
-<p>register works!</p>
+<!-- Registration Form -->
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="username">Username:</label>
+        <input id="username" type="text" formControlName="username">
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input id="email" type="email" formControlName="email">
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input id="password" type="password" formControlName="password">
+    </div>
+    <div>
+        <label for="user_type">User Type:</label>
+        <select formControlName="user_type">
+            <option value="1">Staff</option>
+            <option value="2">Customer</option>
+        </select>
+    </div>
+    <button type="submit" [disabled]="!registerForm.valid">Register</button>
+</form>
+
+<!-- User List Display -->
+<h2>Current Users</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>User Type</th>
+            <th>Actions (cannot delete current user)</th> <!-- Column for delete action -->
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users">
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.user_type === 1 ? 'Staff' : 'Customer' }}</td>
+            <td>
+                <!-- Do not show delete button for admin -->
+                <button *ngIf="user.username !== 'admin'" mat-icon-button (click)="deleteUser(user.id)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

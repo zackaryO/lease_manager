@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 // Import components and guards
 import { LoginComponent } from './authentication/login/login.component';
 import { AuthGuard } from './authentication/auth.guard';
+import { RegisterComponent } from './authentication/register/register.component';
 
 // Import the other components
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -30,6 +31,7 @@ const routes: Routes = [
   },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: 'manage', component: ManageLeaseComponent, canActivate: [AuthGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard] },
 
   // This wildcard route should be last in the list. It ensures that any unmatched path will be redirected to the login
   { path: '**', redirectTo: 'login' }, // Wildcard route

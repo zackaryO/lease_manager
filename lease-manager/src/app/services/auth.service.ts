@@ -1,6 +1,6 @@
 // auth.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
@@ -8,22 +8,53 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private authUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/token/'; // URL to your Django auth endpoint
-  private logoutUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/logout/'; // URL for the logout endpoint
+  private baseUrl = 'http://127.0.0.1:8000/api/'
+  // private baseUrl = 'http://leasemanager-env.us-east-1.elasticbeanstalk.com/api/'
 
-  // private authUrl = 'https://d3ax4y87c24u41.cloudfront.net/api/token/'; // URL to your Django auth endpoint
-  // private logoutUrl = 'https://d3ax4y87c24u41.cloudfront.net/api/logout/'; // URL for the logout endpoint
+  private logoutUrl = `${this.baseUrl}logout/`; // URL for the logout endpoint
+  private authUrl = `${this.baseUrl}token/`; // URL to your Django auth endpoint
+  private registerUrl = `${this.baseUrl}users/create/`; // URL for the creating a new user endpoint
+  private listUsersUrl = `${this.baseUrl}users/list/`; // URL for the listing all users endpoint
 
-  // private logoutUrl = 'http://127.0.0.1:8000/api/logout/'; // URL for the logout endpoint
-  // private authUrl = 'http://127.0.0.1:8000/api/token/'; // URL to your Django auth endpoint
+
 
   // Constructor initializes the service.
   // The HttpClient is injected to make HTTP requests.
   constructor(private http: HttpClient) {
-    // When the service is instantiated, it checks if the token is expired.
+
+  }
+
+  private getHttpOptions() {
+    const token = this.getAuthToken();
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      })
+    };
+  }
 
 
-    // this.checkTokenExpiration();
+  // Function to register a new user.
+  registerUser(userData: { username: string, email: string, password: string, user_type: number }): Observable<any> {
+    return this.http.post<any>(this.registerUrl, userData, this.getHttpOptions())
+      .pipe(
+        catchError(error => {
+          console.error('Error occurred during user registration:', error);
+          return throwError(() => new Error('Failed to create a new user'));
+        })
+      );
+  }
+
+  // Function to get a list of all users, available only to admins.
+  listUsers(): Observable<any[]> {
+    return this.http.get<any[]>(this.listUsersUrl, this.getHttpOptions())
+      .pipe(
+        catchError(error => {
+          console.error('Error occurred during fetching users:', error);
+          return throwError(() => new Error('Failed to retrieve user list'));
+        })
+      );
   }
 
   // Login function: Takes username and password, returns an Observable.
@@ -61,6 +92,25 @@ export class AuthService {
     );
   }
 
+  deleteUser(userId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}user/${userId}/delete/`, this.getHttpOptions())
+      .pipe(
+        catchError(error => {
+          console.error('Error occurred during deleting the user:', error);
+          return throwError(() => new Error('Failed to delete the user'));
+        })
+      );
+  }
+
+  getCurrentUserId(): number | null {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      return decodedToken.user_id; // Make sure the payload has user_id
+    }
+    return null;
+  }
+
   // Function to check if the user is currently logged in.
   isLoggedIn(): boolean {
     // Retrieves the authToken from localStorage.
@@ -79,11 +129,11 @@ export class AuthService {
   }
 
   // Private function to check if the stored token has expired.
-  private checkTokenExpiration(): void {
-    if (this.isTokenExpired()) {
-      this.logout(); // Logout if the token has expired.
-    }
-  }
+  // private checkTokenExpiration(): void {
+  //   if (this.isTokenExpired()) {
+  //     this.logout(); // Logout if the token has expired.
+  //   }
+  // }
 
   // Private helper function to determine if the token is expired.
   private isTokenExpired(): boolean {

@@ -7,13 +7,12 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404, resolve_url
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, DeleteView
-from django.db import IntegrityError
-from urllib.parse import unquote
-from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from rest_framework import generics, views, status, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.core.files.storage import default_storage
@@ -21,7 +20,7 @@ from .forms import LeaseHolderForm, CustomUserCreationForm, LeaseForm, LotForm
 from .permissions import IsAdminUser, IsStaffUser
 from .models import Lease, Payment, Lot, User, LeaseHolder, GlobalSettings
 from .serializers import LeaseSerializer, PaymentSerializer, LotSerializer, UserRegistrationSerializer, \
-    LeaseHolderSerializer, GlobalSettingsSerializer, LeaseCreateSerializer
+    LeaseHolderSerializer, GlobalSettingsSerializer, LeaseCreateSerializer, UserSerializer
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 
@@ -46,6 +45,45 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         return Response({
             "user": UserRegistrationSerializer(user).data
         }, status=status.HTTP_201_CREATED)
+
+
+class APIUserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAdminUser]  # Ensure only admins can access this view
+
+
+# Decorator to check if user is admin
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def user_list(request):
+    if request.method == 'GET':
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+
+class DeleteUserView(views.APIView):
+    permission_classes = [permissions.IsAdminUser]  # Restricts this view to admin users
+
+    def delete(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class CreateUserView(APIView):
+    permission_classes = [permissions.AllowAny]  # Adjust permissions as necessary
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LeaseCreateView(generics.CreateAPIView):
@@ -236,6 +274,7 @@ class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsStaffUser]
     parser_classes = (JSONParser, MultiPartParser, FormParser,)
+
 
 # class LeaseDetailUpdateView(generics.RetrieveUpdateAPIView):
 #     """

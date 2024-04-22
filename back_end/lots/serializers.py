@@ -1,9 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from .models import Lease, Payment, Lot, LeaseHolder, User, GlobalSettings
 import logging
 
 logger = logging.getLogger(__name__)  # Add logging
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +14,27 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def validate_password(self, value: str) -> str:
         return make_password(value)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password', 'user_type')
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        # Create a new user with hashed password and set them as an admin
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+            user_type=validated_data['user_type'],
+            is_staff=True,  # Make user a staff member
+            is_superuser=True  # Optionally make user a superuser as well
+        )
+        return user
 
 
 class LeaseSerializer(serializers.ModelSerializer):
@@ -39,7 +62,8 @@ class LeaseSerializer(serializers.ModelSerializer):
         # Meta class defines serializer behavior
         model = Lease  # The model associated with this serializer
         fields = '__all__'  # Include all fields from the model in the serializer
-        read_only_fields = ['id', 'payment_status', 'last_payment_date']  # Fields that cannot be updated via the serializer
+        read_only_fields = ['id', 'payment_status',
+                            'last_payment_date']  # Fields that cannot be updated via the serializer
 
     def to_representation(self, instance):
         """Modify the representation of the instance to dynamically calculate payment status."""
