@@ -119,8 +119,6 @@ can't seem to add more than one lease without having to leave and renavigate to 
 
 the dialogs to manage datails are too small
 
-if a lot is edited, it in incorrectly changed to unoccupied
-
 current logic and data structures do not support paying more than one month in advanced
 
 # UML sequnce diagrams (more coming soon!)
